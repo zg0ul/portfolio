@@ -80,29 +80,29 @@ const TechStack: React.FC = () => {
   ];
 
   return (
-    <div className="p-6">
-      <h2 className="text-white text-3xl font-bold mb-4">Tech Stack</h2>
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
-        {skills.map((skill) => (
-          <div
-            key={skill.name}
-            className="flex items-center justify-center bg-dark-2/20 p-3 rounded-md transition-all duration-300 hover:shadow-md "
-            onMouseEnter={() => setHoveredSkill(skill.name)}
-            onMouseLeave={() => setHoveredSkill(null)}
-          >
+    <section className="py-16 container">
+        <h2 className="text-white text-3xl font-bold mb-8">Tech Stack</h2>
+        <div className="flex flex-wrap gap-4">
+          {skills.map((skill) => (
             <div
-              style={{
-                color: hoveredSkill === skill.name ? skill.color : "white",
-              }}
-              className="transition-colors duration-300"
+              key={skill.name}
+              className="flex items-center justify-center bg-dark-2/20 p-3 rounded-md transition-all duration-300 hover:shadow-md"
+              onMouseEnter={() => setHoveredSkill(skill.name)}
+              onMouseLeave={() => setHoveredSkill(null)}
             >
-              {skill.icon}
+              <div
+                style={{
+                  color: hoveredSkill === skill.name ? skill.color : "white",
+                }}
+                className="transition-colors duration-300"
+              >
+                {skill.icon}
+              </div>
+              <span className="text-white ml-3 text-sm">{skill.name}</span>
             </div>
-            <span className="text-white ml-3 text-sm mt-2">{skill.name}</span>
-          </div>
-        ))}
+          ))}
       </div>
-    </div>
+    </section>
   );
 };
 
