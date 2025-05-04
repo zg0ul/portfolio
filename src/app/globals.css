@@ -1,6 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
-
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -19,6 +16,7 @@
   --color-navy-500: #1d2d44;
   --color-navy-600: #1a293e;
   --color-navy-700: #152030;
+  --color-navy-800: #101925;
 
   --color-teal-400: #657d91;
   --color-teal-500: #3e5c76;
@@ -34,6 +32,10 @@
   --foreground: #f0ebd8;
   --color-text-600: #dad6c5;
 
+  --color-neon: #86d562;
+  --color-neon-4: #b3e59c;
+  --color-neon-10: #3c602c;
+
   /* Fonts */
   --font-primary: Inter, sans-serif;
 
@@ -45,7 +47,6 @@
   --breakpoint-xs: 480px;
 
   --header-h: 60px;
-  --hero-h: 80vh;
 }
 
 @theme inline {
@@ -74,25 +75,6 @@
 }
 
 :root {
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-}
-
-.dark {
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
   --popover: oklch(0.208 0.042 265.755);
@@ -134,7 +116,7 @@
   }
 
   body {
-    @apply bg-background font-primary text-foreground leading-6 selection:bg-blue-400 selection:text-text-400 relative overflow-hidden;
+    @apply bg-background font-primary text-foreground selection:text-neon-10 selection:bg-neon-4 relative overflow-hidden leading-6;
 
     &::before {
       content: "";
@@ -143,7 +125,7 @@
       height: 70vh;
       background: radial-gradient(
         ellipse,
-        var(--color-blue-500) 0%,
+        var(--color-neon) 0%,
         transparent 80%
       );
       opacity: 0.15;
@@ -159,15 +141,15 @@
     &::after {
       content: "";
       position: absolute;
-      width: 70vw;
-      height: 70vh;
+      width: 500px;
+      height: 300px;
       background: radial-gradient(
         ellipse,
-        var(--color-blue-500) 0%,
+        var(--color-neon) 0%,
         transparent 80%
       );
-      opacity: 0.15;
-      bottom: 80vh;
+      opacity: 0.2;
+      top: 400px;
       right: 0;
       transform: translateX(70%);
       border-radius: 100%;
@@ -192,8 +174,9 @@
 
 @layer components {
   /* Header */
+
   .portfolio-header {
-    @apply flex gap-1  border border-navy-300/15 rounded-full bg-navy-300/10 backdrop-blur-md px-5 mx-auto;
+    @apply mx-auto flex gap-1 border-none bg-transparent backdrop-blur-md md:px-5;
 
     & nav ul {
       @apply flex;
@@ -202,44 +185,76 @@
 
   /* Navigation */
   .nav-item {
-    @apply px-4 py-1.5 rounded-full text-foreground text-[1rem] font-medium hover:bg-navy-300/20 hover:text-blue-100 transition duration-300;
+    @apply text-foreground hover:bg-navy-300/20 hover:text-neon rounded-full px-4 py-1.5 text-[1rem] font-medium transition duration-300;
   }
 
-  /* Hero Section */
-  .hero-section {
-    @apply flex justify-center items-center min-h-(--hero-h) px-5 xs:px-10 pt-(--header-h);
+  @font-face {
+    font-family: "Body Bold Italic";
+    src: url("/fonts/GoogleSans-BoldItalic.ttf") format("truetype");
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+  }
 
-    & .title-container {
-      @apply max-w-4xl text-center;
-    }
+  @font-face {
+    font-family: "Body";
+    src: url("/fonts/GoogleSans-Medium.ttf") format("truetype");
+    font-weight: medium;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Body Bold";
+    src: url("/fonts/GoogleSans-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Body Light";
+    src: url("/fonts/GoogleSans-Regular.ttf") format("truetype");
+    font-weight: light;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Body Italic";
+    src: url("/fonts/GoogleSans-Italic.ttf") format("truetype");
+    font-weight: light;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  .body-bold-italic {
+    font-family: "Body Bold Italic";
+  }
+
+  .body-bold {
+    font-family: "Body Bold";
+  }
+
+  .body-light {
+    font-family: "Body Light";
+  }
+
+  .body-italic {
+    font-family: "Body Italic";
+  }
+
+  .body {
+    font-family: "Body";
   }
 }
 
-@utility container {
-  @apply w-full mx-auto;
+@utility gradient {
+  @apply from-text-300 via-foreground to-text-600 bg-gradient-to-b;
+}
 
-  /* Base padding (mobile first) */
-  @apply px-4 py-6;
-
-  /* Small screens (sm) */
-  @apply sm:px-6 sm:py-8;
-
-  /* Medium screens (md) */
-  @apply md:px-8 md:py-10;
-
-  /* Large screens (lg) */
-  @apply lg:px-12 lg:py-12;
-
-  /* Extra large screens (xl) */
-  @apply xl:px-16 xl:py-16;
-
-  /* Maximum width constraints */
-  @apply max-w-full;
-  @apply sm:max-w-[540px];
-  @apply md:max-w-[720px];
-  @apply lg:max-w-[960px];
-  @apply xl:max-w-[1140px];
-  @apply 2xl:max-w-[1320px];
+@utility gradient-title {
+  @apply gradient bg-clip-text pr-2 pb-2 font-extrabold tracking-tighter text-transparent;
 }
 
 @utility blockquote {
@@ -253,17 +268,23 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #0d1321;
+  background: #0d13211d;
 }
 
 /* Scrollbar thumb */
 ::-webkit-scrollbar-thumb {
-  background: #dad6c588;
+  background: #dad6c55c;
   border-radius: 5px;
-  transition: background-color 0.3s ease, opacity 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    opacity 0.3s ease;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #2c4154;
+  background: #2c41546d;
+}
+
+@utility container {
+  @apply mx-auto max-w-xl px-4 sm:max-w-2xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl;
 }

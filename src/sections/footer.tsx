@@ -5,39 +5,44 @@ import { BackgroundBeams } from "../components/ui/background-beams";
 
 const PortfolioFooter = () => {
   return (
-    <footer className="relative w-full overflow-hidden py-12 border-t border-dark-2">
-      <BackgroundBeams />
-      <div className="container border-red-400 border">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <footer className="relative container overflow-hidden pt-12 pb-6">
+      {/* Background with beam effect */}
+      <div className="absolute inset-0 overflow-hidden mask-t-from-50%">
+        <BackgroundBeams />
+      </div>
+
+      {/* Content container */}
+      <div className="relative z-10 mx-auto justify-between">
+        <div className="mx-auto grid w-full grid-cols-1 place-items-center gap-8 md:grid-cols-3 md:place-items-start">
           {/* About Section */}
-          <div>
-            <div className="mb-4">
+          <div className="mx-auto max-w-xs text-center md:mx-0 md:text-left">
+            <div className="mb-4 flex justify-center md:justify-start">
               <Image
-                src="/z-logo.svg"
+                src="/z-logo.png"
                 alt="Logo"
                 width={50}
                 height={50}
                 className="pointer-events-none"
               />
             </div>
-            <p className="text-gray-400 mb-4 text-sm">
+            <p className="mb-4 text-sm text-gray-400">
               Full-stack developer passionate about creating innovative web
               applications and solving complex problems.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex justify-center space-x-4 md:justify-start">
               <SocialIcon href="https://github.com" icon="github" />
               <SocialIcon href="https://linkedin.com" icon="linkedin" />
               <SocialIcon href="https://twitter.com" icon="twitter" />
               <SocialIcon href="https://instagram.com" icon="instagram" />
             </div>
-            <div className="text-sm text-gray-400 mb-4 md:mb-0 mt-5">
+            <div className="mt-5 mb-4 text-sm text-gray-400 md:mb-0">
               © {new Date().getFullYear()} zg0ul. All rights reserved.
             </div>
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4">
+          <div className="text-center md:text-left">
+            <h3 className="mb-4 text-lg font-semibold text-white">
               Quick Links
             </h3>
             <ul className="space-y-2">
@@ -50,18 +55,18 @@ const PortfolioFooter = () => {
           </div>
 
           {/* Contact Info */}
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Contact</h3>
-            <ul className="space-y-2 text-gray-400 text-sm">
-              <li className="flex items-start">
+          <div className="text-center md:text-left">
+            <h3 className="mb-4 text-lg font-semibold text-white">Contact</h3>
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li className="flex items-start justify-center md:justify-start">
                 <span className="mr-2">📍</span>
                 <span>Amman, Jordan</span>
               </li>
-              <li className="flex items-start">
+              <li className="flex items-start justify-center md:justify-start">
                 <span className="mr-2">📧</span>
                 <a
                   href="mailto:mohammad@zg0ul.com"
-                  className="hover:text-white transition-colors"
+                  className="transition-colors hover:text-white"
                 >
                   mohammad@zg0ul.com
                 </a>
@@ -75,18 +80,18 @@ const PortfolioFooter = () => {
 };
 
 // Helper component for social icons
-const SocialIcon = ({ href, icon }: { href: string; icon: string }) => {
+const SocialIcon = ({ href, icon }) => {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-gray-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700"
+      className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-400 transition-colors hover:bg-gray-700 hover:text-white"
     >
       <span className="sr-only">{icon}</span>
       {icon === "github" && (
         <svg
-          className="w-5 h-5"
+          className="h-5 w-5"
           fill="currentColor"
           viewBox="0 0 24 24"
           aria-hidden="true"
@@ -100,7 +105,7 @@ const SocialIcon = ({ href, icon }: { href: string; icon: string }) => {
       )}
       {icon === "linkedin" && (
         <svg
-          className="w-5 h-5"
+          className="h-5 w-5"
           fill="currentColor"
           viewBox="0 0 24 24"
           aria-hidden="true"
@@ -110,7 +115,7 @@ const SocialIcon = ({ href, icon }: { href: string; icon: string }) => {
       )}
       {icon === "twitter" && (
         <svg
-          className="w-5 h-5"
+          className="h-5 w-5"
           fill="currentColor"
           viewBox="0 0 24 24"
           aria-hidden="true"
@@ -120,7 +125,7 @@ const SocialIcon = ({ href, icon }: { href: string; icon: string }) => {
       )}
       {icon === "instagram" && (
         <svg
-          className="w-5 h-5"
+          className="h-5 w-5"
           fill="currentColor"
           viewBox="0 0 24 24"
           aria-hidden="true"
@@ -137,18 +142,12 @@ const SocialIcon = ({ href, icon }: { href: string; icon: string }) => {
 };
 
 // Helper component for footer links
-const FooterLink = ({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) => {
+const FooterLink = ({ href, children }) => {
   return (
-    <li>
+    <li className="flex justify-center md:justify-start">
       <Link
         href={href}
-        className="text-gray-400 hover:text-white transition-colors text-sm"
+        className="text-sm text-gray-400 transition-colors hover:text-white"
       >
         {children}
       </Link>

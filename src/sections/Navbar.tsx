@@ -4,10 +4,10 @@ import React from "react";
 
 function Header() {
   return (
-    <div className="flex justify-center items-center fixed top-3 w-full z-10 ">
-      <div className="container">
-        <header className="portfolio-header ">
-          <div className=" flex justify-between items-center w-full">
+    <div className="fixed top-0 z-10 flex w-full items-center justify-center">
+      <div className="w-full md:container md:px-4">
+        <header className="portfolio-header">
+          <div className="flex w-full items-center justify-center py-2 max-md:py-1 md:justify-between">
             <Link href="/" className="flex items-center">
               <Zg0ulLogo />
             </Link>
@@ -15,28 +15,23 @@ function Header() {
             <nav className="hidden md:block">
               <ul>
                 <li>
-                  <a href="#projects" className="nav-item">
-                    Projects
-                  </a>
-                </li>
-                <li>
-                  <a href="#about" className="nav-item">
+                  <Link href="/about" className="nav-item">
                     About
-                  </a>
-                </li>
-                <li>
-                  <a href="#resume" className="nav-item">
-                    Resume
-                  </a>
-                </li>
-                <li>
-                  <a href="#contact" className="nav-item">
-                    Contact
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Link href="/awards" className="nav-item">
                     <span>Awards</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/projects" className="nav-item">
+                    Projects
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/resume" className="nav-item">
+                    Resume
                   </Link>
                 </li>
               </ul>

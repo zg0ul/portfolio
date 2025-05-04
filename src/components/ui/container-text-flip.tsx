@@ -19,11 +19,11 @@ export interface ContainerTextFlipProps {
 }
 
 export function ContainerTextFlip({
-  words = ["Flutter Engineer", "Full-Stack Engineer"],
+  words = ["Flutter Developer", "Full-Stack Engineer", "AI Engineer"],
   interval = 3000,
   className,
   textClassName,
-  animationDuration = 700,
+  animationDuration = 300,
 }: ContainerTextFlipProps) {
   const id = useId();
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -61,10 +61,10 @@ export function ContainerTextFlip({
       animate={{ width }}
       transition={{ duration: animationDuration / 2000 }}
       className={cn(
-        "relative inline-block rounded-lg pt-2 pb-3 text-center text-2xl font-bold md:text-5xl text-text-500 mt-1",
-        "[background:linear-gradient(to_bottom,#1d2d44,#152030)]",
-        "shadow-[inset_0_-1px_#2c4154,inset_0_0_0_1px_hsla(205,89%,46%,.24),_0_4px_8px_#152030]",
-        className
+        "text-text-500 relative mt-1 inline-block rounded-lg pt-2 pb-3 text-center text-2xl font-bold md:text-5xl",
+        "[background:linear-gradient(to_bottom,#0d1321,#152030)]",
+        "shadow-[inset_0_-1px_#86d562,inset_0_0_0_2px_hsla(101,58%,61%,1),_0_4px_8px_#86D56241]",
+        className,
       )}
       key={words[currentWordIndex]}
     >

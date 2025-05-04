@@ -1,12 +1,12 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { Github, Instagram, Linkedin } from "lucide-react";
+import { Github, Linkedin, LucideInstagram } from "lucide-react";
 
 function Socials() {
   return (
     <div className="flex gap-4 ">
       <Button variant="outline" size="icon">
-        <Instagram />
+        <LucideInstagram />
       </Button>
       <Button variant="outline" size="icon">
         <Linkedin />

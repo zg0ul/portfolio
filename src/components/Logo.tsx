@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const Zg0ulLogo = () => {
   const [isHovered, setIsHovered] = useState(false);
-  const fillColor = "#d4dbe5";
+  const fillColor = "#86D562";
 
   return (
     <motion.svg

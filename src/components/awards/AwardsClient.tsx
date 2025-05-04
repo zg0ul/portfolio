@@ -43,18 +43,18 @@ export default function AwardsClient({ awards }: AwardClientProps) {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen, currentAwardId]);
 
   // Get icon component based on string name
   const getIconComponent = (iconName: string) => {
     switch (iconName) {
       case "BsAward":
-        return <BsAward className="w-6 h-6" />;
+        return <BsAward className="h-6 w-6" />;
       case "BsTrophy":
-        return <BsTrophy className="w-6 h-6" />;
+        return <BsTrophy className="h-6 w-6" />;
       default:
-        return <BsAward className="w-6 h-6" />;
+        return <BsAward className="h-6 w-6" />;
     }
   };
 
@@ -80,7 +80,7 @@ export default function AwardsClient({ awards }: AwardClientProps) {
     if (!currentAward || !currentAward.images.length) return;
 
     setCurrentImageIndex((prev) =>
-      prev <= 0 ? currentAward.images.length - 1 : prev - 1
+      prev <= 0 ? currentAward.images.length - 1 : prev - 1,
     );
   };
 
@@ -114,14 +114,14 @@ export default function AwardsClient({ awards }: AwardClientProps) {
         />
       </Head>
 
-      <main className="min-h-screen bg-gradient-to-b from-background to-dark-600">
-        <div className="container px-3 sm:px-6 py-16 sm:py-32 mx-auto max-w-5xl">
+      <main className="min-h-screen">
+        <div className="container mx-auto max-w-5xl px-3 py-16 sm:px-6 sm:py-32">
           {/* Page header */}
-          <div className="mb-10 sm:mb-12 text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground">
+          <div className="mb-10 text-center sm:mb-12">
+            <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
               Honors & Awards
             </h1>
-            <p className="mt-3 sm:mt-4 text-lg sm:text-xl text-blue-400">
+            <p className="mt-3 text-lg text-blue-400 sm:mt-4 sm:text-xl">
               Recognition for excellence in technology and innovation
             </p>
           </div>
@@ -129,7 +129,7 @@ export default function AwardsClient({ awards }: AwardClientProps) {
           {/* Timeline of awards */}
           <div className="relative">
             {/* Timeline center line - visible on all screens */}
-            <div className="absolute left-10 md:left-1/2 top-0 bottom-0 md:transform md:-translate-x-1/2 w-0.5 bg-dark-400"></div>
+            <div className="bg-dark-400 absolute top-0 bottom-0 left-10 w-0.5 md:left-1/2 md:-translate-x-1/2 md:transform"></div>
 
             <div className="relative">
               {awards.map((award, idx) => (
@@ -142,20 +142,20 @@ export default function AwardsClient({ awards }: AwardClientProps) {
                 >
                   {/* Content */}
                   <div
-                    className={`w-full md:w-1/2 pl-16 md:pl-0 ${
+                    className={`w-full pl-16 md:w-1/2 md:pl-0 ${
                       idx % 2 === 0 ? "md:pr-10 lg:pr-12" : "md:pl-10 lg:pl-12"
                     } ${idx % 2 === 0 ? "md:text-right" : "md:text-left"}`}
                   >
                     {/* Mobile view date */}
-                    <div className="md:hidden text-sm text-[#748cab] mb-1">
+                    <div className="mb-1 text-sm text-[#748cab] md:hidden">
                       {award.date}
                     </div>
 
-                    <h3 className="text-xl sm:text-2xl font-bold text-[#f0ebd8]">
+                    <h3 className="text-xl font-bold text-[#f0ebd8] sm:text-2xl">
                       {award.title}
                     </h3>
                     <div
-                      className={`flex items-center my-2 text-sm text-[#748cab] gap-2 ${
+                      className={`my-2 flex items-center gap-2 text-sm text-[#748cab] ${
                         idx % 2 === 0 ? "md:justify-end" : "md:justify-start"
                       }`}
                     >
@@ -175,17 +175,17 @@ export default function AwardsClient({ awards }: AwardClientProps) {
                         {award.images.map((image, imageIdx) => (
                           <div
                             key={imageIdx}
-                            className="flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32 overflow-hidden rounded-lg bg-gray-800 cursor-pointer transition-transform hover:scale-95"
+                            className="h-24 w-24 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg bg-gray-800 transition-transform hover:scale-95 sm:h-32 sm:w-32"
                             onClick={() => openImageModal(award.id, imageIdx)}
                           >
                             {/* Use next/image for optimized loading */}
-                            <div className="w-full h-full flex items-center justify-center bg-[#2d3748] text-[#90a3bc] text-xs">
+                            <div className="flex h-full w-full items-center justify-center bg-[#2d3748] text-xs text-[#90a3bc]">
                               <Image
                                 src={image.src}
                                 alt={image.alt}
                                 width={256}
                                 height={256}
-                                className="object-cover w-full h-full"
+                                className="h-full w-full object-cover"
                                 quality={80}
                                 placeholder="blur"
                                 blurDataURL={
@@ -201,7 +201,7 @@ export default function AwardsClient({ awards }: AwardClientProps) {
                   </div>
 
                   {/* Timeline icon */}
-                  <div className="absolute left-10 md:left-1/2 transform -translate-x-1/2 w-10 h-10 md:w-12 md:h-12 bg-[#3e5c76] rounded-full flex items-center justify-center border-3 md:border-4 border-[#0c111e]">
+                  <div className="absolute left-10 flex h-10 w-10 -translate-x-1/2 transform items-center justify-center rounded-full border-3 border-[#0c111e] bg-[#3e5c76] md:left-1/2 md:h-12 md:w-12 md:border-4">
                     <div className="text-[#f0ebd8]">
                       {getIconComponent(award.icon)}
                     </div>
@@ -216,25 +216,25 @@ export default function AwardsClient({ awards }: AwardClientProps) {
       {/* Optimized Modal with improved click outside functionality */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4"
+          className="bg-background/80 fixed inset-0 z-50 flex items-center justify-center p-4"
           onClick={closeImageModal}
         >
           <div
-            className="relative w-full max-w-5xl mx-auto h-[70vh]"
+            className="relative mx-auto h-[70vh] w-full max-w-5xl"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on the container
           >
             {/* Close button */}
             <ModalControls onClick={closeImageModal} position="close">
-              <FiX className="w-6 h-6" />
+              <FiX className="h-6 w-6" />
             </ModalControls>
 
             {/* Image navigation - previous */}
             <ModalControls onClick={prevImage} position="left">
-              <FiChevronLeft className="w-6 h-6" />
+              <FiChevronLeft className="h-6 w-6" />
             </ModalControls>
 
             {/* Fixed-size image container */}
-            <div className="relative h-full w-full flex items-center justify-center rounded-lg overflow-hidden border border-teal-700 bg-dark-600/90">
+            <div className="bg-dark-600/90 relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg border border-teal-700">
               {getCurrentImage() && (
                 <Image
                   src={getCurrentImage()!.src}
@@ -256,7 +256,7 @@ export default function AwardsClient({ awards }: AwardClientProps) {
 
             {/* Image navigation - next */}
             <ModalControls onClick={nextImage} position="right">
-              <FiChevronRight className="w-6 h-6" />
+              <FiChevronRight className="h-6 w-6" />
             </ModalControls>
           </div>
         </div>
