@@ -1,117 +1,123 @@
 "use client";
-import React from "react";
-import Image from "next/image";
+
 import Link from "next/link";
-import { Project } from "@/lib/projects-data";
-import { BsGithub } from "react-icons/bs";
-import { FiExternalLink } from "react-icons/fi";
-import * as Icons from "react-icons/si";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
 import { motion } from "framer-motion";
+import { ExternalLink, Github, ArrowRight } from "lucide-react";
+import { CategoryWithIcon } from "@/utils/ProjectCategories";
+import { TechnologyWithIcon } from "@/utils/TechIcons";
+
+type Project = {
+  id: string;
+  title: string;
+  slug: string;
+  short_description: string;
+  featured_image: string;
+  category: string;
+  technologies: string[];
+  github_url?: string;
+  live_url?: string;
+};
 
 interface ProjectCardProps {
   project: Project;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
-  const IconComponents: Record<string, React.ElementType> = Icons;
-
+export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true }}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-white/5 p-1 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:shadow-xl dark:bg-black/20 dark:hover:bg-black/30"
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="group overflow-hidden rounded-xl border border-navy-600 bg-navy-800/50 shadow-lg backdrop-blur-sm transition-all duration-300 hover:border-neon/50 hover:shadow-neon/10"
+      data-category={project.category}
     >
-      <div className="relative aspect-video w-full overflow-hidden rounded-t-lg">
-        <Image
-          src={project.thumbnail}
-          alt={project.title}
-          width={400}
-          height={225}
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent transition-opacity duration-300 group-hover:opacity-70"></div>
-      </div>
-
-      <div className="flex flex-1 flex-col justify-between gap-3 p-4">
-        <div>
-          <div className="mb-2 flex flex-wrap gap-2">
-            {project.categories.map((category) => (
-              <span
-                key={category}
-                className="rounded-full bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-500"
-              >
-                {category}
-              </span>
-            ))}
+      <div className="relative flex h-full flex-col">
+        {/* Image container with overlay */}
+        <div className="relative h-48 w-full overflow-hidden">
+          <Image
+            src={project.featured_image}
+            alt={project.title}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+          
+          {/* Dark overlay with See Details text */}
+          <div className="absolute inset-0 flex items-center justify-center bg-black/70 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <div className="flex flex-col items-center text-center">
+              <span className="mb-2 text-neon">See Details</span>
+              <ArrowRight className="h-5 w-5 text-neon" />
+            </div>
           </div>
-          <h3 className="mb-2 text-xl font-bold tracking-tight">
-            {project.title}
-          </h3>
-          <p className="mb-4 line-clamp-2 text-sm text-gray-400">
-            {project.description}
-          </p>
+          
+          {/* Category badge */}
+          <div className="absolute bottom-3 left-3 rounded-full bg-navy-700/90 px-3 py-1.5 text-sm backdrop-blur-sm">
+            <CategoryWithIcon categoryId={project.category} />
+          </div>
         </div>
 
-        <div>
-          <div className="mb-3 flex flex-wrap gap-2">
-            {project.technologies.map((tech) => {
-              const TechIcon = IconComponents[tech.icon];
-              return (
-                <div
-                  key={tech.name}
-                  className="group/tech flex items-center rounded-full bg-white/5 p-1.5 text-sm"
-                  title={tech.name}
-                >
-                  {TechIcon && <TechIcon className="h-4 w-4" />}
-                </div>
-              );
-            })}
-          </div>
+        {/* Content area */}
+        <div className="flex flex-1 flex-col p-4">
+          <h2 className="mb-2 text-xl font-bold text-white">{project.title}</h2>
+          <p className="mb-4 line-clamp-2 text-sm text-gray-300">
+            {project.short_description}
+          </p>
 
-          <div className="mt-auto flex justify-between">
-            <Link
-              href={`/projects/${project.slug}`}
-              className="inline-flex items-center rounded-lg bg-blue-500 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-blue-600"
-            >
-              View Details
-            </Link>
+          {/* Technologies with icons */}
+          <div className="mt-auto">
+            <div className="mb-4 flex flex-wrap gap-2">
+              {project.technologies.slice(0, 3).map((tech) => (
+                <span
+                  key={tech}
+                  className="inline-flex items-center rounded-full border border-navy-600 bg-navy-700/50 px-3 py-1 text-xs"
+                >
+                  <TechnologyWithIcon techId={tech} />
+                </span>
+              ))}
+              {project.technologies.length > 3 && (
+                <span className="inline-flex items-center rounded-full border border-navy-600 bg-navy-700/50 px-3 py-1 text-xs">
+                  +{project.technologies.length - 3} more
+                </span>
+              )}
+            </div>
 
-            <div className="flex gap-2">
-              {project.githubUrl && (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20"
-                >
-                  <BsGithub className="h-4 w-4" />
-                </a>
-              )}
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition hover:bg-white/20"
-                >
-                  <FiExternalLink className="h-4 w-4" />
-                </a>
-              )}
+            {/* Links and actions */}
+            <div className="flex items-center justify-between">
+              <Link 
+                href={`/projects/${project.slug}`} 
+                className="from-neon to-neon-4 hover:from-neon-4 hover:to-neon rounded-lg bg-gradient-to-r px-4 py-2 text-sm font-medium text-navy-900 transition-all"
+              >
+                View Project
+              </Link>
+              
+              <div className="flex gap-2">
+                {project.github_url && (
+                  <Link 
+                    href={project.github_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="border-navy-600 bg-navy-700/50 hover:bg-navy-700 flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
+                  >
+                    <Github className="h-4 w-4" />
+                  </Link>
+                )}
+                
+                {project.live_url && (
+                  <Link 
+                    href={project.live_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="border-navy-600 bg-navy-700/50 hover:bg-navy-700 flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      {project.featured && (
-        <span className="absolute top-0 right-0 rounded-tr-lg rounded-bl-lg bg-blue-500 px-2 py-1 text-xs font-semibold text-white">
-          Featured
-        </span>
-      )}
     </motion.div>
   );
-};
-
-export default ProjectCard;
+}

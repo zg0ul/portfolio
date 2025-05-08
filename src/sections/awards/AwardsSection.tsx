@@ -1,18 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Head from "next/head";
 import Image from "next/image";
 import { BsAward, BsTrophy } from "react-icons/bs";
 import { FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Award } from "@/lib/awards-data";
-import ModalControls from "../ui/modal-controls";
+import ModalControls from "@/components/ui/modal-controls";
 
-interface AwardClientProps {
+interface AwardsSectionProps {
   awards: Award[];
 }
 
-export default function AwardsClient({ awards }: AwardClientProps) {
+export default function AwardsSection({ awards }: AwardsSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [currentAwardId, setCurrentAwardId] = useState<number | null>(null);
@@ -106,112 +105,102 @@ export default function AwardsClient({ awards }: AwardClientProps) {
 
   return (
     <>
-      <Head>
-        <title>Honors & Awards | Your Portfolio</title>
-        <meta
-          name="description"
-          content="My professional honors, awards, and recognitions"
-        />
-      </Head>
+      <div className="container mx-auto max-w-5xl">
+        {/* Page header */}
+        <div className="mb-10 text-center sm:mb-12">
+          <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+            Honors & Awards
+          </h1>
+          <p className="mt-3 text-lg text-blue-400 sm:mt-4 sm:text-xl">
+            Recognition for excellence in technology and innovation
+          </p>
+        </div>
 
-      <main className="min-h-screen">
-        <div className="container mx-auto max-w-5xl px-3 py-16 sm:px-6 sm:py-32">
-          {/* Page header */}
-          <div className="mb-10 text-center sm:mb-12">
-            <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-              Honors & Awards
-            </h1>
-            <p className="mt-3 text-lg text-blue-400 sm:mt-4 sm:text-xl">
-              Recognition for excellence in technology and innovation
-            </p>
-          </div>
+        {/* Timeline of awards */}
+        <div className="relative">
+          {/* Timeline center line - visible on all screens */}
+          <div className="bg-dark-400 absolute top-0 bottom-0 left-10 w-0.5 md:left-1/2 md:-translate-x-1/2 md:transform"></div>
 
-          {/* Timeline of awards */}
           <div className="relative">
-            {/* Timeline center line - visible on all screens */}
-            <div className="bg-dark-400 absolute top-0 bottom-0 left-10 w-0.5 md:left-1/2 md:-translate-x-1/2 md:transform"></div>
-
-            <div className="relative">
-              {awards.map((award, idx) => (
+            {awards.map((award, idx) => (
+              <div
+                key={award.id}
+                className="mb-12 md:mb-16 md:flex"
+                style={{
+                  flexDirection: idx % 2 === 0 ? "row" : "row-reverse",
+                }}
+              >
+                {/* Content */}
                 <div
-                  key={award.id}
-                  className="mb-12 md:mb-16 md:flex"
-                  style={{
-                    flexDirection: idx % 2 === 0 ? "row" : "row-reverse",
-                  }}
+                  className={`w-full pl-16 md:w-1/2 md:pl-0 ${
+                    idx % 2 === 0 ? "md:pr-10 lg:pr-12" : "md:pl-10 lg:pl-12"
+                  } ${idx % 2 === 0 ? "md:text-right" : "md:text-left"}`}
                 >
-                  {/* Content */}
-                  <div
-                    className={`w-full pl-16 md:w-1/2 md:pl-0 ${
-                      idx % 2 === 0 ? "md:pr-10 lg:pr-12" : "md:pl-10 lg:pl-12"
-                    } ${idx % 2 === 0 ? "md:text-right" : "md:text-left"}`}
-                  >
-                    {/* Mobile view date */}
-                    <div className="mb-1 text-sm text-[#748cab] md:hidden">
-                      {award.date}
-                    </div>
+                  {/* Mobile view date */}
+                  <div className="mb-1 text-sm text-[#748cab] md:hidden">
+                    {award.date}
+                  </div>
 
-                    <h3 className="text-xl font-bold text-[#f0ebd8] sm:text-2xl">
-                      {award.title}
-                    </h3>
+                  <h3 className="text-xl font-bold text-[#f0ebd8] sm:text-2xl">
+                    {award.title}
+                  </h3>
+                  <div
+                    className={`my-2 flex items-center gap-2 text-sm text-[#748cab] ${
+                      idx % 2 === 0 ? "md:justify-end" : "md:justify-start"
+                    }`}
+                  >
+                    <span>{award.issuer}</span>
+                    <span>•</span>
+                    <span className="hidden md:inline">{award.date}</span>
+                  </div>
+                  <p className="text-[#dad6c5]">{award.description}</p>
+
+                  {/* Image gallery */}
+                  {award.images && award.images.length > 0 && (
                     <div
-                      className={`my-2 flex items-center gap-2 text-sm text-[#748cab] ${
+                      className={`mt-4 flex gap-2 overflow-x-auto pb-2 ${
                         idx % 2 === 0 ? "md:justify-end" : "md:justify-start"
                       }`}
                     >
-                      <span>{award.issuer}</span>
-                      <span>•</span>
-                      <span className="hidden md:inline">{award.date}</span>
-                    </div>
-                    <p className="text-[#dad6c5]">{award.description}</p>
-
-                    {/* Image gallery */}
-                    {award.images && award.images.length > 0 && (
-                      <div
-                        className={`mt-4 flex gap-2 overflow-x-auto pb-2 ${
-                          idx % 2 === 0 ? "md:justify-end" : "md:justify-start"
-                        }`}
-                      >
-                        {award.images.map((image, imageIdx) => (
-                          <div
-                            key={imageIdx}
-                            className="h-24 w-24 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg bg-gray-800 transition-transform hover:scale-95 sm:h-32 sm:w-32"
-                            onClick={() => openImageModal(award.id, imageIdx)}
-                          >
-                            {/* Use next/image for optimized loading */}
-                            <div className="flex h-full w-full items-center justify-center bg-[#2d3748] text-xs text-[#90a3bc]">
-                              <Image
-                                src={image.src}
-                                alt={image.alt}
-                                width={256}
-                                height={256}
-                                className="h-full w-full object-cover"
-                                quality={80}
-                                placeholder="blur"
-                                blurDataURL={
-                                  image.blurDataURL ||
-                                  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN88OjpfwAI+QM4V9Qg1QAAAABJRU5ErkJggg=="
-                                }
-                              />
-                            </div>
+                      {award.images.map((image, imageIdx) => (
+                        <div
+                          key={imageIdx}
+                          className="h-24 w-24 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg bg-gray-800 transition-transform hover:scale-95 sm:h-32 sm:w-32"
+                          onClick={() => openImageModal(award.id, imageIdx)}
+                        >
+                          {/* Use next/image for optimized loading */}
+                          <div className="flex h-full w-full items-center justify-center bg-[#2d3748] text-xs text-[#90a3bc]">
+                            <Image
+                              src={image.src}
+                              alt={image.alt}
+                              width={256}
+                              height={256}
+                              className="h-full w-full object-cover"
+                              quality={80}
+                              placeholder="blur"
+                              blurDataURL={
+                                image.blurDataURL ||
+                                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN88OjpfwAI+QM4V9Qg1QAAAABJRU5ErkJggg=="
+                              }
+                            />
                           </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Timeline icon */}
-                  <div className="absolute left-10 flex h-10 w-10 -translate-x-1/2 transform items-center justify-center rounded-full border-3 border-[#0c111e] bg-[#3e5c76] md:left-1/2 md:h-12 md:w-12 md:border-4">
-                    <div className="text-[#f0ebd8]">
-                      {getIconComponent(award.icon)}
+                        </div>
+                      ))}
                     </div>
+                  )}
+                </div>
+
+                {/* Timeline icon */}
+                <div className="absolute left-10 flex h-10 w-10 -translate-x-1/2 transform items-center justify-center rounded-full border-3 border-[#0c111e] bg-[#3e5c76] md:left-1/2 md:h-12 md:w-12 md:border-4">
+                  <div className="text-[#f0ebd8]">
+                    {getIconComponent(award.icon)}
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Optimized Modal with improved click outside functionality */}
       {isModalOpen && (

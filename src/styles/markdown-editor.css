@@ -1,0 +1,140 @@
+/* Markdown Editor Styles */
+
+/* Editor container */
+.w-md-editor {
+  background-color: #152030 !important;
+  color: #f0ebd8 !important;
+  border-color: #1a293e !important;
+  border-radius: 0.5rem !important;
+}
+
+.w-md-editor-text {
+  color: #f0ebd8 !important;
+  font-family: "Menlo", "Monaco", "Consolas", monospace;
+}
+
+.w-md-editor-toolbar {
+  background-color: #101925 !important;
+  border-color: #1a293e !important;
+  border-top-left-radius: 0.5rem !important;
+  border-top-right-radius: 0.5rem !important;
+}
+
+.w-md-editor-toolbar svg {
+  color: #f0ebd8 !important;
+}
+
+.w-md-editor-toolbar button {
+  color: #f0ebd8 !important;
+}
+
+.w-md-editor-toolbar button:hover {
+  background-color: #1d2d44 !important;
+  border-color: #1a293e !important;
+}
+
+/* Markdown preview styling */
+.wmde-markdown {
+  background-color: #152030 !important;
+  color: #f0ebd8 !important;
+}
+
+.wmde-markdown h1,
+.wmde-markdown h2,
+.wmde-markdown h3,
+.wmde-markdown h4,
+.wmde-markdown h5,
+.wmde-markdown h6 {
+  color: #86d562 !important;
+  border-bottom-color: #1a293e !important;
+}
+
+.wmde-markdown a {
+  color: #90a3bc !important;
+}
+
+.wmde-markdown a:hover {
+  color: #86d562 !important;
+}
+
+.wmde-markdown blockquote {
+  color: #748cab !important;
+  border-left-color: #1a293e !important;
+}
+
+.wmde-markdown code {
+  background-color: rgba(26, 41, 62, 0.5) !important;
+  color: #f0ebd8 !important;
+}
+
+.wmde-markdown-color code[class*="language-"],
+.wmde-markdown-color pre[class*="language-"] {
+  text-shadow: none !important;
+  background-color: #101925 !important;
+}
+
+.wmde-markdown pre {
+  background-color: #101925 !important;
+  border-color: #1a293e !important;
+}
+
+.wmde-markdown table {
+  border-color: #1a293e !important;
+}
+
+.wmde-markdown th {
+  background-color: #101925 !important;
+  border-color: #1a293e !important;
+}
+
+.wmde-markdown td {
+  border-color: #1a293e !important;
+}
+
+.w-md-editor-text-input {
+  color: #f0ebd8 !important;
+}
+
+/* .w-md-editor-text-pre {
+  color: transparent !important;
+} */
+
+.w-md-editor-text-pre .punctuation {
+  color: rgba(240, 235, 216, 0.6) !important;
+}
+
+.w-md-editor-text-pre .token.title,
+.w-md-editor-text-pre .token.title.important,
+.w-md-editor-text-pre .token.title.class {
+  color: #86d562 !important;
+}
+
+.w-md-editor-text-pre .token.code-block {
+  color: #748cab !important;
+}
+
+.w-md-editor-text-pre .token.bold {
+  color: #90a3bc !important;
+  font-weight: bold;
+}
+
+.w-md-editor-text-pre .token.italic {
+  color: #90a3bc !important;
+  font-style: italic;
+}
+
+.w-md-editor-text-pre .token.list.punctuation {
+  color: #86d562 !important;
+}
+
+.w-md-editor-text-pre .token.link {
+  color: #90a3bc !important;
+}
+
+.w-md-editor-text-pre .token.url {
+  color: #90a3bc !important;
+}
+
+.w-md-editor-preview {
+  border-color: #1a293e !important;
+}

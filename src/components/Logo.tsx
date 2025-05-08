@@ -39,6 +39,7 @@ const Zg0ulLogo = () => {
 
       {/* G, Ø, U, L */}
       <motion.g
+        initial={{ opacity: 1 }}
         animate={{ opacity: isHovered ? 0 : 1 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
       >

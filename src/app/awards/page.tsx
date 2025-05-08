@@ -1,9 +1,18 @@
-import AwardsClient from "@/components/awards/AwardsClient";
+import { Metadata } from "next";
 import { getAwardsData } from "@/lib/awards-data";
+import AwardsSection from "@/sections/awards/AwardsSection";
+
+export const metadata: Metadata = {
+  title: "Honors & Awards | Mohammad Zgoul",
+  description: "My professional honors, awards, and recognitions",
+};
 
 export default function AwardsPage() {
-  // Load awards data on the server with await since it's now async
-  const awardsData = getAwardsData();
+  const awards = getAwardsData();
 
-  return <AwardsClient awards={awardsData} />;
+  return (
+    <main className="topPageMargin">
+      <AwardsSection awards={awards} />
+    </main>
+  );
 }

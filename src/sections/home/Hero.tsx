@@ -8,13 +8,13 @@ import React from "react";
 function Hero() {
   return (
     <section
-      className="container mt-(--header-h) flex h-[70vh] min-h-[400px] items-center justify-center  md:h-[80vh] md:min-h-[80vh]"
+      className="container mt-(--header-h) flex h-[70vh] min-h-[400px] items-center justify-center md:h-[80vh] md:min-h-[80vh]"
       id="Hero"
     >
       <ShootingStars />
 
       <div className="flex w-full">
-        <div className="mx-auto flex w-full flex-col items-center justify-center  text-center">
+        <div className="mx-auto flex w-full flex-col items-center justify-center text-center">
           {/* <div className="flex items-center justify-around text-lg">
             <Location />
             {isOpenToWork && <OpenToWork />}
