@@ -1,0 +1,417 @@
+/* Markdown Preview Styling */
+.markdown-preview {
+  color: white;
+  line-height: 1.7;
+  font-size: 1.1rem;
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  font-weight: 700;
+  line-height: 1.3;
+  color: white;
+}
+
+.markdown-preview h1 {
+  font-size: 2.25rem;
+  border-bottom: 2px solid var(--color-navy-600, #2d3748);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.markdown-preview h2 {
+  font-size: 1.75rem;
+  border-bottom: 1px solid var(--color-navy-600, #2d3748);
+  padding-bottom: 0.3rem;
+  margin-top: 2rem;
+}
+
+.markdown-preview h3 {
+  font-size: 1.5rem;
+  color: var(--color-neon, #31e0c2);
+}
+
+.markdown-preview h4 {
+  font-size: 1.25rem;
+}
+
+.markdown-preview p {
+  margin-bottom: 1.25rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.markdown-preview a {
+  color: var(--color-neon, #31e0c2);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.markdown-preview a:hover {
+  text-decoration: underline;
+}
+
+.markdown-preview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+  border: 1px solid var(--color-navy-600, #2d3748);
+}
+
+.markdown-preview ul,
+.markdown-preview ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.markdown-preview ul {
+  list-style-type: disc;
+}
+
+.markdown-preview ol {
+  list-style-type: decimal;
+}
+
+.markdown-preview li {
+  margin-bottom: 0.5rem;
+}
+
+.markdown-preview blockquote {
+  border-left: 4px solid var(--color-neon, #31e0c2);
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Enhanced code block styling with better syntax highlighting */
+.markdown-preview pre {
+  background-color: #101925;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  border: 1px solid var(--color-navy-600, #2d3748);
+}
+
+.markdown-preview code {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  font-size: 0.9em;
+  padding: 0.15rem 0.3rem;
+  border-radius: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.markdown-preview pre code {
+  background-color: transparent;
+  padding: 0;
+  font-size: 0.85em;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: 0;
+}
+
+.markdown-preview hr {
+  height: 1px;
+  background-color: var(--color-navy-600, #2d3748);
+  border: none;
+  margin: 2rem 0;
+}
+
+/* Improved table styling */
+.markdown-preview table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--color-navy-600, #2d3748);
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.markdown-preview thead {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.markdown-preview th {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--color-neon, #31e0c2);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-navy-600, #2d3748);
+}
+
+.markdown-preview tbody tr {
+  transition: background-color 0.15s;
+}
+
+.markdown-preview tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.markdown-preview td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-navy-600, #2d3748);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.markdown-preview tr:last-child td {
+  border-bottom: none;
+}
+
+/* Additional styling for better table appearance */
+.markdown-preview .table-container {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-navy-600, #2d3748);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.markdown-preview .markdown-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin: 0;
+}
+
+.markdown-preview .markdown-table th {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: var(--color-neon, #31e0c2);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-navy-600, #2d3748);
+}
+
+.markdown-preview .markdown-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-navy-600, #2d3748);
+}
+
+.markdown-preview .markdown-table tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown-preview .markdown-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Better styling for code blocks */
+.markdown-preview .code-block-wrapper {
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #101925;
+}
+
+/* Task list styling */
+.markdown-preview .task-list-item {
+  list-style-type: none;
+  margin-left: -1.5rem;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.markdown-preview .task-list-item input[type="checkbox"] {
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  margin-right: 0.5rem;
+  accent-color: var(--color-neon, #31e0c2);
+}
+
+/* Strikethrough text */
+.markdown-preview del,
+.markdown-preview s {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Enhanced strikethrough styling */
+.markdown-preview .strikethrough {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Marked text (highlight) */
+.markdown-preview mark {
+  background-color: rgba(49, 224, 194, 0.2);
+  color: var(--color-neon, #31e0c2);
+  padding: 0.1em 0.2em;
+  border-radius: 0.2em;
+}
+
+/* Superscript and subscript */
+.markdown-preview sup {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+  top: -0.5em;
+}
+
+.markdown-preview sub {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+  bottom: -0.25em;
+}
+
+/* Styles for code highlighting */
+.markdown-preview .hljs {
+  background-color: #101925;
+  color: #e2e8f0;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Special styling for image galleries */
+.markdown-preview .image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.markdown-preview .image-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0;
+}
+
+/* Enhanced video embed styles */
+.markdown-preview .video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-navy-600, #2d3748);
+  background-color: #101925;
+}
+
+.markdown-preview .video-container iframe,
+.markdown-preview .video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.375rem;
+}
+
+/* Container styles for info, warning, success, and danger blocks */
+.markdown-preview .container {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left-width: 4px;
+  border-left-style: solid;
+}
+
+.markdown-preview .container.info {
+  background-color: rgba(66, 153, 225, 0.1);
+  border-left-color: #4299e1;
+}
+
+.markdown-preview .container.success {
+  background-color: rgba(72, 187, 120, 0.1);
+  border-left-color: #48bb78;
+}
+
+.markdown-preview .container.warning {
+  background-color: rgba(237, 137, 54, 0.1);
+  border-left-color: #ed8936;
+}
+
+.markdown-preview .container.danger {
+  background-color: rgba(245, 101, 101, 0.1);
+  border-left-color: #f56565;
+}
+
+/* YouTube card-like preview in markdown content */
+.markdown-preview .youtube-card {
+  display: flex;
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--color-navy-600, #2d3748);
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.markdown-preview .youtube-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.markdown-preview .youtube-card .thumbnail {
+  position: relative;
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.markdown-preview .youtube-card .thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}
+
+.markdown-preview .youtube-card .thumbnail .play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 0, 0, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.markdown-preview .youtube-card .content {
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.markdown-preview .youtube-card .content h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: white;
+}
+
+.markdown-preview .youtube-card .content p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -6,9 +7,194 @@ import { ProjectGallery } from "@/components/projects/ProjectGallery";
 import { TechStack } from "@/components/projects/TechStack";
 import { ProjectNavigation } from "@/components/projects/ProjectNavigation";
 import { Metadata } from "next";
-import { MDXRemote } from "next-mdx-remote/rsc";
 import { CategoryWithIcon } from "@/utils/ProjectCategories";
-import { Github, ExternalLink } from "lucide-react";
+import { ExternalLink, Check } from "lucide-react";
+import { SiGithub } from "react-icons/si";
+import React from "react";
+import YouTubeEmbed from "@/components/ui/YoutubeEmbed";
+import { configureMdx } from "@/lib/markdown/mdx-config";
+import getYouTubeVideoId from "@/utils/GetYoutubeVideoById";
+import PrismLoader from "@/utils/prism-loader";
+
+// Custom components for MDX
+const components = {
+  // Enhanced table styling
+  table: (props: any) => (
+    <div className="border-navy-600 my-6 overflow-x-auto rounded-lg border shadow-md">
+      <table className="w-full border-collapse" {...props} />
+    </div>
+  ),
+  thead: (props: any) => <thead className="bg-navy-700" {...props} />,
+  th: (props: any) => (
+    <th
+      className="border-navy-600 border-b p-3 text-left font-semibold text-gray-200"
+      {...props}
+    />
+  ),
+  td: (props: any) => (
+    <td className="border-navy-600 border-t p-3 text-gray-300" {...props} />
+  ),
+  tr: (props: any) => (
+    <tr className="hover:bg-navy-700/50 transition-colors" {...props} />
+  ),
+
+  // Enhanced code blocks with better styling
+  pre: (props: any) => {
+    const custom =
+      "border-navy-600 bg-navy-800/80 my-6 overflow-x-auto rounded-lg border p-4 text-sm shadow-lg";
+    const classes = [props.className, custom].filter(Boolean).join(" ");
+    return <pre className={classes} {...props} />;
+  },
+  code: (props: any) => {
+    // Check if it's an inline code block
+    const isInline = !props.className;
+    return isInline ? (
+      <code
+        className="bg-navy-700/70 text-neon rounded px-1.5 py-0.5 font-mono"
+        {...props}
+      />
+    ) : (
+      <code className={`${props.className || ""} font-mono`} {...props} />
+    );
+  },
+
+  // Enhanced checkbox lists
+  li: (props: any) => {
+    // Check if this is a task list item
+    if (props.className?.includes("task-list-item")) {
+      return (
+        <li className="my-1 flex items-start gap-2" {...props}>
+          {props.children}
+        </li>
+      );
+    }
+    return <li className="my-1" {...props} />;
+  },
+
+  input: (props: any) => {
+    // Style checkbox inputs for task lists
+    if (props.type === "checkbox") {
+      return (
+        <span
+          className={`inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border ${props.checked ? "border-neon bg-neon/20 text-neon" : "bg-navy-700 border-gray-600"} mt-0.5`}
+        >
+          {props.checked && <Check className="h-3.5 w-3.5" />}
+        </span>
+      );
+    }
+    return <input {...props} />;
+  },
+
+  // Enhanced blockquotes
+  blockquote: (props: any) => (
+    <blockquote
+      className="border-neon/30 bg-navy-800/50 my-6 border-l-4 py-2 pl-4 text-gray-300 italic"
+      {...props}
+    />
+  ),
+
+  // Horizontal rule
+  hr: (props: any) => (
+    <hr className="border-navy-600 my-8 border-t" {...props} />
+  ),
+
+  // Process paragraphs to detect YouTube links
+  p: (props: any) => {
+    // Check if paragraph contains only a YouTube link
+    const childrenArray = React.Children.toArray(props.children);
+
+    if (childrenArray.length === 1 && typeof childrenArray[0] === "string") {
+      const text = childrenArray[0] as string;
+      const youtubeRegex =
+        /^https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:\S*)?$/;
+
+      if (youtubeRegex.test(text)) {
+        const videoId = getYouTubeVideoId(text);
+        if (videoId) {
+          return <YouTubeEmbed videoId={videoId} />;
+        }
+      }
+    }
+
+    return <p className="my-4 text-gray-300" {...props} />;
+  },
+
+  // Enhance links
+  a: (props: any) => {
+    // Check if paragraph contains only a YouTube link
+    const childrenArray = React.Children.toArray(props.children);
+
+    if (childrenArray.length === 1 && typeof childrenArray[0] === "string") {
+      const text = childrenArray[0] as string;
+      const youtubeRegex =
+        /^https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:\S*)?$/;
+
+      if (youtubeRegex.test(text)) {
+        const videoId = getYouTubeVideoId(text);
+        if (videoId) {
+          return <YouTubeEmbed videoId={videoId} />;
+        }
+      }
+    }
+
+    return (
+      <a
+        className="text-neon hover:text-neon-4 transition-colors hover:underline"
+        target={props.href.startsWith("http") ? "_blank" : undefined}
+        rel={props.href.startsWith("http") ? "noopener noreferrer" : undefined}
+        {...props}
+      />
+    );
+  },
+
+  // Enhance headings
+  h1: (props: any) => (
+    <h1 className="mt-10 mb-4 text-3xl font-bold text-white" {...props} />
+  ),
+  h2: (props: any) => (
+    <h2 className="mt-8 mb-4 text-2xl font-bold text-white" {...props} />
+  ),
+  h3: (props: any) => (
+    <h3 className="mt-6 mb-3 text-xl font-bold text-white" {...props} />
+  ),
+  h4: (props: any) => (
+    <h4 className="mt-5 mb-2 text-lg font-bold text-white" {...props} />
+  ),
+  h5: (props: any) => (
+    <h5 className="mt-4 mb-2 text-base font-bold text-white" {...props} />
+  ),
+  h6: (props: any) => (
+    <h6 className="mt-4 mb-2 text-sm font-bold text-white" {...props} />
+  ),
+
+  // Enhance images
+  img: (props: any) => (
+    <div className="my-6">
+      <Image
+        width={500}
+        height={500}
+        className="h-auto max-w-full rounded-lg shadow-lg"
+        loading="lazy"
+        alt={"Image"}
+        {...props}
+      />
+    </div>
+  ),
+
+  // Enhance unordered lists
+  ul: (props: any) => {
+    // Check if this is a task list
+    if (props.className?.includes("contains-task-list")) {
+      return <ul className="my-4 space-y-2 pl-1" {...props} />;
+    }
+    return <ul className="my-4 list-disc space-y-2 pl-6" {...props} />;
+  },
+
+  // Enhance ordered lists
+  ol: (props: any) => (
+    <ol className="my-4 list-decimal space-y-2 pl-6" {...props} />
+  ),
+};
 
 // Generate metadata for SEO
 export async function generateMetadata({
@@ -16,11 +202,12 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
+  const slugParams = await params;
   const supabase = await createClient();
   const { data: project } = await supabase
     .from("projects")
     .select("*")
-    .eq("slug", params.slug)
+    .eq("slug", slugParams.slug)
     .single();
 
   if (!project) {
@@ -30,7 +217,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${project.title} | My Portfolio`,
+    title: `${project.title} | Projects`,
     description: project.short_description,
     openGraph: {
       images: [{ url: project.featured_image }],
@@ -57,6 +244,7 @@ export default async function ProjectPage({
   }
 
   // Fetch other projects for navigation
+  // Appear at the bottom of a project's detail page
   const { data: otherProjects } = await supabase
     .from("projects")
     .select("id, title, slug, featured_image")
@@ -64,30 +252,27 @@ export default async function ProjectPage({
     .limit(2);
 
   return (
-    <main className="relative min-h-screen">
-      {/* Background elements */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="from-neon/10 absolute inset-x-0 top-0 h-80 bg-gradient-to-b to-transparent opacity-70 blur-3xl"></div>
-      </div>
-      
+    <main className="topPageMargin relative container min-h-screen">
       {/* Hero Section */}
       <div className="relative h-[50vh] w-full md:h-[70vh]">
-        <Image
-          src={project.featured_image}
-          alt={project.title}
-          fill
-          className="object-cover"
-          priority
-        />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-navy-900/80 to-navy-900/20"></div>
-        
-        <div className="absolute inset-0 flex items-end">
+        <div className="relative h-full w-full">
+          <Image
+            src={project.featured_image}
+            alt={project.title}
+            fill
+            className="border-navy-400 overflow-clip rounded-xl border-2 object-cover"
+            priority
+          />
+          {/* Gradient overlay - darkens bottom more than top for better text contrast */}
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-black/30 via-black/50 to-black/80"></div>
+        </div>
+
+        <div className="text-shadow-xl absolute inset-0 flex items-end">
           <div className="container mx-auto px-4 pb-12">
-            <div className="mb-6 inline-flex items-center rounded-full border border-navy-600 bg-navy-800/70 px-4 py-2 backdrop-blur-sm">
+            <div className="border-navy-600 bg-navy-800/70 mb-6 inline-flex items-center rounded-full border px-4 py-2 backdrop-blur-sm">
               <CategoryWithIcon categoryId={project.category} />
             </div>
-            
+
             <h1 className="mb-4 text-4xl font-bold text-white md:text-6xl">
               {project.title}
             </h1>
@@ -95,14 +280,15 @@ export default async function ProjectPage({
               {project.short_description}
             </p>
             <div className="flex flex-wrap gap-4">
+              {/* Buttons for GitHub and Live Demo */}
               {project.github_url && (
                 <Link
                   href={project.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2 rounded-full border border-navy-600 bg-navy-800/70 px-6 py-3 font-medium text-white transition-all hover:border-neon/40 hover:bg-navy-800/90 hover:text-neon backdrop-blur-sm"
+                  className="group border-navy-600 bg-navy-800/70 hover:border-neon/40 hover:bg-navy-800/90 hover:text-neon border-navy-600 bg-navy-700/50 flex items-center gap-2 rounded-lg border px-6 py-3 font-medium backdrop-blur-sm transition-all"
                 >
-                  <Github className="h-5 w-5 transition-transform group-hover:scale-110" />
+                  <SiGithub className="h-5 w-5 transition-transform group-hover:scale-110" />
                   View Code
                 </Link>
               )}
@@ -111,7 +297,7 @@ export default async function ProjectPage({
                   href={project.live_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="from-neon to-neon-4 hover:from-neon-4 hover:to-neon group flex items-center gap-2 rounded-full bg-gradient-to-r px-6 py-3 font-medium text-navy-900 transition-all"
+                  className="from-neon to-neon-4 hover:from-neon-4 hover:to-neon group text-navy-900 flex items-center gap-2 rounded-full bg-gradient-to-r px-6 py-3 font-medium transition-all"
                 >
                   <ExternalLink className="h-5 w-5 transition-transform group-hover:scale-110" />
                   Live Demo
@@ -129,8 +315,8 @@ export default async function ProjectPage({
           <div className="lg:w-2/3">
             <section className="mb-16">
               <h2 className="mb-6 text-3xl font-bold">About this project</h2>
-              <div className="prose prose-lg prose-invert max-w-none prose-headings:text-white prose-p:text-gray-300 prose-a:text-neon prose-strong:text-white prose-code:text-neon prose-code:bg-navy-800 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-navy-800 prose-pre:border prose-pre:border-navy-600 prose-img:rounded-lg">
-                <MDXRemote source={project.long_description} />
+              <div className="mdx-content">
+                {configureMdx(project.long_description, components)}
               </div>
             </section>
 
@@ -148,11 +334,11 @@ export default async function ProjectPage({
 
           {/* Sidebar */}
           <div className="lg:w-1/3">
-            <div className="sticky top-8 rounded-xl border border-navy-600 bg-navy-800/50 p-6 shadow-lg backdrop-blur-sm">
+            <div className="border-navy-600 bg-navy-800/50 sticky top-8 rounded-xl border p-6 shadow-lg backdrop-blur-sm">
               <h3 className="mb-4 text-xl font-bold">Tech Stack</h3>
               <TechStack technologies={project.technologies} />
 
-              <div className="my-6 border-t border-navy-600"></div>
+              <div className="border-navy-600 my-6 border-t"></div>
 
               <h3 className="mb-4 text-xl font-bold">Project Details</h3>
               <dl className="space-y-4">
@@ -183,6 +369,8 @@ export default async function ProjectPage({
             <ProjectNavigation projects={otherProjects} />
           </section>
         )}
+
+        <PrismLoader />
       </div>
     </main>
   );

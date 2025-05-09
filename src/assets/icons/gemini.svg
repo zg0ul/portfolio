@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   fill="none"
+   viewBox="0 0 16 16"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="gemini.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="14.75"
+     inkscape:cx="7.9661017"
+     inkscape:cy="8"
+     inkscape:window-width="1328"
+     inkscape:window-height="431"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg3" />
+  <path
+     d="M 14.711864,8.0134237 A 7.1498136,7.1498136 0 0 0 8.0134237,14.711864 H 7.9865763 A 7.1489746,7.1489746 0 0 0 1.2881356,8.0134237 V 7.9865763 A 7.1489746,7.1489746 0 0 0 7.9865763,1.2881356 h 0.026847 a 7.1498136,7.1498136 0 0 0 6.6984407,6.6984407 z"
+     fill="url(#prefix__paint0_radial_980_20147)"
+     id="path1"
+     style="fill:url(#prefix__paint0_radial_980_20147);stroke-width:0.838983" />
+  <defs
+     id="defs3">
+    <radialGradient
+       id="prefix__paint0_radial_980_20147"
+       cx="0"
+       cy="0"
+       r="1"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(13.534978,4.5769042,-36.663937,108.42363,2.6204407,6.7440424)">
+      <stop
+         offset=".067"
+         stop-color="#9168C0"
+         id="stop1" />
+      <stop
+         offset=".343"
+         stop-color="#5684D1"
+         id="stop2" />
+      <stop
+         offset=".672"
+         stop-color="#1BA1E3"
+         id="stop3" />
+    </radialGradient>
+  </defs>
+</svg>

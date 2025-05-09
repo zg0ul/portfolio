@@ -13,7 +13,7 @@ function Header() {
             </Link>
 
             <nav className="hidden md:block">
-              <ul>
+              <ul className="flex items-center">
                 <li>
                   <Link href="/about" className="nav-item">
                     About

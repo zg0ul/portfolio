@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Loader2, Check, X, Plus } from "lucide-react";
-import MarkdownEditor from "./MarkdownEditor";
+import EnhancedMarkdownEditor from "@/components/admin/MarkdownEditor";
 import {
   PROJECT_CATEGORIES,
   CategoryWithIcon,
 } from "@/utils/ProjectCategories";
-import { TECHNOLOGIES, TechnologyWithIcon } from "@/utils/TechIcons";
+import { TECHNOLOGIES, TechnologyWithIcon } from "@/components/TechIcons";
 
 type Project = {
   id?: string;
@@ -632,7 +632,7 @@ export function ProjectForm({ project, isEditing = false }: ProjectFormProps) {
           )}
         </div>
 
-        {/* Long Description with Markdown Editor */}
+        {/* Long Description with Enhanced Markdown Editor */}
         <div className="space-y-2">
           <label
             htmlFor="long_description"
@@ -647,7 +647,7 @@ export function ProjectForm({ project, isEditing = false }: ProjectFormProps) {
                 : ""
             }
           >
-            <MarkdownEditor
+            <EnhancedMarkdownEditor
               value={formData.long_description}
               onChange={handleMarkdownChange}
               placeholder="Write your project description using Markdown..."
@@ -660,9 +660,11 @@ export function ProjectForm({ project, isEditing = false }: ProjectFormProps) {
             </p>
           ) : (
             <p className="mt-1 text-xs text-gray-400">
-              Detailed description supports Markdown formatting with inline
-              images. Include sections like Overview, Features, Technical
-              Details, Challenges & Solutions, etc.
+              Detailed description supports Markdown formatting.{" "}
+              <strong>Drag and drop images</strong> directly into the editor,
+              paste from clipboard, or click the image button to upload. Include
+              sections like Overview, Features, Technical Details, Challenges &
+              Solutions, etc.
             </p>
           )}
         </div>

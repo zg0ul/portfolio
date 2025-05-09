@@ -1,0 +1,184 @@
+/**
+ * Custom Prism.js theme that matches the portfolio's dark theme
+ */
+
+/* Code blocks */
+pre[class*="language-"],
+code[class*="language-"] {
+  color: #f8f8f2;
+  background: none;
+  font-family:
+    "JetBrains Mono", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  tab-size: 4;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: 1em;
+  margin: 0.5em 0;
+  overflow: auto;
+  border-radius: 0.5rem;
+  background: #1a202c !important; /* Dark navy background */
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: #1a202c !important; /* Dark navy background */
+  border: 1px solid #2d3748 !important; /* Border color */
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: 0.1em 0.3em;
+  border-radius: 0.3em;
+  color: #90cdf4; /* Light blue */
+  background: rgba(26, 32, 44, 0.6) !important;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6c7a94; /* Muted blue-gray for comments */
+}
+
+.token.punctuation {
+  color: #e2e8f0; /* Light gray for punctuation */
+}
+
+.namespace {
+  opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #ff79c6; /* Pink */
+}
+
+.token.boolean,
+.token.number {
+  color: #bd93f9; /* Purple */
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #50fa7b; /* Green */
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #f8f8f2; /* Light gray */
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #ff79c6; /* Pink */
+}
+
+.token.function,
+.token.class-name {
+  color: #8be9fd; /* Cyan */
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #f1fa8c; /* Yellow */
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+/* Python specific tokens */
+.language-python .token.comment {
+  color: #6c7a94; /* Muted blue-gray for comments */
+}
+
+.language-python .token.function {
+  color: #8be9fd; /* Cyan for functions */
+}
+
+.language-python .token.keyword {
+  color: #ff79c6; /* Pink for keywords */
+}
+
+.language-python .token.string {
+  color: #50fa7b; /* Green for strings */
+}
+
+.language-python .token.number {
+  color: #bd93f9; /* Purple for numbers */
+}
+
+.language-python .token.operator {
+  color: #ff79c6; /* Pink for operators */
+}
+
+.language-python .token.builtin {
+  color: #8be9fd; /* Cyan for built-in functions */
+}
+
+/* Line numbers */
+pre[class*="language-"].line-numbers {
+  position: relative;
+  padding-left: 3.8em;
+  counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+  position: relative;
+  white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  font-size: 100%;
+  left: -3.8em;
+  width: 3em;
+  letter-spacing: -1px;
+  border-right: 1px solid #4a5568; /* Border color */
+  user-select: none;
+}
+
+.line-numbers-rows > span {
+  display: block;
+  counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: #4a5568; /* Line number color */
+  display: block;
+  padding-right: 0.8em;
+  text-align: right;
+}

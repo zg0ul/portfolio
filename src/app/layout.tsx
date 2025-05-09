@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import "./animation.css";
+import "@/app/globals.css";
+
 import NextTopLoader from "nextjs-toploader";
 import Header from "@/sections/Navbar";
 import PortfolioFooter from "@/sections/footer";
@@ -9,7 +9,7 @@ import ClickSpark from "@/components/ui/click-spark";
 import { StarsBackground } from "@/components/ui/stars-background";
 
 export const metadata: Metadata = {
-  title: "zg0ul's portfolio",
+  title: "zg0ul.com",
   description: "A Portfolio website for Mohammad Zgoul (zg0ul)",
 };
 
@@ -41,7 +41,11 @@ export default function RootLayout({
           <Header />
           <StarsBackground />
 
-          {children}
+          <div className="glow-container z-1">
+            <div className="glow-primary" />
+            <div className="glow-secondary" />
+            {children}
+          </div>
           <PortfolioFooter />
           <Toaster position="top-right" richColors closeButton />
         </ClickSpark>

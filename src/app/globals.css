@@ -2,14 +2,17 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:is(.dark *));
+@import "./styles/animation.css";
+@import "./styles/mdx.css";
+@import "./styles/markdown-preview.css";
+@import "./styles/prism-theme.css";
 
 @theme {
   --radius: 0.625rem;
 
   /* Colors */
   --color-dark-400: #3d424d;
-  --background: #0d1321;
+  --color-background: #0d1321;
   --color-dark-600: #0c111e;
 
   --color-navy-300: #687282;
@@ -30,12 +33,14 @@
 
   --color-text-300: #f5f2e5;
   --color-text-400: #f3efe0;
-  --foreground: #f0ebd8;
+  --color-foreground: #f0ebd8;
   --color-text-600: #dad6c5;
 
   --color-neon: #86d562;
   --color-neon-4: #b3e59c;
   --color-neon-10: #3c602c;
+
+  --color-destructive: oklch(0.704 0.191 22.216);
 
   /* Fonts */
   --font-primary: Inter, sans-serif;
@@ -48,20 +53,14 @@
   --breakpoint-xs: 480px;
 
   --header-h: 60px;
-}
 
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-destructive: var(--destructive);
-}
-
-:root {
-  --destructive: oklch(0.704 0.191 22.216);
+  /* Glowing background */
+  --glow-size-large: 70vw;
+  --glow-size-small: 500px;
+  --glow-color: var(--color-neon);
+  --glow-opacity-primary: 0.15;
+  --glow-opacity-secondary: 0.2;
+  --glow-blur: 50px;
 }
 
 @layer base {
@@ -71,75 +70,32 @@
 
   body {
     @apply bg-background font-primary text-foreground selection:text-neon-10 selection:bg-neon-4 relative overflow-hidden leading-6;
-
-    &::before {
-      content: "";
-      position: absolute;
-      width: 70vw;
-      height: 70vh;
-      background: radial-gradient(
-        ellipse,
-        var(--color-neon) 0%,
-        transparent 80%
-      );
-      opacity: 0.15;
-      top: -40vh;
-      left: 0;
-      transform: translateX(-50%);
-      border-radius: 100%;
-      filter: blur(50px);
-      z-index: 51;
-      pointer-events: none;
-    }
-
-    &::after {
-      content: "";
-      position: absolute;
-      width: 500px;
-      height: 300px;
-      background: radial-gradient(
-        ellipse,
-        var(--color-neon) 0%,
-        transparent 80%
-      );
-      opacity: 0.2;
-      top: 400px;
-      right: 0;
-      transform: translateX(70%);
-      border-radius: 100%;
-      filter: blur(50px);
-      z-index: 51;
-      pointer-events: none;
-    }
   }
-
-  /* h1 {
-    @apply text-5xl font-bold leading-tight tracking-[-1%] sm:text-[64px] sm:leading-[76px];
-  }
-
-  h2 {
-    @apply text-3xl font-bold;
-  }
-
-  a {
-    @apply transition-colors duration-300;
-  } */
 }
 
 @layer components {
-  /* Header */
-
   .portfolio-header {
     @apply mx-auto flex gap-1 border-none bg-transparent backdrop-blur-md md:px-5;
-
-    & nav ul {
-      @apply flex;
-    }
   }
 
-  /* Navigation */
   .nav-item {
     @apply text-foreground hover:bg-navy-300/20 hover:text-neon rounded-full px-4 py-1.5 text-[1rem] font-medium transition duration-300;
+  }
+
+  .topPageMargin {
+    @apply mt-[calc(var(--header-h)+4rem)];
+  }
+
+  .container {
+    @apply mx-auto max-w-lg px-4 sm:max-w-2xl md:max-w-3xl lg:max-w-4xl;
+  }
+
+  .blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
+  }
+
+  .gradient-title {
+    @apply gradient bg-clip-text pr-2 pb-2 font-extrabold tracking-tighter text-transparent;
   }
 
   @font-face {
@@ -202,21 +158,46 @@
     font-family: "Body";
   }
 
-  .topPageMargin {
-    @apply mt-[calc(var(--header-h)+4rem)];
+  .glow-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glow-primary {
+    content: "";
+    position: absolute;
+    width: var(--glow-size-large);
+    height: var(--glow-size-large);
+    background: radial-gradient(ellipse, var(--glow-color) 0%, transparent 80%);
+    opacity: var(--glow-opacity-primary);
+    top: -80vh;
+    left: 0;
+    transform: translateX(-50%);
+    border-radius: 100%;
+    filter: blur(var(--glow-blur));
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .glow-secondary {
+    content: "";
+    position: absolute;
+    width: var(--glow-size-large);
+    height: calc(var(--glow-size-large) * 0.6);
+    background: radial-gradient(ellipse, var(--glow-color) 0%, transparent 80%);
+    opacity: var(--glow-opacity-primary);
+    top: 200px;
+    right: 0;
+    transform: translateX(70%);
+    border-radius: 100%;
+    filter: blur(var(--glow-blur));
+    z-index: 0;
+    pointer-events: none;
   }
 }
 
 @utility gradient {
   @apply from-text-300 via-foreground to-text-600 bg-gradient-to-b;
-}
-
-@utility gradient-title {
-  @apply gradient bg-clip-text pr-2 pb-2 font-extrabold tracking-tighter text-transparent;
-}
-
-@utility blockquote {
-  @apply mt-6 border-l-2 pl-6 italic;
 }
 
 /* width */
@@ -241,8 +222,4 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #2c41546d;
-}
-
-@utility container {
-  @apply mx-auto max-w-lg px-4 sm:max-w-2xl md:max-w-3xl lg:max-w-4xl;
 }

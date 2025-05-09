@@ -11,14 +11,35 @@ import {
   Clock,
   Tag,
   Info,
+  Youtube,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import MarkdownIt from "markdown-it";
 import markdownItAnchor from "markdown-it-anchor";
 import markdownItHighlightjs from "markdown-it-highlightjs";
+import markdownItTaskLists from "markdown-it-task-lists";
+import markdownItMark from "markdown-it-mark";
+import markdownItSup from "markdown-it-sup";
+import markdownItSub from "markdown-it-sub";
+import markdownItContainer from "markdown-it-container";
+import markdownItAttrs from "markdown-it-attrs";
 import "highlight.js/styles/atom-one-dark.css";
 import { format, parseISO } from "date-fns";
 import "@/styles/markdown-preview.css";
+import dynamic from "next/dynamic";
+
+// Dynamic import for YouTubeEmbed to avoid SSR issues
+const YouTubeEmbed = dynamic(() => import("../admin/YouTubeEmbed"), {
+  ssr: false,
+});
+
+// Helper function to extract YouTube video ID
+const getYouTubeVideoId = (url: string): string | null => {
+  const regex =
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+};
 
 // Initialize markdown-it with options and plugins
 const md = new MarkdownIt({
@@ -32,7 +53,77 @@ const md = new MarkdownIt({
     permalinkSymbol: "#",
     permalinkAttrs: () => ({ "aria-hidden": "true" }),
   })
-  .use(markdownItHighlightjs);
+  .use(markdownItHighlightjs, { inline: true })
+  .use(markdownItTaskLists, { enabled: true, label: true, labelAfter: true })
+  .use(markdownItMark)
+  .use(markdownItSub)
+  .use(markdownItSup)
+  .use(markdownItAttrs, {
+    leftDelimiter: "{",
+    rightDelimiter: "}",
+    allowedAttributes: ["id", "class"],
+  })
+  .use(markdownItContainer, "info")
+  .use(markdownItContainer, "success")
+  .use(markdownItContainer, "warning")
+  .use(markdownItContainer, "danger");
+
+// Add support for custom YouTube embed tag
+const defaultRender =
+  md.renderer.rules.html_block ||
+  function (tokens, idx, options, env, self) {
+    return self.renderToken(tokens, idx, options);
+  };
+
+// Custom table renderer for better styling
+md.renderer.rules.table_open = () => {
+  return '<div class="table-container"><table class="markdown-table">';
+};
+
+md.renderer.rules.table_close = () => {
+  return "</table></div>";
+};
+
+// Enhance code block styling
+const originalCodeBlockRule = md.renderer.rules.code_block;
+md.renderer.rules.code_block = function (tokens, idx, options, env, self) {
+  const originalCodeHtml = originalCodeBlockRule
+    ? originalCodeBlockRule(tokens, idx, options, env, self)
+    : self.renderToken(tokens, idx, options);
+
+  return `<div class="code-block-wrapper">${originalCodeHtml}</div>`;
+};
+
+// Enhance strikethrough rendering
+md.renderer.rules.s_open = () => '<span class="strikethrough">';
+md.renderer.rules.s_close = () => "</span>";
+
+md.renderer.rules.html_block = function (tokens, idx, options, env, self) {
+  const content = tokens[idx].content;
+
+  // Check if this is our custom YouTube embed
+  if (content.includes("<youtube-embed")) {
+    const idMatch = content.match(/id="([^"]+)"/);
+    if (idMatch && idMatch[1]) {
+      const videoId = idMatch[1];
+      return `
+        <div class="video-container">
+          <iframe
+            width="100%"
+            height="400"
+            src="https://www.youtube.com/embed/${videoId}"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+      `;
+    }
+  }
+
+  return defaultRender(tokens, idx, options, env, self);
+};
 
 // Custom renderer for links to open in new tab
 md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
@@ -55,21 +146,52 @@ const videoLinkRegex =
   /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
 
 const parseContent = (content: string) => {
-  // Replace YouTube links with embed frames
-  const processedContent = content.replace(videoLinkRegex, (match, videoId) => {
-    return `
-<div class="video-container">
-  <iframe
-    width="100%"
-    height="400"
-    src="https://www.youtube.com/embed/${videoId}"
-    title="YouTube video player"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen>
-  </iframe>
+  // Process YouTube links in the markdown content
+  let processedContent = content;
+
+  // Extract YouTube links and convert them to YouTube card format
+  processedContent = processedContent.replace(
+    videoLinkRegex,
+    (match, videoId) => {
+      return `
+<div class="youtube-card" onclick="this.innerHTML='<div class=\\"video-container\\"><iframe width=\\"100%\\" height=\\"400\\" src=\\"https://www.youtube.com/embed/${videoId}?autoplay=1\\" title=\\"YouTube video player\\" frameborder=\\"0\\" allow=\\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay\\" allowfullscreen></iframe></div>'">
+  <div class="thumbnail">
+    <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" alt="YouTube thumbnail">
+    <div class="play-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="none">
+        <path d="M8 5v14l11-7z" />
+      </svg>
+    </div>
+  </div>
+  <div class="content">
+    <h3>YouTube Video</h3>
+    <p>Click to play this video</p>
+  </div>
 </div>
-      `;
+    `;
+    },
+  );
+
+  // Also handle our custom tags for backward compatibility
+  const embedTagRegex =
+    /<youtube-embed\s+id="([a-zA-Z0-9_-]{11})"\s*><\/youtube-embed>/g;
+  processedContent = processedContent.replace(embedTagRegex, (_, videoId) => {
+    return `
+<div class="youtube-card" onclick="this.innerHTML='<div class=\\"video-container\\"><iframe width=\\"100%\\" height=\\"400\\" src=\\"https://www.youtube.com/embed/${videoId}?autoplay=1\\" title=\\"YouTube video player\\" frameborder=\\"0\\" allow=\\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay\\" allowfullscreen></iframe></div>'">
+  <div class="thumbnail">
+    <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" alt="YouTube thumbnail">
+    <div class="play-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="none">
+        <path d="M8 5v14l11-7z" />
+      </svg>
+    </div>
+  </div>
+  <div class="content">
+    <h3>YouTube Video</h3>
+    <p>Click to play this video</p>
+  </div>
+</div>
+    `;
   });
 
   return md.render(processedContent);
