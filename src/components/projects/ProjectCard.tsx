@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ExternalLink, ArrowRight } from "lucide-react";
-import { CategoryWithIcon } from "@/utils/ProjectCategories";
+import { CategoryWithIcon } from "@/components/ProjectCategories";
 import { TechnologyWithIcon } from "@/components/TechIcons";
 import { ProjectType } from "@/types/project";
 import { FiGithub } from "react-icons/fi";
@@ -33,12 +33,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           />
 
           {/* Dark overlay with See Details text */}
-          <div className="absolute inset-0 flex items-center justify-center bg-black/70 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <Link
+            href={`/projects/${project.slug}`}
+            className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/70 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          >
             <div className="flex flex-col items-center text-center">
               <span className="text-neon mb-2">See Details</span>
               <ArrowRight className="text-neon h-5 w-5" />
             </div>
-          </div>
+          </Link>
 
           {/* Category badge */}
           <div className="bg-navy-700/90 absolute bottom-3 left-3 rounded-full px-3 py-1.5 text-sm backdrop-blur-sm">

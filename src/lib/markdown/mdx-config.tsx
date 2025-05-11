@@ -17,7 +17,7 @@ const processChildren = (children: React.ReactNode): React.ReactNode => {
     }
 
     // Handle React elements that might have children with YouTube links
-    if (React.isValidElement(child) && child.props.children) {
+    if (React.isValidElement(child) && child.props && child.props.children) {
       // Clone the element with processed children
       return React.cloneElement(
         child,
@@ -129,6 +129,27 @@ const createEnhancedComponents = (baseComponents: any) => {
       </a>
     );
   };
+
+  // Enhance heading components to add IDs for table of contents
+  ["h1", "h2", "h3", "h4", "h5", "h6"].forEach((heading) => {
+    const OriginalHeading = baseComponents[heading];
+    enhancedComponents[heading] = (props: any) => {
+      // Generate ID from heading text for anchor linking
+      const id =
+        typeof props.children === "string"
+          ? props.children
+              .toLowerCase()
+              .replace(/[^\w\s-]/g, "")
+              .replace(/\s+/g, "-")
+          : "";
+
+      return OriginalHeading ? (
+        <OriginalHeading id={id} {...props} />
+      ) : (
+        React.createElement(heading, { id, ...props }, props.children)
+      );
+    };
+  });
 
   return enhancedComponents;
 };

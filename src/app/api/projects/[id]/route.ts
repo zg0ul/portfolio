@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAdminClient } from "@/lib/supabase/admin";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -38,7 +39,7 @@ export async function PUT(
 ) {
   try {
     // Get the project ID from the URL params - properly handled without destructuring
-    const id = params.id;
+    const { id } = await params;
 
     // Parse the request body
     const body = await request.json();
@@ -85,7 +86,7 @@ export async function DELETE(
   { params }: { params: { id: string } },
 ) {
   try {
-    const id = params.id;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json(

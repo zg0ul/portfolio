@@ -1,5 +1,5 @@
 "use client";
-import { useMouse } from "@/components/hooks/usemouse";
+import { useMouse } from "@/hooks/usemouse";
 import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon } from "lucide-react";
 import type { ReactNode } from "react";
@@ -19,7 +19,7 @@ export const BentoCard = ({
 
   return (
     <div
-      className="group bg-background border border-navy-600 relative h-full transform-gpu overflow-hidden rounded-[20px] p-4 transition-transform hover:scale-[1.01] active:scale-95"
+      className="group bg-background border-navy-600 relative h-full transform-gpu overflow-hidden rounded-[20px] border p-4 transition-transform hover:scale-[1.01] active:scale-95"
       ref={parentRef}
     >
       {withArrow && (

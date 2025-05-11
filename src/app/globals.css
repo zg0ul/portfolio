@@ -6,6 +6,7 @@
 @import "./styles/mdx.css";
 @import "./styles/markdown-preview.css";
 @import "./styles/prism-theme.css";
+@import "./styles/scrollbar.css";
 
 @theme {
   --radius: 0.625rem;

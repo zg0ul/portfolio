@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { useMouse } from "../hooks/usemouse";
+import { useMouse } from "../../hooks/usemouse";
 
 export const MainMenusGradientCard = ({
   title,

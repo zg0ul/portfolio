@@ -6,8 +6,9 @@ import Link from "next/link";
 import { ProjectGallery } from "@/components/projects/ProjectGallery";
 import { TechStack } from "@/components/projects/TechStack";
 import { ProjectNavigation } from "@/components/projects/ProjectNavigation";
+import { TableOfContents } from "@/components/projects/TableOfContents";
 import { Metadata } from "next";
-import { CategoryWithIcon } from "@/utils/ProjectCategories";
+import { CategoryWithIcon } from "@/components/ProjectCategories";
 import { ExternalLink, Check } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import React from "react";
@@ -231,12 +232,13 @@ export default async function ProjectPage({
   params: { slug: string };
 }) {
   const supabase = await createClient();
+  const { slug } = await params;
 
   // Fetch the current project
   const { data: project, error } = await supabase
     .from("projects")
     .select("*")
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .single();
 
   if (error || !project) {
@@ -311,8 +313,8 @@ export default async function ProjectPage({
       {/* Content Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col gap-12 lg:flex-row">
-          {/* Main content */}
-          <div className="lg:w-2/3">
+          {/* Main content - Scrollable */}
+          <div className="scrollbar-thin scrollbar-thumb-navy-600 scrollbar-track-navy-900 max-h-[calc(100vh-200px)] overflow-y-auto pr-4 lg:w-2/3">
             <section className="mb-16">
               <h2 className="mb-6 text-3xl font-bold">About this project</h2>
               <div className="mdx-content">
@@ -332,7 +334,7 @@ export default async function ProjectPage({
             )}
           </div>
 
-          {/* Sidebar */}
+          {/* Sidebar - Fixed */}
           <div className="lg:w-1/3">
             <div className="border-navy-600 bg-navy-800/50 sticky top-8 rounded-xl border p-6 shadow-lg backdrop-blur-sm">
               <h3 className="mb-4 text-xl font-bold">Tech Stack</h3>
@@ -349,20 +351,46 @@ export default async function ProjectPage({
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-gray-400">Date</dt>
+                  <dt className="text-sm text-gray-400">Timeline</dt>
                   <dd className="mt-1 font-medium">
-                    {new Date(project.created_at).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                    })}
+                    {project.start_date ? (
+                      <>
+                        {new Date(project.start_date).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                          },
+                        )}
+                        {" - "}
+                        {project.end_date
+                          ? new Date(project.end_date).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "long",
+                              },
+                            )
+                          : "Present"}
+                      </>
+                    ) : (
+                      new Date(project.created_at).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                      })
+                    )}
                   </dd>
                 </div>
               </dl>
+
+              {/* Table of Contents */}
+              <div className="border-navy-600 my-6 border-t"></div>
+              <TableOfContents content={project.long_description} />
             </div>
           </div>
         </div>
 
-        {/* Project Navigation */}
+        {/* Project Navigation - Outside the scrollable content */}
         {otherProjects && otherProjects.length > 0 && (
           <section className="mt-24">
             <h2 className="mb-8 text-3xl font-bold">Other Projects</h2>

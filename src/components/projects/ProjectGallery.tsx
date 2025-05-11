@@ -25,13 +25,13 @@ export function ProjectGallery({ images, alt }: ProjectGalleryProps) {
   const goToNext = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedImage === null) return;
-    setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setSelectedImage((prev) => (prev === null || prev === images.length - 1 ? 0 : prev + 1));
   };
 
   const goToPrev = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedImage === null) return;
-    setSelectedImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setSelectedImage((prev) => (prev === null || prev === 0 ? images.length - 1 : prev - 1));
   };
 
   return (

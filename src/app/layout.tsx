@@ -19,7 +19,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-background scroll-smooth" data-theme="dark">
+    <html
+      lang="en"
+      className="bg-background scroll-smooth"
+      data-theme="dark"
+      suppressHydrationWarning
+    >
       <body>
         <NextTopLoader
           color="#90a3bc"

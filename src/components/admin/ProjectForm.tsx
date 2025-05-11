@@ -10,27 +10,12 @@ import EnhancedMarkdownEditor from "@/components/admin/MarkdownEditor";
 import {
   PROJECT_CATEGORIES,
   CategoryWithIcon,
-} from "@/utils/ProjectCategories";
+} from "@/components/ProjectCategories";
 import { TECHNOLOGIES, TechnologyWithIcon } from "@/components/TechIcons";
-
-type Project = {
-  id?: string;
-  title: string;
-  slug: string;
-  short_description: string;
-  long_description: string;
-  featured_image: string;
-  github_url: string;
-  live_url: string;
-  category: string;
-  technologies: string[];
-  gallery_images: string[];
-  created_at?: string;
-  updated_at?: string;
-};
+import { ProjectType } from "@/types/project";
 
 interface ProjectFormProps {
-  project?: Project;
+  project?: ProjectType;
   isEditing?: boolean;
 }
 
@@ -38,7 +23,7 @@ export function ProjectForm({ project, isEditing = false }: ProjectFormProps) {
   const router = useRouter();
 
   // Form state
-  const [formData, setFormData] = useState<Project>({
+  const [formData, setFormData] = useState<ProjectType>({
     title: "",
     slug: "",
     short_description: "",
@@ -49,6 +34,8 @@ export function ProjectForm({ project, isEditing = false }: ProjectFormProps) {
     category: "",
     technologies: [],
     gallery_images: [],
+    start_date: "",
+    end_date: "",
     ...project,
   });
 
@@ -134,7 +121,9 @@ export function ProjectForm({ project, isEditing = false }: ProjectFormProps) {
       // Remove technology if already selected
       setFormData({
         ...formData,
-        technologies: formData.technologies.filter((id) => id !== techId),
+        technologies: formData.technologies.filter(
+          (id: string) => id !== techId,
+        ),
       });
     } else {
       // Add technology if not already selected
@@ -632,6 +621,71 @@ export function ProjectForm({ project, isEditing = false }: ProjectFormProps) {
           )}
         </div>
 
+        {/* Project Dates */}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          {/* Start Date */}
+          <div className="space-y-2">
+            <label
+              htmlFor="start_date"
+              className="text-foreground block text-sm font-medium"
+            >
+              Start Date
+            </label>
+            <input
+              type="date"
+              id="start_date"
+              name="start_date"
+              value={formData.start_date}
+              onChange={handleChange}
+              className="body border-navy-600 bg-navy-700/50 text-foreground focus:border-neon focus:ring-neon/20 focus:ring-opacity-50 w-full rounded-lg border p-3 placeholder-gray-400 shadow-sm focus:ring"
+            />
+            <p className="mt-1 text-xs text-gray-400">
+              When did you start working on this project?
+            </p>
+          </div>
+
+          {/* End Date */}
+          <div className="space-y-2">
+            <label
+              htmlFor="end_date"
+              className="text-foreground block text-sm font-medium"
+            >
+              End Date
+            </label>
+            <input
+              type="date"
+              id="end_date"
+              name="end_date"
+              value={formData.end_date}
+              onChange={handleChange}
+              className="body border-navy-600 bg-navy-700/50 text-foreground focus:border-neon focus:ring-neon/20 focus:ring-opacity-50 w-full rounded-lg border p-3 placeholder-gray-400 shadow-sm focus:ring"
+            />
+            <p className="mt-1 text-xs text-gray-400">
+              Leave blank if this is an ongoing project.
+            </p>
+          </div>
+        </div>
+
+        {/* Featured Project Toggle */}
+        <div className="flex items-center space-x-3">
+          <input
+            type="checkbox"
+            id="featured"
+            name="featured"
+            checked={!!formData.featured}
+            onChange={(e) =>
+              setFormData({ ...formData, featured: e.target.checked })
+            }
+            className="border-navy-600 bg-navy-700/50 text-neon focus:ring-neon/20 h-5 w-5 rounded border"
+          />
+          <label
+            htmlFor="featured"
+            className="text-foreground text-sm font-medium"
+          >
+            Feature this project on homepage
+          </label>
+        </div>
+
         {/* Long Description with Enhanced Markdown Editor */}
         <div className="space-y-2">
           <label
@@ -686,7 +740,7 @@ export function ProjectForm({ project, isEditing = false }: ProjectFormProps) {
               }`}
             >
               {formData.technologies.length > 0 ? (
-                formData.technologies.map((techId) => (
+                formData.technologies.map((techId: string) => (
                   <div
                     key={techId}
                     className="bg-navy-600/80 border-navy-500 inline-flex items-center rounded-full border px-3 py-1.5"
