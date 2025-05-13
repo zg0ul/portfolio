@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // lib/markdown/mdx-config.tsx
 import { MDXRemote } from "next-mdx-remote/rsc";

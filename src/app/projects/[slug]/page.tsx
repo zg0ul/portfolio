@@ -7,6 +7,7 @@ import { ProjectGallery } from "@/components/projects/ProjectGallery";
 import { TechStack } from "@/components/projects/TechStack";
 import { ProjectNavigation } from "@/components/projects/ProjectNavigation";
 import { TableOfContents } from "@/components/projects/TableOfContents";
+import ScrollToHashHandler from "@/components/ScrollToHashHandler";
 import { Metadata } from "next";
 import { CategoryWithIcon } from "@/components/ProjectCategories";
 import { ExternalLink, Check } from "lucide-react";
@@ -16,6 +17,7 @@ import YouTubeEmbed from "@/components/ui/YoutubeEmbed";
 import { configureMdx } from "@/lib/markdown/mdx-config";
 import getYouTubeVideoId from "@/utils/GetYoutubeVideoById";
 import PrismLoader from "@/utils/prism-loader";
+import { H1, H2, H3, H4, H5, H6 } from "@/components/projects/ClientHeadings";
 
 // Custom components for MDX
 const components = {
@@ -148,25 +150,13 @@ const components = {
     );
   },
 
-  // Enhance headings
-  h1: (props: any) => (
-    <h1 className="mt-10 mb-4 text-3xl font-bold text-white" {...props} />
-  ),
-  h2: (props: any) => (
-    <h2 className="mt-8 mb-4 text-2xl font-bold text-white" {...props} />
-  ),
-  h3: (props: any) => (
-    <h3 className="mt-6 mb-3 text-xl font-bold text-white" {...props} />
-  ),
-  h4: (props: any) => (
-    <h4 className="mt-5 mb-2 text-lg font-bold text-white" {...props} />
-  ),
-  h5: (props: any) => (
-    <h5 className="mt-4 mb-2 text-base font-bold text-white" {...props} />
-  ),
-  h6: (props: any) => (
-    <h6 className="mt-4 mb-2 text-sm font-bold text-white" {...props} />
-  ),
+  // Use client components for headings with click handling
+  h1: (props: any) => <H1 {...props} />,
+  h2: (props: any) => <H2 {...props} />,
+  h3: (props: any) => <H3 {...props} />,
+  h4: (props: any) => <H4 {...props} />,
+  h5: (props: any) => <H5 {...props} />,
+  h6: (props: any) => <H6 {...props} />,
 
   // Enhance images
   img: (props: any) => (
@@ -255,6 +245,9 @@ export default async function ProjectPage({
 
   return (
     <main className="topPageMargin relative container min-h-screen">
+      {/* Handle direct navigation to sections via URL hash */}
+      <ScrollToHashHandler />
+
       {/* Hero Section */}
       <div className="relative h-[50vh] w-full md:h-[70vh]">
         <div className="relative h-full w-full">
@@ -312,31 +305,34 @@ export default async function ProjectPage({
 
       {/* Content Section */}
       <div className="container mx-auto px-4 py-16">
-        <div className="flex flex-col gap-12 lg:flex-row">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
           {/* Main content - Scrollable */}
-          <div className="scrollbar-thin scrollbar-thumb-navy-600 scrollbar-track-navy-900 max-h-[calc(100vh-200px)] overflow-y-auto pr-4 lg:w-2/3">
-            <section className="mb-16">
-              <h2 className="mb-6 text-3xl font-bold">About this project</h2>
-              <div className="mdx-content">
-                {configureMdx(project.long_description, components)}
-              </div>
-            </section>
-
-            {/* Only show gallery if there are images */}
-            {project.gallery_images && project.gallery_images.length > 0 && (
+          <div className="lg:flex-grow">
+            <div className="mdx-container scrollbar-thin scrollbar-thumb-navy-600 scrollbar-track-navy-900 relative pr-4">
               <section className="mb-16">
-                <h2 className="mb-6 text-3xl font-bold">Project Gallery</h2>
-                <ProjectGallery
-                  images={project.gallery_images}
-                  alt={project.title}
-                />
+                <h2 className="mb-6 text-3xl font-bold">About this project</h2>
+                <div className="mdx-content">
+                  {configureMdx(project.long_description, components)}
+                </div>
               </section>
-            )}
+
+              {/* Only show gallery if there are images */}
+              {project.gallery_images && project.gallery_images.length > 0 && (
+                <section className="mb-16">
+                  <h2 className="mb-6 text-3xl font-bold">Project Gallery</h2>
+                  <ProjectGallery
+                    images={project.gallery_images}
+                    alt={project.title}
+                  />
+                </section>
+              )}
+            </div>
           </div>
 
           {/* Sidebar - Fixed */}
-          <div className="lg:w-1/3">
-            <div className="border-navy-600 bg-navy-800/50 sticky top-8 rounded-xl border p-6 shadow-lg backdrop-blur-sm">
+          <div className="lg:w-1/3 lg:max-w-xs">
+            {/* Project details card */}
+            <div className="border-navy-600 bg-navy-800/50 mb-6 rounded-xl border p-6 shadow-lg backdrop-blur-sm">
               <h3 className="mb-4 text-xl font-bold">Tech Stack</h3>
               <TechStack technologies={project.technologies} />
 
@@ -382,9 +378,15 @@ export default async function ProjectPage({
                   </dd>
                 </div>
               </dl>
+            </div>
 
-              {/* Table of Contents */}
-              <div className="border-navy-600 my-6 border-t"></div>
+            {/* Table of Contents - Fixed position */}
+            <div className="sticky top-8 hidden lg:block">
+              <TableOfContents content={project.long_description} />
+            </div>
+
+            {/* Mobile TOC - Only appears on smaller screens - floating */}
+            <div className="mobile-toc-container fixed right-6 bottom-6 z-50 lg:hidden">
               <TableOfContents content={project.long_description} />
             </div>
           </div>

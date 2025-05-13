@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { List, ChevronUp } from "lucide-react";
 
 interface TOCItem {
   id: string;
@@ -16,6 +17,10 @@ interface TableOfContentsProps {
 export function TableOfContents({ content }: TableOfContentsProps) {
   const [items, setItems] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  // For mobile view - collapse/expand the TOC
+  const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   // Extract headings from markdown content
   useEffect(() => {
@@ -37,6 +42,10 @@ export function TableOfContents({ content }: TableOfContentsProps) {
     });
 
     setItems(tocItems);
+
+    // Expand TOC on desktop automatically
+    const isDesktop = window.innerWidth >= 1024;
+    setIsCollapsed(!isDesktop);
   }, [content]);
 
   // Set up intersection observer to update active link on scroll
@@ -45,13 +54,25 @@ export function TableOfContents({ content }: TableOfContentsProps) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
+        // Filter for entries that are currently intersecting
+        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+
+        if (visibleEntries.length > 0) {
+          // Find the first visible heading (closest to the top)
+          const sortedVisible = [...visibleEntries].sort(
+            (a, b) =>
+              a.target.getBoundingClientRect().top -
+              b.target.getBoundingClientRect().top,
+          );
+
+          // Set the active ID to the first visible heading
+          setActiveId(sortedVisible[0].target.id);
+        }
       },
-      { rootMargin: "-100px 0px -80% 0px" },
+      {
+        rootMargin: "-100px 0px -70% 0px",
+        threshold: [0.1, 0.5, 0.9], // Multiple thresholds for better accuracy
+      },
     );
 
     // Observe all headings
@@ -72,9 +93,28 @@ export function TableOfContents({ content }: TableOfContentsProps) {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      // Scroll the element into view
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-      setActiveId(id);
+      // For mobile, collapse the TOC after clicking
+      if (window.innerWidth < 1024) {
+        setIsCollapsed(true);
+      }
+
+      // Add a slight delay to ensure any animations have finished
+      setTimeout(() => {
+        // Calculate offset to account for sticky headers or navigation
+        const headerOffset = 100;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
+
+        // Scroll the element into view
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+
+        // Set this as the active section
+        setActiveId(id);
+      }, 100);
     }
   };
 
@@ -82,28 +122,56 @@ export function TableOfContents({ content }: TableOfContentsProps) {
     return null;
   }
 
+  // On mobile we want a compact version that can be expanded
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="border-navy-600 bg-navy-800/50 rounded-lg border p-4 shadow-md backdrop-blur-sm"
+      className="border-navy-600 bg-navy-800/50 toc-container rounded-lg border p-4 shadow-md backdrop-blur-sm"
     >
-      <h3 className="text-neon mb-4 text-lg font-medium">On this page</h3>
-      <nav className="toc-nav">
-        <ul className="space-y-2">
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-neon text-lg font-medium">On this page</h3>
+
+        {/* Mobile toggle button */}
+        <button
+          onClick={toggleCollapse}
+          className="hover:text-neon text-gray-400 transition-colors focus:outline-none lg:hidden"
+          aria-label={
+            isCollapsed
+              ? "Expand table of contents"
+              : "Collapse table of contents"
+          }
+        >
+          {isCollapsed ? (
+            <List className="h-5 w-5" />
+          ) : (
+            <ChevronUp className="h-5 w-5" />
+          )}
+        </button>
+      </div>
+
+      <nav
+        className={`toc-nav ${isCollapsed && isMobile ? "hidden" : "block"}`}
+      >
+        <ul className="scrollbar-thin scrollbar-thumb-navy-600 scrollbar-track-navy-900 max-h-[calc(100vh-250px)] space-y-2 overflow-y-auto pr-2">
           {items.map((item) => (
             <li
               key={item.id}
               style={{ paddingLeft: `${(item.level - 1) * 0.75}rem` }}
+              className={item.level > 2 && isCollapsed ? "hidden" : ""}
             >
               <button
                 onClick={() => scrollToSection(item.id)}
                 className={`hover:text-neon-4 text-left text-sm transition-colors ${
                   activeId === item.id
-                    ? "text-neon font-medium"
+                    ? "text-neon active font-medium"
                     : "text-gray-400"
                 }`}
+                data-active={activeId === item.id ? "true" : "false"}
+                data-id={item.id}
               >
                 {item.text}
               </button>
