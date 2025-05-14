@@ -1,26 +1,28 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { FileDown, ChevronRight, ChevronLeft } from "lucide-react";
+import { FileDown } from "lucide-react";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { MdOutlineFileDownload } from "react-icons/md";
 
 const ResumePage = () => {
-  const [activeResume, setActiveResume] = useState<"flutter" | "fullstack">(
-    "flutter",
-  );
-
-  // PDF file paths
+  // PDF file path
   const flutterResumePath = "/assets/pdf/My_Resume_flutter.pdf";
-  const fullstackResumePath = "/assets/pdf/My_Resume_flutter.pdf"; // Using Flutter resume for both until you add a separate fullstack resume
+  // Commented out for future use
+  // const fullstackResumePath = "/assets/pdf/My_Resume_fullstack.pdf";
 
-  const handleDownload = (type: "flutter" | "fullstack") => {
-    const path = type === "flutter" ? flutterResumePath : fullstackResumePath;
-    const filename =
-      type === "flutter"
-        ? "zg0ul_Flutter_Resume.pdf"
-        : "zg0ul_Fullstack_Resume.pdf";
+  // Image version of your resume
+  const flutterResumeImage = "/assets/pdf/My_Resume_flutter.png";
+  // Commented out for future use
+  // const fullstackResumeImage = "/assets/pdf/My_Resume_fullstack.png";
+
+  const handleDownload = () => {
+    // Currently only handling Flutter resume download
+    const path = flutterResumePath;
+    const filename = "zg0ul_Flutter_Resume.pdf";
 
     // Create an anchor element and trigger download
     const link = document.createElement("a");
@@ -30,27 +32,89 @@ const ResumePage = () => {
     link.click();
     document.body.removeChild(link);
 
-    toast.success(
-      `Downloaded ${type === "flutter" ? "Flutter" : "Full Stack"} resume!`,
-    );
-  };
-
-  const toggleResume = () => {
-    setActiveResume(activeResume === "flutter" ? "fullstack" : "flutter");
+    toast.success("Downloaded Flutter resume!");
   };
 
   return (
-    <section className="container mt-(--header-h) flex h-screen flex-col py-8">
-      <div className="container mx-auto flex flex-1 flex-col px-4 sm:px-6 lg:px-8">
-        <div className="mb-4 text-center">
-          <h1 className="text-3xl font-bold md:text-4xl">My Resume</h1>
-          <p className="mt-2 text-lg text-gray-400">
+    <section className="topPageMargin min-h-screen">
+      <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 text-center">
+          <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+            My Resume
+          </h1>
+          <p className="mt-3 text-lg text-blue-400 sm:mt-4 sm:text-xl">
             View and download my professional resume
           </p>
         </div>
 
-        {/* Resume Type Toggle */}
-        <div className="mb-4 flex justify-center">
+        {/* Resume Controls */}
+        <div className="mb-6 flex justify-end">
+          <Button
+            onClick={handleDownload}
+            variant="default"
+            size="lg"
+            className="cursor-pointer gap-2 transition-all duration-200 hover:scale-105"
+          >
+            <MdOutlineFileDownload className="h-5 w-5" />
+            <span className="inline">Download</span>
+          </Button>
+        </div>
+
+        {/* Resume Image Display */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="w-full"
+        >
+          <div className="border-neon relative w-full overflow-hidden rounded-lg border bg-white shadow-xl transition-all duration-300 hover:shadow-2xl">
+            <Image
+              src={flutterResumeImage}
+              alt="Flutter Developer Resume for Mohammad zgoul (zg0ul)"
+              width={800}
+              height={1032}
+              className="h-auto w-full"
+              priority
+              loading="eager"
+            />
+          </div>
+        </motion.div>
+
+        {/* Add some space at the bottom */}
+        <div className="h-16"></div>
+
+        {/* COMMENTED OUT: FULL STACK RESUME TOGGLE FUNCTIONALITY FOR FUTURE USE
+        
+        import { useState } from "react";
+        import { AnimatePresence } from "framer-motion";
+        import { ChevronRight, ChevronLeft } from "lucide-react";
+        
+        // State for toggling between resumes
+        const [activeResume, setActiveResume] = useState<"flutter" | "fullstack">("flutter");
+        
+        // Toggle function
+        const toggleResume = () => {
+          setActiveResume(activeResume === "flutter" ? "fullstack" : "flutter");
+        };
+        
+        // Download function for both resume types
+        const handleDownload = (type: "flutter" | "fullstack") => {
+          const path = type === "flutter" ? flutterResumePath : fullstackResumePath;
+          const filename = type === "flutter" ? "zg0ul_Flutter_Resume.pdf" : "zg0ul_Fullstack_Resume.pdf";
+          
+          // Create an anchor element and trigger download
+          const link = document.createElement("a");
+          link.href = path;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          toast.success(`Downloaded ${type === "flutter" ? "Flutter" : "Full Stack"} resume!`);
+        };
+        
+        // Toggle UI
+        <div className="mb-6 flex justify-center">
           <div className="flex items-center rounded-full border border-gray-700/30 bg-gray-800/50 px-2 py-1 backdrop-blur-sm">
             <Button
               variant={activeResume === "flutter" ? "default" : "ghost"}
@@ -73,83 +137,47 @@ const ResumePage = () => {
             </Button>
           </div>
         </div>
-
-        {/* Resume Controls */}
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">
-            {activeResume === "flutter"
-              ? "Flutter Developer"
-              : "Full Stack Developer"}
-          </h2>
-
-          <div className="flex gap-2">
-            <Button
-              onClick={() => toggleResume()}
-              variant="outline"
-              size="sm"
-              className="gap-2"
-            >
-              {activeResume === "flutter" ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
-                <ChevronLeft className="h-4 w-4" />
-              )}
-              Switch to {activeResume === "flutter" ? "Full Stack" : "Flutter"}
-            </Button>
-            <Button
-              onClick={() => handleDownload(activeResume)}
-              variant="default"
-              size="sm"
-              className="gap-2"
-            >
-              <FileDown className="h-4 w-4" /> Download
-            </Button>
-          </div>
-        </div>
-
-        {/* Full Screen Resume Viewer */}
-        <div className="flex-1 overflow-hidden rounded-lg border border-gray-700 bg-gradient-to-br from-gray-900/40 to-gray-800/40 shadow-xl backdrop-blur-sm">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeResume}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="h-full w-full"
-            >
-              <iframe
-                src={`${
-                  activeResume === "flutter"
-                    ? flutterResumePath
-                    : fullstackResumePath
-                }#toolbar=0&navpanes=0&scrollbar=0`}
-                className="h-full w-full"
-                // frameBorder="0"
-              >
-                <div className="flex h-full w-full flex-col items-center justify-center bg-gray-800 p-4 text-center">
-                  <p className="mb-4 text-lg">
-                    Your browser does not support embedded PDFs.
-                  </p>
-                  <Button asChild variant="secondary">
-                    <a
-                      href={
-                        activeResume === "flutter"
-                          ? flutterResumePath
-                          : fullstackResumePath
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2"
-                    >
-                      <FileDown className="h-5 w-5" /> Open PDF in new tab
-                    </a>
-                  </Button>
-                </div>
-              </iframe>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        
+        // Toggle button in controls
+        <Button
+          onClick={toggleResume}
+          variant="outline"
+          size="sm"
+          className="gap-2"
+        >
+          {activeResume === "flutter" ? (
+            <ChevronRight className="h-4 w-4" />
+          ) : (
+            <ChevronLeft className="h-4 w-4" />
+          )}
+          <span className="hidden sm:inline">Switch to</span>{" "}
+          {activeResume === "flutter" ? "Full Stack" : "Flutter"}
+        </Button>
+        
+        // Animated display with both resume options
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeResume}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            <div className="relative w-full overflow-hidden rounded-lg border border-gray-700 bg-white shadow-xl">
+              <Image
+                src={activeResume === "flutter" ? flutterResumeImage : fullstackResumeImage}
+                alt={`${activeResume === "flutter" ? "Flutter" : "Full Stack"} Developer Resume`}
+                width={800}
+                height={1032}
+                className="h-auto w-full"
+                priority
+              />
+            </div>
+          </motion.div>
+        </AnimatePresence>
+        
+        END COMMENTED OUT SECTION */}
       </div>
     </section>
   );

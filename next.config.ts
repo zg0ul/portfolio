@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
   },
   webpack(config) {
     // Grab the existing rule that handles SVG imports
+    config.resolve.alias.canvas = false;
+    config.resolve.alias.encoding = false;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fileLoaderRule = config.module.rules.find((rule: any) =>
       rule.test?.test?.(".svg"),

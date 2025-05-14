@@ -12,8 +12,8 @@ export const MainMenusGradientCard = ({
   className,
   children,
 }: {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   withArrow?: boolean;
   circleSize?: number;
   children?: ReactNode;

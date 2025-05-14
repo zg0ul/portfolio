@@ -1,4 +1,4 @@
-import Socials from "@/components/Socials";
+import SocialLinks from "@/components/SocialLinks";
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import SplitText from "@/components/ui/split-text";
@@ -19,7 +19,7 @@ function Hero() {
             <Location />
             {isOpenToWork && <OpenToWork />}
           </div> */}
-          <h2 className="body-bold mb-8 gap-10 text-3xl leading-tight font-bold md:text-5xl lg:text-6xl xl:text-7xl">
+          <h2 className="body-bold mb-4 text-2xl leading-tight font-bold sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
             <SplitText
               text="Hey!"
               className="gradient-title text-neon"
@@ -28,18 +28,25 @@ function Hero() {
               animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
               easing={easeInOut}
               threshold={0.2}
-              //   rootMargin="-50px"
             />
-            <span className="gradient-title">I&apos;m Mohammad Zgoul</span>{" "}
+            <span className="gradient-title">I&apos;m</span>
+            <span className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl">
+              Mohammad Zgoul
+            </span>
             <br />
-            <ContainerTextFlip className="body-bold text-2xl leading-tight font-bold md:text-3xl lg:text-4xl xl:text-5xl" />
+            <ContainerTextFlip className="body-bold sm:2xl text-xl leading-tight font-bold md:text-3xl lg:text-4xl xl:text-5xl" />
           </h2>
 
-          <p className="text-md body-light mb-8 leading-tight font-light md:text-xl lg:text-2xl">
-            I love building all sorts of software, <br />
-            from web applications to mobile apps.
+          <p className="text-md body-light mb-8 font-light md:text-xl lg:text-2xl">
+            I enjoy bringing ideas to life <br /> whether it's a mobile app or a
+            full-stack web platform.
           </p>
-          <Socials />
+          <div className="hidden md:block">
+            <SocialLinks size="lg" />
+          </div>
+          <div className="block md:hidden">
+            <SocialLinks size="md" />
+          </div>
         </div>
       </div>
     </section>

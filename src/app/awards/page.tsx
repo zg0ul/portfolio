@@ -3,7 +3,7 @@ import { getAwardsData } from "@/lib/awards-data";
 import AwardsSection from "@/sections/awards/AwardsSection";
 
 export const metadata: Metadata = {
-  title: "Honors & Awards | Mohammad Zgoul",
+  title: "Honors & Awards",
   description: "My professional honors, awards, and recognitions",
 };
 

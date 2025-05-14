@@ -121,7 +121,7 @@ const SplitText: React.FC<SplitTextProps> = ({
               </animated.span>
             );
           })}
-          <span style={{ display: "inline-block", width: "0.3em" }}>
+          <span style={{ display: "inline-block", width: "0.1em" }}>
             &nbsp;
           </span>
         </span>

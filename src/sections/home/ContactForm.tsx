@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, CheckCircle, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import Socials from "@/components/Socials";
+import SocialLinks from "@/components/SocialLinks";
 
 interface FormData {
   name: string;
@@ -206,7 +206,7 @@ const ContactForm = () => {
                 more of my work.
               </p>
               <div className="flex justify-center">
-                <Socials />
+                <SocialLinks />
               </div>
             </div>
           </div>
