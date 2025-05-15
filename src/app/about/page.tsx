@@ -1,21 +1,27 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { BentoCard } from "@/components/ui/bento-card";
-import { MainMenusGradientCard } from "@/components/ui/animated_card";
 import AboutPageHero from "@/sections/about/Hero";
 import AboutPageExperience from "@/sections/about/Experience";
+import AboutPageEduction from "@/sections/about/Eduction";
+import AboutPageVolunteering from "@/sections/about/Volunteering";
 
 export default function AboutPage() {
   return (
     <main className="topPageMargin container mb-20 min-h-screen">
       {/* Hero Section with Background Beams */}
       <AboutPageHero />
+
+      {/* Experience Section */}
+      <AboutPageExperience />
+
+      {/* Volunteering Section */}
+      <AboutPageVolunteering />
 
       {/* Skills & Technologies Section with Bento Cards */}
       <section className="container mb-24">
@@ -124,62 +130,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Experience Section */}
-      <AboutPageExperience />
-
       {/* Education Section */}
-      <section className="container mb-24">
-        <div className="mx-auto max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <h2 className="mb-10 text-center text-4xl font-bold">Education</h2>
-
-            <MainMenusGradientCard
-              title="Bachelor of Science in Computer Science"
-              description="University of Petra"
-              className="w-full"
-            >
-              <div className="z-10 p-4">
-                <div className="mb-4 flex items-center justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold">
-                      Bachelor of Science in Computer Science
-                    </h3>
-                    <p className="text-blue-400">University of Petra</p>
-                  </div>
-                  <p className="text-text-400 text-sm">2019 - 2023</p>
-                </div>
-                <p className="text-text-400 mb-4">
-                  Graduated with honors, focusing on software development and
-                  advanced programming concepts. Participated in programming
-                  competitions and hackathons, showcasing problem-solving
-                  abilities and teamwork.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <span className="border-navy-600 bg-navy-700/50 rounded-full border px-3 py-1 text-xs">
-                    Data Structures
-                  </span>
-                  <span className="border-navy-600 bg-navy-700/50 rounded-full border px-3 py-1 text-xs">
-                    Algorithms
-                  </span>
-                  <span className="border-navy-600 bg-navy-700/50 rounded-full border px-3 py-1 text-xs">
-                    Software Engineering
-                  </span>
-                  <span className="border-navy-600 bg-navy-700/50 rounded-full border px-3 py-1 text-xs">
-                    Web Development
-                  </span>
-                  <span className="border-navy-600 bg-navy-700/50 rounded-full border px-3 py-1 text-xs">
-                    Mobile Development
-                  </span>
-                </div>
-              </div>
-            </MainMenusGradientCard>
-          </motion.div>
-        </div>
-      </section>
+      <AboutPageEduction />
 
       {/* My Approach Section */}
       <section className="container mb-24">

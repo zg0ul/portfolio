@@ -1,6 +1,9 @@
-import { motion } from "framer-motion";
+import * as motion from "motion/react-client";
 import React from "react";
-import { MainMenusGradientCard } from "@/components/ui/animated_card";
+import { AnimatedCard } from "@/components/ui/animated_card";
+import { TechnologyWithIcon } from "@/components/TechIcons";
+import { cn } from "@/lib/utils";
+import AnimatedUnderline from "@/components/ui/AnimatedUnderline";
 
 interface ExperienceItem {
   title: string;
@@ -14,31 +17,31 @@ interface ExperienceItem {
 const experiences: ExperienceItem[] = [
   {
     title: "AI Engineer Intern",
-    company: "SAGER", // Replace with actual company name
-    duration: "Jan 2025 - Present", // Replace with actual dates
+    company: "SAGER",
+    duration: "Feb 2025 - May 2025",
     location: "Amman, Jordan",
     description: [
-      "Developed computer vision and geospatial AI solutions for ultra-HD aerial mapping applications",
-      "Built custom motion detection system using YOLOv9 for polygon-based vehicle tracking with multi-class identification",
-      "Developed UAE license plate detection model with custom post-processing algorithms for multi-emirate plate recognition",
-      "Created CNN models from scratch and implemented custom image processing algorithms without external libraries",
-      'Built "Searchable Images" - NextJS/TypeScript application with Gemini AI integration for automatic image categorization',
-      'Developed "Searchable Maps" - Interactive geospatial query system using PostgreSQL/PostGIS with natural language processing',
-      "Processed geospatial data using Python (rasterio), QGIS, and x-anylabeling for map annotation",
-      "Transformed GeoJSON data to structured database formats for efficient spatial queries",
+      "Developed computer vision and geospatial AI solutions for ultra-HD aerial mapping applications.",
+      "Built custom motion detection system using YOLOv9 for polygon-based vehicle tracking with multi-class identification.",
+      "Developed UAE license plate detection model with custom post-processing algorithms for multi-emirate plate recognition.",
+      "Created CNN models from scratch and implemented custom image processing algorithms without external libraries.",
+      'Built "Searchable Images" - NextJS/TypeScript application with Gemini AI integration for automatic image categorization.',
+      'Developed "Searchable Maps" - Interactive geospatial query system using PostgreSQL/PostGIS with natural language processing.',
+      "Processed geospatial data using Python (rasterio), QGIS, and x-anylabeling for map annotation.",
+      "Transformed GeoJSON data to structured database formats for efficient spatial queries.",
     ],
     skills: [
       "Computer Vision",
       "YOLOv9",
       "CNN",
-      "Python",
-      "PostgreSQL",
+      "python",
+      "qgis",
+      "nextjs",
+      "typescript",
+      "gemini",
+      "leafletjs",
+      "postgresql",
       "PostGIS",
-      "Next.js",
-      "TypeScript",
-      "Gemini AI",
-      "QGIS",
-      "Leaflet.js",
     ],
   },
 
@@ -48,18 +51,12 @@ const experiences: ExperienceItem[] = [
     duration: "Jul 2022 - Nov 2022",
     location: "Amman, Jordan",
     description: [
-      "Divided into teams to build a project with the theme: Tech for Good",
-      "Built a pair of glasses that help blind people read by converting written content into audible content",
-      "Designed reading glasses using Fusion360 with features ensuring smooth reading experience",
-      "Led team design efforts, learning 3D modeling, 3D printing, and Laser Cutting techniques",
+      "Divided into teams to build a project with the theme: Tech for Good.",
+      "Built a pair of glasses that help blind people read by converting written content into audible content.",
+      "Designed reading glasses using Fusion360 with features ensuring smooth reading experience.",
+      "Led team design efforts, learning 3D modeling, 3D printing, and Laser Cutting techniques.",
     ],
-    skills: [
-      "3D Modeling",
-      "Computer-Aided Design (CAD)",
-      "Fusion360",
-      "3D Printing",
-      "Laser Cutting",
-    ],
+    skills: ["fusion360", "3dprinting", "lasercutting"],
   },
 ];
 
@@ -69,58 +66,76 @@ const ExperienceCard: React.FC<{
 }> = ({ experience, index }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative pb-8 pl-8 last:pb-0"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: index * 0.2 }}
+      viewport={{ once: true, amount: 0.2 }}
+      className="relative w-full pb-8 pl-8 last:pb-0"
     >
       {/* Timeline line */}
-      <div className="absolute top-0 left-0 h-full w-px bg-gray-700" />
+      <div
+        className={cn(
+          "bg-navy-700 absolute top-0 left-0 h-full w-px",
+          index === 0 ? "mask-t-from-80% mask-t-to-100%" : "",
+          index === experiences.length - 1
+            ? "mask-b-from-80% mask-b-to-100%"
+            : "",
+        )}
+      />
 
       {/* Timeline dot aligned with title */}
-      <div className="absolute top-[1.75rem] left-[-4px] h-2 w-2 rounded-full bg-blue-500" />
+      <div className="bg-neon absolute top-[3.2rem] left-[-4px] h-2 w-2 rounded-full" />
 
       {/* Bento Card */}
-      <MainMenusGradientCard
-        className="w-full"
-      >
-        <div className="z-10 p-6">
-          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-xl font-semibold text-white">
+      <AnimatedCard className="w-full">
+        <div className="z-10 p-4 sm:p-6">
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-start sm:justify-between">
+            <div className="text-left">
+              <h3 className="text-text-300 text-xl font-semibold">
                 {experience.title}
               </h3>
-              <p className="text-lg text-blue-400">{experience.company}</p>
+              <p className="text-navy-300 text-lg">{experience.company}</p>
               {experience.location && (
-                <p className="text-sm text-gray-400">{experience.location}</p>
+                <p className="text-navy-400 text-sm">{experience.location}</p>
               )}
             </div>
-            <p className="mt-2 text-sm text-gray-400 sm:mt-0">
+            <p className="pill-container mt-2 inline-block px-3 py-1 text-sm sm:mt-0">
               {experience.duration}
             </p>
           </div>
 
-          <ul className="mb-4 space-y-2">
+          <ul className="foreground mb-5 space-y-3 text-left text-sm font-medium tracking-wider lg:text-base">
             {experience.description.map((item, i) => (
-              <li key={i} className="flex text-gray-300">
-                <span className="mr-2 text-blue-400">•</span>
+              <motion.li
+                key={i}
+                className="group flex items-start gap-3"
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 + 0.2 }}
+                viewport={{ once: true }}
+              >
+                {/* animated bullet point */}
+                <motion.div
+                  className="from-neon-10 to-neon mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-gradient-to-r transition-all duration-300 group-hover:scale-150 group-hover:text-white"
+                  whileHover={{ scale: 1.5 }}
+                />
                 <span>{item}</span>
-              </li>
+              </motion.li>
             ))}
           </ul>
 
           <div className="flex flex-wrap gap-2">
             {experience.skills.map((skill, i) => (
-              <span
+              <div
                 key={i}
-                className="bg-navy-700/50 border-navy-600 rounded-full border px-3 py-1 text-xs text-gray-300"
+                className="pill-container hover:border-navy-500/70 flex items-center gap-1.5 px-3 py-1.5 text-sm transition-all duration-300 hover:scale-110"
               >
-                {skill}
-              </span>
+                <TechnologyWithIcon techId={skill} />
+              </div>
             ))}
           </div>
         </div>
-      </MainMenusGradientCard>
+      </AnimatedCard>
     </motion.div>
   );
 };
@@ -128,27 +143,23 @@ const ExperienceCard: React.FC<{
 const AboutPageExperience: React.FC = () => {
   return (
     <section className="container mb-24">
-      <div className="mx-auto max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <h2 className="mb-12 text-center text-4xl font-bold text-white">
-            Professional Experience
-          </h2>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="text-center"
+      >
+        <h2 className="section-title:small relative mb-12 inline-block text-center">
+          Professional Experience
+          <AnimatedUnderline />
+        </h2>
 
-          <div className="relative">
-            {experiences.map((experience, index) => (
-              <ExperienceCard
-                key={index}
-                experience={experience}
-                index={index}
-              />
-            ))}
-          </div>
-        </motion.div>
-      </div>
+        <div className="relative">
+          {experiences.map((experience, index) => (
+            <ExperienceCard key={index} experience={experience} index={index} />
+          ))}
+        </div>
+      </motion.div>
     </section>
   );
 };

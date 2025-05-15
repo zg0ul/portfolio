@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import ProjectCard from "@/components/projects/ProjectCard";
 import { ProjectType } from "@/types/project";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ export default function FeaturedProjects() {
   if (isLoading) {
     return (
       <div className="mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="mb-10 text-center text-3xl font-bold">
+        <h2 className="section-title:small mb-4 text-center">
           Featured Projects
         </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -58,8 +58,8 @@ export default function FeaturedProjects() {
 
   return (
     <div className="mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:px-8">
-      <h2 className="mb-4 text-center text-3xl font-bold">Featured Projects</h2>
-      <p className="mx-auto mb-10 max-w-2xl text-center text-gray-400">
+      <h2 className="section-title:small text-center">Featured Projects</h2>
+      <p className="section-description:small mb-6 text-center">
         Check out some of my best work
       </p>
 

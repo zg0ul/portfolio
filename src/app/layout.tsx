@@ -33,11 +33,11 @@ export default function RootLayout({
           speed={300}
           showSpinner={false}
           height={2}
-          shadow="0 0 20px #90a3bc, 0 0 10px #90a3bc"
+          shadow="0 0 20px #4a5769, 0 0 10px #687282"
           zIndex={100}
         />
         <ClickSpark
-          sparkColor="#90a3bc"
+          sparkColor="#b3e59c"
           sparkSize={10}
           sparkRadius={15}
           sparkCount={8}

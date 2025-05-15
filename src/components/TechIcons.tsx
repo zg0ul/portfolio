@@ -10,6 +10,13 @@ import TypescriptIcon from "@/assets/icons/typescript.svg";
 import OpenAiIcon from "@/assets/icons/openai.svg";
 import GeminiIcon from "@/assets/icons/gemini.svg";
 import FirebaseIcon from "@/assets/icons/firebase.svg";
+import PythonIcon from "@/assets/icons/python.svg";
+import PostgreSQLIcon from "@/assets/icons/postgresql.svg";
+import QGISIcon from "@/assets/icons/qgis.svg";
+import LeafletJSIcon from "@/assets/icons/leaflet.svg";
+import Fusion360Icon from "@/assets/icons/fusion360.svg";
+import threeDPrinterIcon from "@/assets/icons/3dprinter.svg";
+import LaserCuttingIcon from "@/assets/icons/lasercutting.svg";
 import { Technology } from "@/types/technology";
 
 const NextJSIcon = () => (
@@ -90,6 +97,19 @@ export const TECHNOLOGIES: Technology[] = [
   { id: "gemini", name: "Gemini", icon: GeminiIcon },
   { id: "supabase", name: "Supabase", icon: SupabaseIcon },
   { id: "firebase", name: "Firebase", icon: FirebaseIcon },
+  // Python and ML
+  { id: "python", name: "Python", icon: PythonIcon },
+  { id: "opencv", name: "OpenCV", icon: DefaultIcon },
+  { id: "pytorch", name: "PyTorch", icon: DefaultIcon },
+  { id: "tensorflow", name: "TensorFlow", icon: DefaultIcon },
+  // databases
+  { id: "postgresql", name: "PostgreSQL", icon: PostgreSQLIcon },
+  // others
+  { id: "qgis", name: "QGIS", icon: QGISIcon },
+  { id: "leafletjs", name: "Leaflet.js", icon: LeafletJSIcon },
+  { id: "fusion360", name: "Fusion 360", icon: Fusion360Icon },
+  { id: "3dprinting", name: "3D Printing", icon: threeDPrinterIcon },
+  { id: "lasercutting", name: "Laser Cutting", icon: LaserCuttingIcon },
 ];
 
 // Map technology IDs to icon components for backward compatibility
@@ -132,7 +152,14 @@ export function TechnologyWithIcon({ techId }: { techId: string }) {
   const tech = getTechById(techId);
 
   if (!tech) {
-    return <span className="text-sm text-gray-400">{techId}</span>;
+    return (
+      <div className="flex items-center gap-2">
+        <div className="h-5 w-5">
+          <DefaultIcon />
+        </div>
+        <span className="text-navy-300 text-sm">{techId}</span>
+      </div>
+    );
   }
 
   const Icon = tech.icon;
@@ -142,7 +169,7 @@ export function TechnologyWithIcon({ techId }: { techId: string }) {
       <div className="h-5 w-5">
         <Icon />
       </div>
-      <span className="text-sm">{tech.name}</span>
+      <span className="text-navy-300 text-sm">{tech.name}</span>
     </div>
   );
 }

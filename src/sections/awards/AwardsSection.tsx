@@ -108,10 +108,8 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
       <div className="container mx-auto max-w-5xl">
         {/* Page header */}
         <div className="mb-10 text-center sm:mb-12">
-          <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-            Honors & Awards
-          </h1>
-          <p className="mt-3 text-lg text-blue-400 sm:mt-4 sm:text-xl">
+          <h1 className="section-title">Honors & Awards</h1>
+          <p className="section-description">
             Recognition for excellence in technology and innovation
           </p>
         </div>

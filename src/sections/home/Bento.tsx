@@ -3,7 +3,7 @@ import { Atom, Languages, MapPin, Target, Timer } from "lucide-react";
 import Image from "next/image";
 import { FaRegKeyboard } from "react-icons/fa";
 import { BentoCard } from "@/components/ui/bento-card";
-import { MainMenusGradientCard } from "@/components/ui/animated_card";
+import { AnimatedCard } from "@/components/ui/animated_card";
 import GitHubContributionGraph from "@/components/GitHubContributionGraph";
 import BentoPill from "@/components/ui/bento-pill";
 import {
@@ -114,13 +114,13 @@ export default function Bento() {
 
   return (
     <div className="container">
-      <div className="text-foreground grid w-full grid-cols-1 gap-2">
+      <div className="text-foreground mb-40 grid w-full grid-cols-1 gap-2">
         <div className="grid w-full grid-cols-1 gap-2">
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-[2fr_1fr]">
             <div className="min-w-0">
               {" "}
               {/* Add min-w-0 to prevent overflow */}
-              <MainMenusGradientCard
+              <AnimatedCard
                 description="Design tools and code tools I mainly use. Focused on React or Javascript ecosystem, recently have been using Next.js"
                 title="Tech stack I mainly use"
               >
@@ -147,7 +147,7 @@ export default function Bento() {
                     </div>
                   </div>
                 </section>
-              </MainMenusGradientCard>
+              </AnimatedCard>
             </div>
             <div className="hidden lg:block">
               <TypingSpeedCard />

@@ -2,9 +2,8 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FileDown } from "lucide-react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Image from "next/image";
 import { MdOutlineFileDownload } from "react-icons/md";
 
@@ -39,10 +38,8 @@ const ResumePage = () => {
     <section className="topPageMargin min-h-screen">
       <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 text-center">
-          <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-            My Resume
-          </h1>
-          <p className="mt-3 text-lg text-blue-400 sm:mt-4 sm:text-xl">
+          <h1 className="section-title">My Resume</h1>
+          <p className="section-description">
             View and download my professional resume
           </p>
         </div>
@@ -86,7 +83,7 @@ const ResumePage = () => {
         {/* COMMENTED OUT: FULL STACK RESUME TOGGLE FUNCTIONALITY FOR FUTURE USE
         
         import { useState } from "react";
-        import { AnimatePresence } from "framer-motion";
+        import { AnimatePresence } from "motion/react";
         import { ChevronRight, ChevronLeft } from "lucide-react";
         
         // State for toggling between resumes

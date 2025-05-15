@@ -4,7 +4,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { useMouse } from "../../hooks/usemouse";
 
-export const MainMenusGradientCard = ({
+export const AnimatedCard = ({
   title,
   description,
   withArrow = false,
@@ -23,7 +23,7 @@ export const MainMenusGradientCard = ({
 
   return (
     <div
-      className="group border-navy-600 relative h-full transform-gpu overflow-hidden rounded-[20px] border p-4 transition-transform hover:scale-[1.01] active:scale-90"
+      className="group border-navy-500 bg-navy-800 relative h-full transform-gpu overflow-hidden rounded-3xl border p-4 transition-transform hover:scale-[1.01]"
       ref={parentRef}
     >
       {withArrow && (
@@ -31,7 +31,7 @@ export const MainMenusGradientCard = ({
       )}
       <div
         className={cn(
-          "absolute -translate-x-1/2 -translate-y-1/2 transform-gpu rounded-full transition-transform duration-500 group-hover:scale-[3]",
+          "absolute -translate-x-1/2 -translate-y-1/2 transform-gpu rounded-full blur-xl transition-transform duration-500 group-hover:scale-[3]",
           mouse.elementX === null || mouse.elementY === null
             ? "opacity-0"
             : "opacity-100",
@@ -48,21 +48,23 @@ export const MainMenusGradientCard = ({
             "linear-gradient(135deg, #86D562, #9cdd7e, #b3e59c, #cbedbb)",
         }}
       />
-      <div className="bg-navy-800/80 absolute inset-px rounded-[19px]" />
+      <div className="bg-navy-800/85 absolute inset-px rounded-3xl" />
       {children && (
         <div
           className={cn(
-            "border-navy-500 relative grid overflow-hidden rounded-[15px]",
+            "border-navy-500 relative grid overflow-hidden rounded-3xl",
             className,
           )}
         >
           {children}
         </div>
       )}
-      <div className="relative pt-4 pb-2">
-        <h3 className="body text-foreground text-lg">{title}</h3>
-        <p className="body-light text-foreground/50 mt-2">{description}</p>
-      </div>
+      {title && (
+        <div className="relative pt-4 pb-2">
+          <h3 className="body text-foreground text-xl">{title}</h3>
+          <p className="body-light text-foreground/50 mt-2">{description}</p>
+        </div>
+      )}
     </div>
   );
 };

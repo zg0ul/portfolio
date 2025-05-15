@@ -17,6 +17,7 @@
   --color-background: #0d1321;
   --color-dark-600: #0c111e;
 
+  --color-navy-200: #979ea9;
   --color-navy-300: #687282;
   --color-navy-400: #4a5769;
   --color-navy-500: #1d2d44;
@@ -37,6 +38,7 @@
   --color-text-400: #f3efe0;
   --color-foreground: #f0ebd8;
   --color-text-600: #dad6c5;
+  --color-text-700: #aaa799;
 
   --color-neon: #86d562;
   --color-neon-4: #b3e59c;
@@ -196,6 +198,26 @@
     z-index: 0;
     pointer-events: none;
   }
+
+  .section-title {
+    @apply text-foreground text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl;
+  }
+
+  .section-title\:small {
+    @apply text-foreground text-2xl font-bold tracking-tight sm:text-4xl;
+  }
+
+  .section-description {
+    @apply text-navy-200 mt-3 text-lg sm:mt-4 sm:text-xl;
+  }
+
+  .section-description\:small {
+    @apply text-navy-200 mt-3 text-[1rem] sm:mt-4 sm:text-lg;
+  }
+
+  .pill-container {
+    @apply text-navy-300 border-navy-500 bg-navy-700 rounded-full border;
+  }
 }
 
 @utility gradient {
@@ -204,18 +226,18 @@
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 7px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #0d13211d;
+  background: #0d13212a;
 }
 
 /* Scrollbar thumb */
 ::-webkit-scrollbar-thumb {
-  background: #dad6c55c;
-  border-radius: 5px;
+  background: #aaa799;
+  border-radius: 2.5px;
   transition:
     background-color 0.3s ease,
     opacity 0.3s ease;
@@ -223,5 +245,5 @@
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #2c41546d;
+  background: #86d562;
 }
