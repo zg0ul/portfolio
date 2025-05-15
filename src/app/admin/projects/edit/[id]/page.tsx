@@ -4,20 +4,14 @@ import Link from "next/link";
 import { ProjectForm } from "@/components/admin/ProjectForm";
 import { LucideArrowLeft } from "lucide-react";
 
-export default async function EditProjectPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  // Await the params object before using its properties
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
-  // Use admin client to bypass RLS
+type Params = Promise<{ id: string[] }>;
+
+export default async function Page({ params }: { params: Params }) {
+  const { id } = await params;
+
+  // Rest of your code remains the same
   const supabase = createAdminClient();
 
-  // Authentication check removed for testing purposes
-
-  // Fetch the project
   const { data: project, error } = await supabase
     .from("projects")
     .select("*")

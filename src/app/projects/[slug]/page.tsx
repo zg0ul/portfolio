@@ -19,6 +19,8 @@ import getYouTubeVideoId from "@/utils/GetYoutubeVideoById";
 import PrismLoader from "@/utils/prism-loader";
 import { H1, H2, H3, H4, H5, H6 } from "@/components/projects/ClientHeadings";
 
+type Params = Promise<{ slug: string[] }>;
+
 // Custom components for MDX
 const components = {
   // Enhanced table styling
@@ -191,14 +193,14 @@ const components = {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Params;
 }): Promise<Metadata> {
-  const slugParams = await params;
+  const { slug } = await params;
   const supabase = await createClient();
   const { data: project } = await supabase
     .from("projects")
     .select("*")
-    .eq("slug", slugParams.slug)
+    .eq("slug", slug)
     .single();
 
   if (!project) {
@@ -216,11 +218,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProjectPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export default async function ProjectPage({ params }: { params: Params }) {
   const supabase = await createClient();
   const { slug } = await params;
 
@@ -281,7 +279,7 @@ export default async function ProjectPage({
                   href={project.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group border-navy-600 bg-navy-800/70 hover:border-neon/40 hover:bg-navy-800/90 hover:text-neon border-navy-600 bg-navy-700/50 flex items-center gap-2 rounded-lg border px-6 py-3 font-medium backdrop-blur-sm transition-all"
+                  className="group border-navy-600 bg-navy-800/70 hover:border-neon/40 hover:bg-navy-800/90 hover:text-neon flex items-center gap-2 rounded-lg border px-6 py-3 font-medium backdrop-blur-sm transition-all"
                 >
                   <SiGithub className="h-5 w-5 transition-transform group-hover:scale-110" />
                   View Code

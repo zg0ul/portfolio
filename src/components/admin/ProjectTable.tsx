@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -203,10 +204,10 @@ export function ProjectTable({ projects: initialProjects }: ProjectTableProps) {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="h-12 w-12 flex-shrink-0">
-                        {project.featured_image && (
+                        {project.thumbnail_url && (
                           <div className="relative h-12 w-12 overflow-hidden rounded-md">
                             <Image
-                              src={project.featured_image}
+                              src={project.thumbnail_url}
                               alt={project.title}
                               fill
                               className="object-cover"

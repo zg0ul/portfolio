@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import * as motion from "motion/react-client";
 
 function AnimatedUnderline() {
   return (
@@ -12,4 +12,4 @@ function AnimatedUnderline() {
   );
 }
 
-export default AnimatedUnderline
+export default AnimatedUnderline;

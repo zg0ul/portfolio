@@ -2,13 +2,15 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { NextRequest, NextResponse } from "next/server";
 
+type Params = Promise<{ id: string[] }>;
+
 // GET handler to fetch a specific project
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Params },
 ) {
   try {
-    const id = params.id;
+    const { id } = await params;
     const supabase = createAdminClient();
 
     const { data, error } = await supabase
@@ -35,7 +37,7 @@ export async function GET(
 // PUT handler to update a specific project
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Params },
 ) {
   try {
     // Get the project ID from the URL params - properly handled without destructuring
@@ -83,7 +85,7 @@ export async function PUT(
 // DELETE handler to remove a specific project
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Params },
 ) {
   try {
     const { id } = await params;

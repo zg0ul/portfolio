@@ -19,7 +19,7 @@ function Hero() {
             <Location />
             {isOpenToWork && <OpenToWork />}
           </div> */}
-          <h2 className="body-bold mb-4 text-2xl leading-tight font-bold sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+          <h2 className="body-bold mb-8 text-2xl leading-tight font-bold sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
             <SplitText
               text="Hey!"
               className="gradient-title text-neon"

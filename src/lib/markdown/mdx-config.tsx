@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // lib/markdown/mdx-config.tsx
 import { MDXRemote } from "next-mdx-remote/rsc";
@@ -18,13 +17,16 @@ const processChildren = (children: React.ReactNode): React.ReactNode => {
     }
 
     // Handle React elements that might have children with YouTube links
-    if (React.isValidElement(child) && child.props && child.props.children) {
-      // Clone the element with processed children
-      return React.cloneElement(
-        child,
-        { ...child.props },
-        processChildren(child.props.children),
-      );
+    if (React.isValidElement(child) && child.props) {
+      const childProps = child.props as Record<string, unknown>;
+      if ("children" in childProps) {
+        // Clone the element with processed children
+        return React.cloneElement(
+          child,
+          { ...child.props },
+          processChildren(childProps.children as React.ReactNode),
+        );
+      }
     }
 
     // Return other children unmodified

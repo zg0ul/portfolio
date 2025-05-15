@@ -13,7 +13,9 @@ import {
   Quote,
   CheckSquare,
   Youtube,
+  Strikethrough,
 } from "lucide-react";
+import { LucideProps } from "lucide-react";
 import MediaUploadButton from "./MediaUploadButton";
 
 interface ToolbarProps {
@@ -64,7 +66,9 @@ export default function EditorToolbar({
     isActive = false,
   }: {
     onClick: () => void;
-    icon: React.ElementType;
+    icon: React.ForwardRefExoticComponent<
+      Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+    >;
     title: string;
     isActive?: boolean;
   }) => (
@@ -76,7 +80,7 @@ export default function EditorToolbar({
         isActive ? "text-neon bg-navy-600" : "text-gray-300"
       }`}
     >
-      <Icon size={16} />
+      <Icon size="16px" />
     </button>
   );
 
@@ -89,7 +93,7 @@ export default function EditorToolbar({
       <ToolbarButton onClick={onItalic} icon={Italic} title="Italic (Ctrl+I)" />
       <ToolbarButton
         onClick={onStrikethrough}
-        icon={() => <span className="text-sm font-medium">S̶</span>}
+        icon={Strikethrough}
         title="Strikethrough"
       />
 

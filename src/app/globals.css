@@ -83,7 +83,11 @@
   }
 
   .nav-item {
-    @apply text-foreground hover:bg-navy-300/20 hover:text-neon rounded-full px-4 py-1.5 text-[1rem] font-medium transition duration-300;
+    @apply text-foreground hover:bg-navy-300/20 hover:text-neon rounded-full px-3 py-2 text-[1rem] font-bold transition duration-300 text-shadow-lg/30;
+  }
+
+  .nav-item-active {
+    @apply bg-navy-300/20 text-neon rounded-full px-3 py-2 text-[1rem] font-bold transition duration-300 text-shadow-lg/30;
   }
 
   .topPageMargin {

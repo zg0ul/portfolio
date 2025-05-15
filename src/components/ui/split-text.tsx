@@ -2,6 +2,15 @@
 
 import { useSprings, animated, SpringConfig } from "@react-spring/web";
 import { useEffect, useRef, useState } from "react";
+import type { SpringValue } from "@react-spring/web";
+
+// Create a custom animated component that explicitly accepts children
+const AnimatedSpan = animated("span") as unknown as React.FC<{
+  style: { opacity: SpringValue<number>; transform: SpringValue<string> };
+  className?: string;
+  key?: React.Key;
+  children: React.ReactNode;
+}>;
 
 interface SplitTextProps {
   text?: string;
@@ -112,13 +121,18 @@ const SplitText: React.FC<SplitTextProps> = ({
               letterIndex;
 
             return (
-              <animated.span
+              <AnimatedSpan
                 key={index}
-                style={springs[index]}
+                style={
+                  springs[index] as unknown as {
+                    opacity: SpringValue<number>;
+                    transform: SpringValue<string>;
+                  }
+                }
                 className="inline-block transform transition-opacity will-change-transform"
               >
                 {letter}
-              </animated.span>
+              </AnimatedSpan>
             );
           })}
           <span style={{ display: "inline-block", width: "0.1em" }}>
