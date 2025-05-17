@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import * as motion from "motion/react-client";
 import { volunteeringData } from "./data";
 
 const Timeline: React.FC = () => {

@@ -1,23 +1,8 @@
-// This file maps technology names to their corresponding icon components
-
-import React from "react";
-import FlutterIcon from "@/assets/icons/flutter.svg";
-import RiverpodIcon from "@/assets/icons/riverpod.svg";
-import DartIcon from "@/assets/icons/dart.svg";
-import TailwindIcon from "@/assets/icons/tailwind-css.svg";
-import ReactIcon from "@/assets/icons/react.svg";
-import TypescriptIcon from "@/assets/icons/typescript.svg";
-import OpenAiIcon from "@/assets/icons/openai.svg";
-import GeminiIcon from "@/assets/icons/gemini.svg";
-import FirebaseIcon from "@/assets/icons/firebase.svg";
-import PythonIcon from "@/assets/icons/python.svg";
-import PostgreSQLIcon from "@/assets/icons/postgresql.svg";
-import QGISIcon from "@/assets/icons/qgis.svg";
-import LeafletJSIcon from "@/assets/icons/leaflet.svg";
-import Fusion360Icon from "@/assets/icons/fusion360.svg";
-import threeDPrinterIcon from "@/assets/icons/3dprinter.svg";
-import LaserCuttingIcon from "@/assets/icons/lasercutting.svg";
+import Image from "next/image";
 import { Technology } from "@/types/technology";
+
+// Using SVG components in public folder instead of importing them as React components
+// This reduces the bundle size significantly as seen in the Lighthouse Treemap
 
 const NextJSIcon = () => (
   <svg
@@ -79,37 +64,146 @@ const DefaultIcon = () => (
   </svg>
 );
 
+// Create components that use Next/Image for SVG icons from public folder
+const PublicSVGIcon = ({
+  iconName,
+  className = "h-5 w-5",
+}: {
+  iconName: string;
+  className?: string;
+}) => (
+  <Image
+    src={`/assets/icons/${iconName}.svg`}
+    alt={`${iconName} icon`}
+    className={className}
+    width={24}
+    height={24}
+  />
+);
+
 // Export the list of technologies as a structured array
 export const TECHNOLOGIES: Technology[] = [
   // Web specific
-  { id: "react", name: "React", icon: ReactIcon },
-  { id: "nextjs", name: "Next.js", icon: NextJSIcon },
-  { id: "tailwind", name: "Tailwind CSS", icon: TailwindIcon },
-  { id: "typescript", name: "TypeScript", icon: TypescriptIcon },
-  { id: "javascript", name: "JavaScript", icon: JavaScriptIcon },
+  {
+    id: "react",
+    name: "React",
+    icon: () => <PublicSVGIcon iconName="react" />,
+  },
+  {
+    id: "nextjs",
+    name: "Next.js",
+    icon: NextJSIcon,
+  },
+  {
+    id: "tailwind",
+    name: "Tailwind CSS",
+    icon: () => <PublicSVGIcon iconName="tailwind-css" />,
+  },
+  {
+    id: "typescript",
+    name: "TypeScript",
+    icon: () => <PublicSVGIcon iconName="typescript" />,
+  },
+  {
+    id: "javascript",
+    name: "JavaScript",
+    icon: JavaScriptIcon,
+  },
   // Flutter specific
-  { id: "flutter", name: "Flutter", icon: FlutterIcon },
-  { id: "gorouter", name: "Go Router", icon: GoRouterIcon },
-  { id: "riverpod", name: "Riverpod", icon: RiverpodIcon },
-  { id: "dart", name: "Dart", icon: DartIcon },
+  {
+    id: "flutter",
+    name: "Flutter",
+    icon: () => <PublicSVGIcon iconName="flutter" />,
+  },
+  {
+    id: "gorouter",
+    name: "Go Router",
+    icon: GoRouterIcon,
+  },
+  {
+    id: "riverpod",
+    name: "Riverpod",
+    icon: () => <PublicSVGIcon iconName="riverpod" />,
+  },
+  {
+    id: "dart",
+    name: "Dart",
+    icon: () => <PublicSVGIcon iconName="dart" />,
+  },
   // AI and cloud
-  { id: "openai", name: "OpenAI", icon: OpenAiIcon },
-  { id: "gemini", name: "Gemini", icon: GeminiIcon },
-  { id: "supabase", name: "Supabase", icon: SupabaseIcon },
-  { id: "firebase", name: "Firebase", icon: FirebaseIcon },
+  {
+    id: "openai",
+    name: "OpenAI",
+    icon: () => <PublicSVGIcon iconName="openai" />,
+  },
+  {
+    id: "gemini",
+    name: "Gemini",
+    icon: () => <PublicSVGIcon iconName="gemini" />,
+  },
+  {
+    id: "supabase",
+    name: "Supabase",
+    icon: SupabaseIcon,
+  },
+  {
+    id: "firebase",
+    name: "Firebase",
+    icon: () => <PublicSVGIcon iconName="firebase" />,
+  },
   // Python and ML
-  { id: "python", name: "Python", icon: PythonIcon },
-  { id: "opencv", name: "OpenCV", icon: DefaultIcon },
-  { id: "pytorch", name: "PyTorch", icon: DefaultIcon },
-  { id: "tensorflow", name: "TensorFlow", icon: DefaultIcon },
+  {
+    id: "python",
+    name: "Python",
+    icon: () => <PublicSVGIcon iconName="python" />,
+  },
+  {
+    id: "opencv",
+    name: "OpenCV",
+    icon: DefaultIcon,
+  },
+  {
+    id: "pytorch",
+    name: "PyTorch",
+    icon: DefaultIcon,
+  },
+  {
+    id: "tensorflow",
+    name: "TensorFlow",
+    icon: DefaultIcon,
+  },
   // databases
-  { id: "postgresql", name: "PostgreSQL", icon: PostgreSQLIcon },
+  {
+    id: "postgresql",
+    name: "PostgreSQL",
+    icon: () => <PublicSVGIcon iconName="postgresql" />,
+  },
   // others
-  { id: "qgis", name: "QGIS", icon: QGISIcon },
-  { id: "leafletjs", name: "Leaflet.js", icon: LeafletJSIcon },
-  { id: "fusion360", name: "Fusion 360", icon: Fusion360Icon },
-  { id: "3dprinting", name: "3D Printing", icon: threeDPrinterIcon },
-  { id: "lasercutting", name: "Laser Cutting", icon: LaserCuttingIcon },
+  {
+    id: "qgis",
+    name: "QGIS",
+    icon: () => <PublicSVGIcon iconName="qgis" />,
+  },
+  {
+    id: "leafletjs",
+    name: "Leaflet.js",
+    icon: () => <PublicSVGIcon iconName="leaflet" />,
+  },
+  {
+    id: "fusion360",
+    name: "Fusion 360",
+    icon: () => <PublicSVGIcon iconName="fusion360" />,
+  },
+  {
+    id: "3dprinting",
+    name: "3D Printing",
+    icon: () => <PublicSVGIcon iconName="3dprinter" />,
+  },
+  {
+    id: "lasercutting",
+    name: "Laser Cutting",
+    icon: () => <PublicSVGIcon iconName="lasercutting" />,
+  },
 ];
 
 // Map technology IDs to icon components for backward compatibility

@@ -7,6 +7,7 @@ import PortfolioFooter from "@/sections/footer";
 import { Toaster } from "sonner";
 import ClickSpark from "@/components/ui/click-spark";
 import { StarsBackground } from "@/components/ui/stars-background";
+import MobileDock from "@/components/MobileDock";
 
 export const metadata: Metadata = {
   title: "zg0ul.com",
@@ -45,7 +46,8 @@ export default function RootLayout({
         >
           <Header />
           <StarsBackground />
-
+          {/* Mobile Navigation Dock */}
+          <MobileDock />
           <div className="glow-container z-1">
             <div className="glow-primary" />
             <div className="glow-secondary" />

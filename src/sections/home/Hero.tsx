@@ -1,8 +1,7 @@
 import SocialLinks from "@/components/SocialLinks";
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 import { ShootingStars } from "@/components/ui/shooting-stars";
-import SplitText from "@/components/ui/split-text";
-import { easeInOut } from "motion/react";
+import SplitText from "@/components/ui/split-text-motion";
 import React from "react";
 
 function Hero() {
@@ -26,7 +25,7 @@ function Hero() {
               delay={150}
               animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
               animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
-              easing={easeInOut}
+              easing="easeInOut"
               threshold={0.2}
             />
             <span className="gradient-title">I&apos;m</span>

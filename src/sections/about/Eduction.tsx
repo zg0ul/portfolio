@@ -1,21 +1,31 @@
-import { motion } from "motion/react";
-import React from "react";
+"use client";
+
+import AnimatedUnderline from "@/components/ui/AnimatedUnderline";
+import React, { useState } from "react";
 import { FaGraduationCap } from "react-icons/fa";
+import * as motion from "motion/react-client";
+import { FaRobot, FaCode, FaCogs } from "react-icons/fa";
 
 function AboutPageEducation() {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <section className="container mb-24">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
+        className="text-center will-change-transform"
       >
-        <h2 className="section-title:small">Education</h2>
+        <h2 className="relative mb-8 inline-block text-center text-3xl font-bold">
+          Education
+          <AnimatedUnderline />
+        </h2>
 
         {/* Education Timeline */}
         <div className="relative">
-          {/* Vertical line */}
-          <div className="from-neon-10/30 via-neon-10/20 absolute top-0 left-8 h-full w-0.5 bg-gradient-to-b to-transparent md:left-12"></div>
+          {/* Vertical line with glow effect */}
+          <div className="from-neon-10/50 via-neon-10/30 absolute top-0 left-8 h-full w-0.5 bg-gradient-to-b to-transparent md:left-12"></div>
 
           {/* Education Entry */}
           <motion.div
@@ -23,65 +33,98 @@ function AboutPageEducation() {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
+            style={{ willChange: "transform, opacity" }}
           >
-            {/* Timeline Dot */}
+            {/* Timeline Dot with enhanced glow */}
             <div className="relative z-10 flex h-16 w-16 items-center justify-center md:h-24 md:w-24">
-              <div className="border-neon-4/50 bg-navy-800 shadow-glow-sm relative flex h-8 w-8 items-center justify-center rounded-full border-2 transition-transform duration-300 hover:scale-110 md:h-12 md:w-12">
-                <FaGraduationCap className="text-neon-4 h-4 w-4 md:h-5 md:w-5" />
-              </div>
-              {/* Year Badge */}
-              <span className="text-neon-10/80 absolute -bottom-6 text-xs font-medium md:text-sm">
+              <motion.div
+                className="border-neon-4/70 bg-navy-800 relative flex h-10 w-10 items-center justify-center rounded-full border-2 shadow-lg transition-all duration-300 md:h-14 md:w-14"
+                whileHover={{
+                  scale: 1.15,
+                  boxShadow: "0 0 15px rgba(80, 250, 123, 0.5)",
+                }}
+                animate={
+                  isHovered
+                    ? { boxShadow: "0 0 15px rgba(80, 250, 123, 0.5)" }
+                    : {}
+                }
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <FaGraduationCap className="text-neon-4 h-5 w-5 md:h-6 md:w-6" />
+              </motion.div>
+              {/* Year Badge with enhanced styling */}
+              <span className="bg-navy-700/50 text-neon-10/90 absolute -bottom-6 rounded-full px-3 py-1 text-xs font-medium backdrop-blur-sm md:text-sm">
                 2020 - 2025
               </span>
             </div>
 
-            {/* Content */}
-            <div className="flex-1 pb-16">
+            {/* Content with improved card styling */}
+            <div className="flex-1 pb-16 text-left">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
+                className="border-navy-600/50 bg-navy-800/30 will-change-opacity hover:border-neon-10/20 hover:shadow-glow-sm rounded-xl border p-6 shadow-lg backdrop-blur-sm"
               >
-                {/* Degree Header */}
+                {/* Degree Header with improved typography */}
                 <div className="mb-6">
-                  <h3 className="text-text-300 mb-2 text-xl font-bold md:text-2xl">
+                  <h3 className="text-text-200 mb-2 text-2xl font-bold md:text-2xl">
                     Mechatronics Engineering
                   </h3>
-                  <p className="text-navy-300 mt-1 text-lg">
-                    The Hashemite University
-                  </p>
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                    <p className="text-navy-200 flex items-center text-lg">
+                      The Hashemite University
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <span className="bg-neon/15 text-neon shadow-glow-xs rounded-md px-3 py-1 text-sm font-medium">
+                        GPA: 3.56/4.0
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Description */}
-                <p className="text-text-400 mb-6 text-lg leading-relaxed">
-                  Graduated with honors, focusing on software development and
-                  advanced programming concepts. Participated in programming
-                  competitions and hackathons, showcasing problem-solving
-                  abilities and teamwork.
-                </p>
+                {/* Description with icons to visualize mechatronics */}
+                <div className="mb-6">
+                  <p className="text-text-300 mb-4 text-lg leading-relaxed">
+                    Mechatronics engineering is an interdisciplinary field that
+                    combines mechanical, electrical, and software engineering to
+                    create innovative robotic and automated systems.
+                  </p>
 
-                {/* Skills Grid */}
-                <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-                  {[
-                    "Data Structures",
-                    "Algorithms",
-                    "Software Engineering",
-                    "Web Development",
-                    "Mobile Development",
-                  ].map((skill, index) => (
-                    <motion.div
-                      key={skill}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
-                      className="group relative"
-                    >
-                      <div className="bg-neon-10/5 group-hover:bg-neon-10/10 absolute inset-0 rounded-lg blur-xl transition-all"></div>
-                      <div className="border-navy-600 bg-navy-700/50 hover:border-neon/30 hover:bg-navy-600/60 text-text-400 relative rounded-lg border px-4 py-2 text-center text-sm font-medium transition-all duration-200">
-                        {skill}
+                  {/* Icons representing mechatronics disciplines */}
+                  <div className="mt-6 flex justify-center gap-8">
+                    <div className="flex flex-col items-center">
+                      <div className="bg-navy-700 shadow-glow-xs mb-2 flex h-12 w-12 items-center justify-center rounded-full">
+                        <FaCogs className="text-neon-4 h-6 w-6" />
                       </div>
-                    </motion.div>
-                  ))}
+                      <span className="text-navy-200 text-sm">Mechanical</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <div className="bg-navy-700 shadow-glow-xs mb-2 flex h-12 w-12 items-center justify-center rounded-full">
+                        <FaCode className="text-neon-4 h-6 w-6" />
+                      </div>
+                      <span className="text-navy-200 text-sm">Software</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <div className="bg-navy-700 shadow-glow-xs mb-2 flex h-12 w-12 items-center justify-center rounded-full">
+                        <FaRobot className="text-neon-4 h-6 w-6" />
+                      </div>
+                      <span className="text-navy-200 text-sm">Robotics</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Specialization */}
+                <div className="bg-navy-700/50 rounded-lg p-4">
+                  <h4 className="text-neon-10/90 mb-2 font-semibold">
+                    Specialization
+                  </h4>
+                  <p className="text-text-400">
+                    Focused on autonomous systems and robotics, combining
+                    mechanical engineering principles with programming
+                    expertise. Completed capstone project on Crack detection wall climbing robot.
+                  </p>
                 </div>
               </motion.div>
             </div>

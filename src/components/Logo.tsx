@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "motion/react";
+import * as motion from "motion/react-client";
 
 const Zg0ulLogo = () => {
   const [isHovered, setIsHovered] = useState(false);

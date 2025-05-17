@@ -25,13 +25,17 @@ export function ProjectGallery({ images, alt }: ProjectGalleryProps) {
   const goToNext = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedImage === null) return;
-    setSelectedImage((prev) => (prev === null || prev === images.length - 1 ? 0 : prev + 1));
+    setSelectedImage((prev) =>
+      prev === null || prev === images.length - 1 ? 0 : prev + 1,
+    );
   };
 
   const goToPrev = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (selectedImage === null) return;
-    setSelectedImage((prev) => (prev === null || prev === 0 ? images.length - 1 : prev - 1));
+    setSelectedImage((prev) =>
+      prev === null || prev === 0 ? images.length - 1 : prev - 1,
+    );
   };
 
   return (
@@ -62,7 +66,7 @@ export function ProjectGallery({ images, alt }: ProjectGalleryProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+            className="will-change-opacity fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
             onClick={closeLightbox}
           >
             <button

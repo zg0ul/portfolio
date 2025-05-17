@@ -1,7 +1,7 @@
 "use client";
 
 import { clsx } from "clsx";
-import { motion } from "motion/react";
+import * as motion from "motion/react-client";
 
 export function BentoCard({
   dark = false,
@@ -25,6 +25,7 @@ export function BentoCard({
         "group relative flex flex-col overflow-hidden rounded-lg",
         "ring-navy-600 bg-transparent shadow-sm ring-1",
         "data:bg-transparent data-:ring-white/5",
+        "will-change-transform",
       )}
     >
       <div className="relative h-80 shrink-0">

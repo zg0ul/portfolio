@@ -1,8 +1,7 @@
 import { CanvasRevealEffect } from "@/components/ui/canvas-reveal-effect";
 import Image from "next/image";
-import portrait from "@/assets/images/portrait.jpeg";
 import { CardBody, CardContainer, CardItem } from "../ui/3d-card";
-import { motion } from "motion/react";
+import * as motion from "motion/react-client";
 
 export default function Portrait() {
   return (
@@ -10,7 +9,7 @@ export default function Portrait() {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.3 }}
-      className="w-full max-w-[300px] sm:max-w-[350px] md:max-w-[400px] lg:max-w-[450px]"
+      className="w-full sm:max-w-[350px] md:max-w-[400px] lg:max-w-[450px]"
     >
       <CardContainer className="aspect-square w-full p-2 sm:p-4">
         <CardBody className="relative h-full w-full">
@@ -30,11 +29,12 @@ export default function Portrait() {
             </div>
             {/* Border and content container */}
             <CardItem
-              className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg p-2 sm:p-4"
-              translateZ={50}
+              className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg p-6 sm:p-7"
+              translateZ={100}
+              rotateY={-10}
             >
               <Image
-                src={portrait}
+                src={"/assets/images/portrait.jpeg"}
                 alt="Portrait"
                 width={450}
                 height={450}

@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import * as motion from "motion/react-client";
 import AnimatedUnderline from "@/components/ui/AnimatedUnderline";
 
 const VolunteeringHeader: React.FC = () => {
@@ -8,7 +8,7 @@ const VolunteeringHeader: React.FC = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6 }}
-      className="mb-8 lg:mb-16 text-center"
+      className="mb-8 text-center lg:mb-16"
     >
       <motion.div
         initial={{ y: -20, opacity: 0 }}

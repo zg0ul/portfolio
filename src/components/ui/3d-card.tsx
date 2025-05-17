@@ -107,47 +107,62 @@ interface CardItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
 // Simplify the generic approach and use a more direct component
 export const CardItem = forwardRef<HTMLDivElement, CardItemProps>(
-  function CardItem({
-    children,
-    className,
-    translateX = 0,
-    translateY = 0,
-    translateZ = 0,
-    rotateX = 0,
-    rotateY = 0,
-    rotateZ = 0,
-    ...rest
-  }, forwardedRef) {
-  
-  const localRef = useRef<HTMLDivElement>(null);
-  const [isMouseEntered] = useMouseEnter();
-  
-  // Use the forwarded ref if provided, otherwise use the local ref
-  const ref = (forwardedRef || localRef) as React.RefObject<HTMLDivElement>;
+  function CardItem(
+    {
+      children,
+      className,
+      translateX = 0,
+      translateY = 0,
+      translateZ = 0,
+      rotateX = 0,
+      rotateY = 0,
+      rotateZ = 0,
+      ...rest
+    },
+    forwardedRef,
+  ) {
+    const localRef = useRef<HTMLDivElement>(null);
+    const [isMouseEntered] = useMouseEnter();
 
-  const handleAnimations = useCallback(() => {
-    if (!ref.current) return;
-    if (isMouseEntered) {
-      ref.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
-    } else {
-      ref.current.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)`;
-    }
-  }, [isMouseEntered, translateX, translateY, translateZ, rotateX, rotateY, rotateZ, ref]);
+    // Use the forwarded ref if provided, otherwise use the local ref
+    const ref = (forwardedRef || localRef) as React.RefObject<HTMLDivElement>;
 
-  useEffect(() => {
-    handleAnimations();
-  }, [handleAnimations]);
+    const handleAnimations = useCallback(() => {
+      if (!ref.current) return;
+      if (isMouseEntered) {
+        ref.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
+      } else {
+        ref.current.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)`;
+      }
+    }, [
+      isMouseEntered,
+      translateX,
+      translateY,
+      translateZ,
+      rotateX,
+      rotateY,
+      rotateZ,
+      ref,
+    ]);
 
-  return (
-    <div
-      ref={ref}
-      className={cn("w-full transition duration-200 ease-linear", className || "")}
-      {...rest}
-    >
-      {children}
-    </div>
-  );
-});
+    useEffect(() => {
+      handleAnimations();
+    }, [handleAnimations]);
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "w-full transition duration-200 ease-linear",
+          className || "",
+        )}
+        {...rest}
+      >
+        {children}
+      </div>
+    );
+  },
+);
 
 // Create a hook to use the context
 export const useMouseEnter = () => {

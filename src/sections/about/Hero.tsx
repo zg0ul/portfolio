@@ -5,14 +5,14 @@ import React from "react";
 function AboutPageHero() {
   return (
     <section className="relative mb-24">
-      <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
         {/* Text Content */}
-        <div className="w-full px-4 text-center lg:w-1/2 lg:px-0 lg:text-left">
-          <h1 className="gradient-title mb-6 text-2xl font-bold md:text-3xl lg:text-4xl">
-            I'm Mohammad — Tech-Savvy Engineer
+        <div className="w-full px-4 lg:w-1/2 lg:px-0 lg:text-left">
+          <h1 className="gradient-title mb-6 text-xl font-extrabold md:text-3xl lg:text-4xl">
+            I'm Mohammad - Tech-Savvy Engineer
           </h1>
 
-          <p className="text-text-400 mb-8 text-base leading-relaxed md:text-lg lg:text-xl">
+          <p className="text-text-400 mb-8 text-base leading-normal tracking-wide md:text-lg lg:text-xl">
             I'm Mohammad Zgoul, I go by zg0ul online, an engineer passionate
             about bridging AI, hardware, and software to build meaningful
             technology. My journey has taken me through developing computer
@@ -36,7 +36,7 @@ function AboutPageHero() {
         </div>
 
         {/* Portrait - Below text on mobile, side-by-side on desktop */}
-        <div className="flex w-full justify-center lg:w-1/2 lg:justify-end">
+        <div className="flex w-full justify-center p-2 lg:w-1/2 lg:justify-end">
           <Portrait />
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "motion/react";
+import * as motion from "motion/react-client";
 import { ExternalLink, ArrowRight } from "lucide-react";
 import { CategoryWithIcon } from "@/components/ProjectCategories";
 import { TechnologyWithIcon } from "@/components/TechIcons";

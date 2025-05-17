@@ -1,4 +1,6 @@
-import { motion } from "motion/react";
+"use client";
+
+import * as motion from "motion/react-client";
 import { BsStars } from "react-icons/bs";
 import CountUp from "react-countup";
 import { useEffect, useRef, useState } from "react";

@@ -130,7 +130,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="border-navy-600 bg-navy-800/50 toc-container rounded-lg border p-4 shadow-md backdrop-blur-sm"
+      className="border-navy-600 bg-navy-800/50 toc-container rounded-lg border p-4 shadow-md backdrop-blur-sm will-change-transform"
     >
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-neon text-lg font-medium">On this page</h3>

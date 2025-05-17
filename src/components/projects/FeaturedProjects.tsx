@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion } from "motion/react";
+import * as motion from "motion/react-client";
 import ProjectCard from "@/components/projects/ProjectCard";
 import { ProjectType } from "@/types/project";
 import { Button } from "@/components/ui/button";

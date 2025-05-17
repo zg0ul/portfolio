@@ -70,7 +70,7 @@ const ExperienceCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: index * 0.2 }}
       viewport={{ once: true, amount: 0.2 }}
-      className="relative w-full pb-8 pl-8 last:pb-0"
+      className="relative w-full pb-8 pl-8 will-change-transform last:pb-0"
     >
       {/* Timeline line */}
       <div
@@ -113,10 +113,11 @@ const ExperienceCard: React.FC<{
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 + 0.2 }}
                 viewport={{ once: true }}
+                style={{ willChange: "transform, opacity" }}
               >
                 {/* animated bullet point */}
                 <motion.div
-                  className="from-neon-10 to-neon mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-gradient-to-r transition-all duration-300 group-hover:scale-150 group-hover:text-white"
+                  className="from-neon-10 to-neon mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-gradient-to-r transition-all duration-300 will-change-transform group-hover:scale-150 group-hover:text-white"
                   whileHover={{ scale: 1.5 }}
                 />
                 <span>{item}</span>
@@ -147,7 +148,7 @@ const AboutPageExperience: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="text-center"
+        className="text-center will-change-transform"
       >
         <h2 className="section-title:small relative mb-12 inline-block text-center">
           Professional Experience

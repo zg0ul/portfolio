@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useId } from "react";
 
-import { motion } from "motion/react";
+import * as motion from "motion/react-client";
 import { cn } from "@/lib/utils";
 
 export interface ContainerTextFlipProps {
@@ -64,6 +64,7 @@ export function ContainerTextFlip({
         "text-text-500 relative mt-1 inline-block rounded-lg pt-2 pb-3 text-center text-2xl font-bold md:text-5xl",
         "[background:linear-gradient(to_bottom,#0d1321,#152030)]",
         "shadow-[inset_0_-1px_#86d562,inset_0_0_0_2px_hsla(101,58%,61%,1),_0_4px_8px_#86D56241]",
+        "will-change-width will-change-transform",
         className,
       )}
       key={words[currentWordIndex]}
@@ -77,7 +78,7 @@ export function ContainerTextFlip({
         ref={textRef}
         layoutId={`word-div-${words[currentWordIndex]}-${id}`}
       >
-        <motion.div className="inline-block">
+        <motion.div className="will-change-opacity inline-block will-change-transform">
           {words[currentWordIndex].split("").map((letter, index) => (
             <motion.span
               key={index}
@@ -88,6 +89,7 @@ export function ContainerTextFlip({
               animate={{
                 opacity: 1,
                 filter: "blur(0px)",
+                transform: "none",
               }}
               transition={{
                 delay: index * 0.02,

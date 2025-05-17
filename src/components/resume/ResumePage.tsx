@@ -62,7 +62,7 @@ const ResumePage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="w-full"
+          className="w-full will-change-transform"
         >
           <div className="border-neon relative w-full overflow-hidden rounded-lg border bg-white shadow-xl transition-all duration-300 hover:shadow-2xl">
             <Image
