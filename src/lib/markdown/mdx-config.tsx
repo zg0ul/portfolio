@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// lib/markdown/mdx-config.tsx
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrism from "rehype-prism-plus";
 import remarkGfm from "remark-gfm";
@@ -88,7 +87,7 @@ const createEnhancedComponents = (baseComponents: any) => {
     return originalP ? (
       originalP({ ...props, children: processedChildren })
     ) : (
-      <p className="my-4 text-gray-300">{processedChildren}</p>
+      <p className="my-4 text-foreground">{processedChildren}</p>
     );
   };
 

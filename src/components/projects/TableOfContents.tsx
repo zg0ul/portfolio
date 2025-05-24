@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { List, ChevronUp } from "lucide-react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { List, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface TOCItem {
   id: string;
@@ -15,170 +15,301 @@ interface TableOfContentsProps {
 }
 
 export function TableOfContents({ content }: TableOfContentsProps) {
-  const [items, setItems] = useState<TOCItem[]>([]);
+  const [tocItems, setTocItems] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
-  // For mobile view - collapse/expand the TOC
-  const toggleCollapse = () => setIsCollapsed(!isCollapsed);
+  // Refs for TOC containers
+  const desktopTocRef = useRef<HTMLDivElement>(null);
+  const mobileTocRef = useRef<HTMLDivElement>(null);
 
-  // Extract headings from markdown content
+  // Track if user is manually scrolling TOC
+  const isUserScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
-    if (!content) return;
-
+    // Extract ALL headings from markdown content
     const headingRegex = /^(#{1,6})\s+(.+?)(?:\s+#+)?$/gm;
-    const matches = [...content.matchAll(headingRegex)];
+    const items: TOCItem[] = [];
+    let match;
 
-    const tocItems = matches.map((match) => {
+    while ((match = headingRegex.exec(content)) !== null) {
       const level = match[1].length;
       const text = match[2].trim();
-      // Generate a unique ID for the heading
       const id = text
         .toLowerCase()
         .replace(/[^\w\s-]/g, "")
         .replace(/\s+/g, "-");
 
-      return { id, text, level };
-    });
+      items.push({ id, text, level });
+    }
 
-    setItems(tocItems);
-
-    // Expand TOC on desktop automatically
-    const isDesktop = window.innerWidth >= 1024;
-    setIsCollapsed(!isDesktop);
+    setTocItems(items);
   }, [content]);
 
-  // Set up intersection observer to update active link on scroll
-  useEffect(() => {
-    if (items.length === 0) return;
+  // Smooth scroll to center the active item in TOC
+  const scrollTocToActiveItem = useCallback(
+    (itemId: string, immediate = false) => {
+      // Don't auto-scroll if user is manually scrolling
+      if (isUserScrollingRef.current && !immediate) return;
 
+      const scrollToItem = (container: HTMLDivElement | null) => {
+        if (!container || !itemId) return;
+
+        const activeButton = container.querySelector(
+          `button[data-id="${itemId}"]`,
+        ) as HTMLElement;
+
+        if (activeButton) {
+          const containerHeight = container.clientHeight;
+          const buttonTop = activeButton.offsetTop;
+          const buttonHeight = activeButton.clientHeight;
+
+          // Calculate scroll position to center the button
+          const scrollTop = buttonTop - containerHeight / 2 + buttonHeight / 2;
+
+          container.scrollTo({
+            top: Math.max(0, scrollTop),
+            behavior: immediate ? "auto" : "smooth",
+          });
+        }
+      };
+
+      // Scroll both desktop and mobile TOC containers
+      scrollToItem(desktopTocRef.current);
+      scrollToItem(mobileTocRef.current);
+    },
+    [],
+  );
+
+  // Track user scrolling on TOC
+  const handleTocScroll = useCallback(() => {
+    isUserScrollingRef.current = true;
+
+    // Clear existing timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    // Reset flag after user stops scrolling
+    scrollTimeoutRef.current = setTimeout(() => {
+      isUserScrollingRef.current = false;
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    // Intersection Observer to track active heading
     const observer = new IntersectionObserver(
       (entries) => {
-        // Filter for entries that are currently intersecting
         const visibleEntries = entries.filter((entry) => entry.isIntersecting);
 
         if (visibleEntries.length > 0) {
-          // Find the first visible heading (closest to the top)
-          const sortedVisible = [...visibleEntries].sort(
-            (a, b) =>
-              a.target.getBoundingClientRect().top -
-              b.target.getBoundingClientRect().top,
-          );
+          // Get the first visible heading
+          const mostVisible = visibleEntries.reduce((prev, current) => {
+            return current.boundingClientRect.top < prev.boundingClientRect.top
+              ? current
+              : prev;
+          });
 
-          // Set the active ID to the first visible heading
-          setActiveId(sortedVisible[0].target.id);
+          const newActiveId = mostVisible.target.id;
+
+          if (newActiveId !== activeId) {
+            setActiveId(newActiveId);
+
+            // Auto-scroll TOC to active item with a small delay
+            setTimeout(() => {
+              scrollTocToActiveItem(newActiveId);
+            }, 100);
+          }
         }
       },
       {
-        rootMargin: "-100px 0px -70% 0px",
-        threshold: [0.1, 0.5, 0.9], // Multiple thresholds for better accuracy
+        rootMargin: "-20% 0px -70% 0px",
+        threshold: [0, 0.5, 1],
       },
     );
 
-    // Observe all headings
-    items.forEach((item) => {
-      const element = document.getElementById(item.id);
-      if (element) observer.observe(element);
+    // Observe ALL headings (h1-h6)
+    const headings = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    headings.forEach((heading) => {
+      if (heading.id) {
+        observer.observe(heading);
+      }
     });
 
     return () => {
-      items.forEach((item) => {
-        const element = document.getElementById(item.id);
-        if (element) observer.unobserve(element);
-      });
+      observer.disconnect();
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
     };
-  }, [items]);
+  }, [activeId, scrollTocToActiveItem]);
 
-  // Scroll to the section when a TOC item is clicked
-  const scrollToSection = (id: string) => {
+  // When mobile TOC opens, scroll to active item
+  useEffect(() => {
+    if (isOpen && activeId) {
+      setTimeout(() => {
+        scrollTocToActiveItem(activeId, true);
+      }, 300); // Wait for animation to complete
+    }
+  }, [isOpen, activeId, scrollTocToActiveItem]);
+
+  const scrollToHeading = useCallback((id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      // For mobile, collapse the TOC after clicking
-      if (window.innerWidth < 1024) {
-        setIsCollapsed(true);
-      }
+      const headerOffset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
 
-      // Add a slight delay to ensure any animations have finished
-      setTimeout(() => {
-        // Calculate offset to account for sticky headers or navigation
-        const headerOffset = 100;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition =
-          elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
 
-        // Scroll the element into view
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
-
-        // Set this as the active section
-        setActiveId(id);
-      }, 100);
+      setActiveId(id);
+      setIsOpen(false);
     }
-  };
+  }, []);
 
-  if (items.length === 0) {
-    return null;
-  }
+  if (tocItems.length === 0) return null;
 
-  // On mobile we want a compact version that can be expanded
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
+  // Desktop TOC
+  const DesktopTOC = () => (
+    <div className="sticky top-8 hidden lg:block">
+      <div className="border-navy-600 bg-navy-800/50 rounded-xl border p-4 shadow-lg backdrop-blur-sm">
+        <h3 className="text-neon mb-3 text-base font-bold">On this page</h3>
+        <nav
+          ref={desktopTocRef}
+          onScroll={handleTocScroll}
+          className="scrollbar-thin scrollbar-thumb-navy-600 scrollbar-track-navy-900 max-h-[calc(100vh-300px)] space-y-1 overflow-y-auto pr-2"
+        >
+          {tocItems.map((item) => (
+            <button
+              key={item.id}
+              data-id={item.id}
+              onClick={() => scrollToHeading(item.id)}
+              className={`relative block w-full rounded-md text-left text-sm transition-all duration-300 ease-in-out ${
+                activeId === item.id
+                  ? "text-neon bg-neon/10 font-medium"
+                  : "hover:bg-navy-700/30 text-gray-400 hover:text-gray-200"
+              } `}
+              style={{
+                paddingLeft: `${12 + (item.level - 1) * 12}px`,
+                paddingRight: "12px",
+                paddingTop: "6px",
+                paddingBottom: "6px",
+              }}
+            >
+              {/* Animated highlight indicator */}
+              {activeId === item.id && (
+                <motion.div
+                  layoutId="desktop-toc-indicator"
+                  className="bg-neon absolute top-0 bottom-0 left-0 w-0.5 rounded-full"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
+              <span className="relative z-10">{item.text}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+
+  // Mobile TOC
+  const MobileTOC = () => (
+    <div className="lg:hidden">
+      <motion.button
+        onClick={() => setIsOpen(!isOpen)}
+        className="bg-navy-800/90 border-navy-600 hover:bg-navy-700/90 flex h-12 w-12 items-center justify-center rounded-2xl border shadow-lg backdrop-blur-sm"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <List className="h-5 w-5 text-white" />
+      </motion.button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+              onClick={() => setIsOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            <motion.div
+              className="bg-navy-800/95 border-navy-600 fixed right-4 bottom-20 left-4 z-50 flex max-h-[60vh] flex-col rounded-2xl border shadow-2xl backdrop-blur-xl sm:left-auto sm:w-80"
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            >
+              <div className="p-4 pb-0">
+                <div className="mb-3 flex items-center justify-between">
+                  <h3 className="text-base font-bold text-white">
+                    On this page
+                  </h3>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="hover:bg-navy-700/50 rounded-lg p-1 text-gray-400 transition-colors hover:text-white"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              <nav
+                ref={mobileTocRef}
+                onScroll={handleTocScroll}
+                className="scrollbar-thin scrollbar-thumb-navy-600 scrollbar-track-navy-900 flex-1 space-y-1 overflow-y-auto px-4 pb-4"
+              >
+                {tocItems.map((item) => (
+                  <button
+                    key={item.id}
+                    data-id={item.id}
+                    onClick={() => scrollToHeading(item.id)}
+                    className={`relative block w-full rounded-lg text-left text-sm transition-all duration-300 ease-in-out ${
+                      activeId === item.id
+                        ? "text-neon bg-neon/10 pr-8 font-medium"
+                        : "hover:bg-navy-700/30 text-gray-300 hover:text-white"
+                    } `}
+                    style={{
+                      paddingLeft: `${12 + (item.level - 1) * 12}px`,
+                      paddingRight: activeId === item.id ? "32px" : "12px",
+                      paddingTop: "8px",
+                      paddingBottom: "8px",
+                    }}
+                  >
+                    {/* Animated highlight indicator with gap from scrollbar */}
+                    {activeId === item.id && (
+                      <motion.div
+                        layoutId="mobile-toc-indicator"
+                        className="bg-neon absolute top-1 bottom-1 left-0 w-0.5 rounded-full"
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                    <span className="relative z-10 block">{item.text}</span>
+                  </button>
+                ))}
+              </nav>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="border-navy-600 bg-navy-800/50 toc-container rounded-lg border p-4 shadow-md backdrop-blur-sm will-change-transform"
-    >
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-neon text-lg font-medium">On this page</h3>
-
-        {/* Mobile toggle button */}
-        <button
-          onClick={toggleCollapse}
-          className="hover:text-neon text-gray-400 transition-colors focus:outline-none lg:hidden"
-          aria-label={
-            isCollapsed
-              ? "Expand table of contents"
-              : "Collapse table of contents"
-          }
-        >
-          {isCollapsed ? (
-            <List className="h-5 w-5" />
-          ) : (
-            <ChevronUp className="h-5 w-5" />
-          )}
-        </button>
-      </div>
-
-      <nav
-        className={`toc-nav ${isCollapsed && isMobile ? "hidden" : "block"}`}
-      >
-        <ul className="scrollbar-thin scrollbar-thumb-navy-600 scrollbar-track-navy-900 max-h-[calc(100vh-250px)] space-y-2 overflow-y-auto pr-2">
-          {items.map((item) => (
-            <li
-              key={item.id}
-              style={{ paddingLeft: `${(item.level - 1) * 0.75}rem` }}
-              className={item.level > 2 && isCollapsed ? "hidden" : ""}
-            >
-              <button
-                onClick={() => scrollToSection(item.id)}
-                className={`hover:text-neon-4 text-left text-sm transition-colors ${
-                  activeId === item.id
-                    ? "text-neon active font-medium"
-                    : "text-gray-400"
-                }`}
-                data-active={activeId === item.id ? "true" : "false"}
-                data-id={item.id}
-              >
-                {item.text}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </motion.div>
+    <>
+      <DesktopTOC />
+      <MobileTOC />
+    </>
   );
 }

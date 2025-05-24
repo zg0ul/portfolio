@@ -8,7 +8,12 @@ import { Toaster } from "sonner";
 import ClickSpark from "@/components/ui/click-spark";
 import { StarsBackground } from "@/components/ui/stars-background";
 import MobileDock from "@/components/MobileDock";
+import { Roboto } from "next/font/google";
 
+const roboto = Roboto({
+  subsets: ["latin"],
+  variable: "--font-roboto",
+});
 export const metadata: Metadata = {
   title: "zg0ul.com",
   description: "A Portfolio website for Mohammad Zgoul (zg0ul)",
@@ -22,13 +27,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="bg-background scroll-smooth"
+      className={`bg-background scroll-smooth ${roboto.className} antialiased`}
       data-theme="dark"
       suppressHydrationWarning
     >
+      <link rel="icon" href="/icon.png" sizes="any" />
       <body>
         <NextTopLoader
-          color="#90a3bc"
+          color="#86d562"
           initialPosition={0.2}
           easing="ease"
           speed={300}
@@ -48,11 +54,11 @@ export default function RootLayout({
           <StarsBackground />
           {/* Mobile Navigation Dock */}
           <MobileDock />
-          <div className="glow-container z-1">
+          {/* <div className="glow-container z-1">
             <div className="glow-primary" />
             <div className="glow-secondary" />
-            {children}
-          </div>
+          </div> */}
+          {children}
           <PortfolioFooter />
           <Toaster position="top-right" richColors closeButton />
         </ClickSpark>

@@ -19,11 +19,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="group border-navy-600 bg-navy-800 hover:border-neon/50 hover:shadow-neon/10 overflow-hidden rounded-xl border shadow-lg backdrop-blur-md transition-all duration-300"
+      className="group border-navy-600 bg-navy-800 hover:border-neon-10/20 hover:shadow-neon-10/10 overflow-hidden rounded-xl border shadow-lg backdrop-blur-md transition-all duration-300"
     >
       <div className="relative flex h-full flex-col">
         {/* Image container with overlay */}
-        <div className="relative h-48 w-full overflow-hidden">
+        <div className="relative aspect-video w-full overflow-hidden">
           <Image
             src={project.featured_image}
             alt={project.title}
@@ -79,11 +79,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
             {/* Links and actions */}
             <div className="flex items-center justify-between">
+              {/* Fixed button with specific group name */}
               <Link
                 href={`/projects/${project.slug}`}
-                className="from-neon to-neon-4 hover:from-neon-4 hover:to-neon text-navy-900 text-neon-10 group flex h-10 items-center justify-center rounded-lg bg-gradient-to-r px-4 py-2 text-sm font-bold transition-colors duration-500 hover:bg-gradient-to-l"
+                className="border-neon-10 text-neon hover:bg-neon hover:text-navy-800 group/button flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-300"
               >
                 View Project
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/button:translate-x-1" />
               </Link>
 
               <div className="flex gap-2">
@@ -92,7 +94,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     href={project.github_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="border-navy-500 bg-navy-700/50 hover:bg-navy-700 hover:border-neon/50 flex size-10 items-center justify-center rounded-lg border transition-colors"
+                    className="border-navy-500 hover:bg-neon hover:text-navy-800 flex size-10 items-center justify-center rounded-lg border transition-colors duration-500"
                   >
                     <FiGithub className="h-5 w-5" />
                   </Link>
@@ -103,7 +105,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     href={project.live_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="border-navy-500 bg-navy-700/50 hover:bg-navy-700 hover:border-neon/50 flex size-10 items-center justify-center rounded-lg border transition-colors"
+                    className="border-navy-500 hover:bg-neon hover:text-navy-800 flex size-10 items-center justify-center rounded-lg border transition-colors duration-500"
                   >
                     <ExternalLink className="h-5 w-5" />
                   </Link>

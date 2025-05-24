@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import ProjectsClient from "./projectsClient";
+import ProjectCardSkeleton from "@/components/projects/ProjectCardSkeleton";
 
 export default async function ProjectsPage() {
   // Server-side data fetching
@@ -10,7 +11,7 @@ export default async function ProjectsPage() {
   const { data: projects, error } = await supabase
     .from("projects")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("end_date", { ascending: false }); // projects that were finished recently should be shown first
 
   if (error) {
     console.error("Error fetching projects:", error);
@@ -24,16 +25,29 @@ export default async function ProjectsPage() {
   return (
     <main className="topPageMargin relative z-1 container mb-10 min-h-screen">
       <div className="">
-        <div className="mb-8">
-          <h1 className="gradient-title text-5xl font-bold">Projects</h1>
-          <p className="text-text-400 mt-4 max-w-2xl text-lg">
+        <div className="mb-8 text-center">
+          <h1 className="section-title">Projects</h1>
+          <p className="section-description">
             Explore my portfolio of projects across different technologies.
           </p>
         </div>
 
         <Suspense
           fallback={
-            <div className="bg-navy-700/50 h-16 w-full animate-pulse rounded-lg"></div>
+            <div>
+              {/* Category filter skeleton */}
+              <div className="mb-8 flex flex-wrap justify-center gap-2">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <div
+                    key={`filter-skeleton-${index}`}
+                    className="bg-navy-700/50 h-10 w-20 animate-pulse rounded-full"
+                  />
+                ))}
+              </div>
+
+              {/* Project cards skeleton */}
+              <ProjectCardSkeleton count={6} />
+            </div>
           }
         >
           <ProjectsClient

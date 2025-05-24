@@ -6,7 +6,7 @@ import SocialLinks from "@/components/SocialLinks";
 
 const PortfolioFooter = () => {
   return (
-    <footer className="relative overflow-hidden">
+    <footer className="relative overflow-x-hidden">
       {/* Background with beam effect */}
       <div className="absolute inset-0 overflow-hidden mask-t-from-60% mask-t-to-95%">
         <BackgroundBeams />
