@@ -1,16 +1,20 @@
+// src/app/admin/projects/page.tsx
 import { createAdminClient } from "@/lib/supabase/admin";
+import { checkAdminAuth } from "@/lib/admin-auth";
 import Link from "next/link";
-import { ProjectTable } from "@/components/admin/ProjectTable";
-import { LucidePlus } from "lucide-react";
+import { AdminProjectTable } from "@/components/admin/ProjectTable";
+import { ArrowLeft, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "Admin - Projects",
+  title: "Projects Management - Admin",
   description: "Manage your portfolio projects",
 };
 
-async function AdminProjects() {
-  // Use the admin client for fetching projects to bypass RLS
-  // No authentication check, similar to dashboard approach
+async function AdminProjectsPage() {
+  // Check authentication first
+  await checkAdminAuth();
+
   const adminClient = createAdminClient();
   const { data: projects, error } = await adminClient
     .from("projects")
@@ -22,22 +26,49 @@ async function AdminProjects() {
   }
 
   return (
-    <div className="topPageMargin container mx-auto px-4 py-16">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Manage Projects</h1>
-        <Link
-          href="/admin/projects/new"
-          className="flex items-center rounded-md bg-black px-4 py-2 text-white"
-        >
-          <LucidePlus />
-          New Project
-        </Link>
-      </div>
+    <main className="topPageMargin bg-background min-h-screen">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="mb-6 flex items-center gap-4">
+            <Link href="/admin">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-foreground hover:bg-navy-700/50"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Dashboard
+              </Button>
+            </Link>
+          </div>
 
-      {/* Projects table */}
-      <ProjectTable projects={projects || []} />
-    </div>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-foreground text-3xl font-bold">
+                Projects Management
+              </h1>
+              <p className="text-navy-200 mt-1">
+                Create, edit, and manage your portfolio projects
+              </p>
+            </div>
+
+            <Link href="/admin/projects/editor">
+              <Button className="from-neon to-neon-4 hover:from-neon-4 hover:to-neon text-navy-800 bg-gradient-to-r">
+                <Plus className="mr-2 h-4 w-4" />
+                New Project
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Projects Table */}
+        <div className="bg-navy-800/50 border-navy-600 rounded-xl border shadow-lg backdrop-blur-sm">
+          <AdminProjectTable projects={projects || []} />
+        </div>
+      </div>
+    </main>
   );
 }
 
-export default AdminProjects;
+export default AdminProjectsPage;

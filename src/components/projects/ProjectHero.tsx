@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, ArrowLeft } from "lucide-react";
 import { SiGithub } from "react-icons/si";
+import * as motion from "motion/react-client";
 import { ProjectDetails } from "@/components/projects/ProjectDetails";
 
 interface ProjectHeroProps {
@@ -22,51 +23,37 @@ interface ProjectHeroProps {
 export function ProjectHero({ project }: ProjectHeroProps) {
   return (
     <div className="relative w-full">
-      {/* Header with Title centered */}
-      <div className="mb-4 flex justify-center">
-        {/* Title - Centered */}
-        <h1 className="text-neon-4 text-3xl font-bold tracking-tight whitespace-nowrap sm:text-4xl md:text-5xl">
+      {/* Header with Back Button and Title */}
+      <div className="mb-4 flex items-center justify-between">
+        {/* Back Button - Desktop only */}
+        <Link
+          href="/projects"
+          className="bg-navy-800/90 border-navy-600 hover:bg-navy-700/90 hover:text-neon group hidden items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium backdrop-blur-sm transition-all lg:flex"
+        >
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+          Back to Projects
+        </Link>
+
+        {/* Title - Centered on mobile, right-aligned on desktop */}
+        <h1 className="text-neon-4 mx-auto text-3xl font-bold tracking-tight whitespace-nowrap sm:text-4xl md:text-5xl lg:mx-0">
           {project.title}
         </h1>
+
+        {/* Empty space for balance on desktop */}
+        <div className="hidden lg:block lg:w-[140px]"></div>
       </div>
 
-      {/* Centered Description and Buttons */}
+      {/* Centered Description */}
       <div className="mb-8 text-center">
-        <p className="text-foreground mx-auto mb-6 max-w-3xl text-sm md:text-lg lg:text-xl">
+        <p className="text-foreground mx-auto max-w-3xl text-sm md:text-lg lg:text-xl">
           {project.short_description}
         </p>
-
-        {/* Action Buttons - Centered */}
-        <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-          {project.github_url && (
-            <Link
-              href={project.github_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group border-navy-400 bg-navy-800/90 hover:border-neon/40 hover:bg-navy-800 hover:text-neon flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium shadow-lg backdrop-blur-md transition-all md:px-6 md:py-3 md:text-base"
-            >
-              <SiGithub className="h-4 w-4 transition-transform group-hover:scale-110 md:h-5 md:w-5" />
-              View Code
-            </Link>
-          )}
-          {project.live_url && (
-            <Link
-              href={project.live_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="from-neon to-neon-4 hover:from-neon-4 hover:to-neon group text-navy-900 flex items-center gap-2 rounded-full bg-gradient-to-r px-4 py-2.5 text-sm font-medium shadow-lg transition-all md:px-6 md:py-3 md:text-base"
-            >
-              <ExternalLink className="h-4 w-4 transition-transform group-hover:scale-110 md:h-5 md:w-5" />
-              Live Demo
-            </Link>
-          )}
-        </div>
       </div>
 
-      {/* Image and Project Details Layout */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
-        {/* Smaller Hero Image with 16:9 aspect ratio */}
-        <div className="relative aspect-video w-full">
+      {/* Image and Project Details Layout - Equal Heights */}
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-8">
+        {/* Hero Image - Takes up more space (2/3) */}
+        <div className="relative aspect-video w-full lg:flex-[2]">
           <Image
             src={project.featured_image}
             alt={project.title}
@@ -76,21 +63,53 @@ export function ProjectHero({ project }: ProjectHeroProps) {
           />
         </div>
 
-        {/* Project Details Card */}
-        <div className="flex items-start">
-          <ProjectDetails project={project} />
+        {/* Project Details Card - Takes up less space (1/3) */}
+        <div className="flex lg:flex-1">
+          <ProjectDetails
+            project={project}
+            actionButtons={
+              project.github_url || project.live_url ? (
+                <div className="flex flex-wrap gap-3">
+                  {project.github_url && (
+                    <Link
+                      href={project.github_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group border-navy-400 bg-navy-700/50 hover:border-neon/40 hover:bg-navy-600/50 hover:text-neon flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-all"
+                    >
+                      <SiGithub className="h-4 w-4 transition-transform group-hover:scale-110" />
+                      View Code
+                    </Link>
+                  )}
+                  {project.live_url && (
+                    <Link
+                      href={project.live_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="from-neon to-neon-4 hover:from-neon-4 hover:to-neon group text-navy-900 flex items-center gap-2 rounded-lg bg-gradient-to-r px-4 py-2.5 text-sm font-medium shadow-lg transition-all"
+                    >
+                      <ExternalLink className="h-4 w-4 transition-transform group-hover:scale-110" />
+                      Live Demo
+                    </Link>
+                  )}
+                </div>
+              ) : undefined
+            }
+          />
         </div>
       </div>
 
-      {/* Floating Back Button - Bottom Left */}
+      {/* Floating Back Button - Mobile only */}
       <div className="fixed bottom-4 left-4 z-50 lg:hidden">
         <Link href="/projects">
-          <button
+          <motion.button
             className="bg-navy-800/90 border-navy-600 hover:bg-navy-700/90 flex h-12 w-12 items-center justify-center rounded-2xl border shadow-lg backdrop-blur-sm"
             aria-label="Back to All Projects"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <ArrowLeft className="text-foreground h-5 w-5" />
-          </button>
+          </motion.button>
         </Link>
       </div>
     </div>

@@ -76,6 +76,7 @@ const PublicSVGIcon = ({
     src={`/assets/icons/${iconName}.svg`}
     alt={`${iconName} icon`}
     className={className}
+    draggable={false}
     width={24}
     height={24}
   />
@@ -124,6 +125,20 @@ export const TECHNOLOGIES: Technology[] = [
     id: "riverpod",
     name: "Riverpod",
     icon: () => <PublicSVGIcon iconName="riverpod" />,
+  },
+  {
+    id: "hive",
+    name: "Hive",
+    icon: () => (
+      <Image
+        width={100}
+        height={100}
+        draggable={false}
+        src="/assets/icons/hive.png"
+        className="h-5 w-5"
+        alt="hive"
+      />
+    ),
   },
   {
     id: "dart",

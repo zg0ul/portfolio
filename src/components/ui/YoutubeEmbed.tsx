@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Play, Loader2, Youtube } from "lucide-react";
+import { Play, Loader2, Youtube, X } from "lucide-react";
 import Image from "next/image";
 
 interface YouTubeEmbedProps {
@@ -20,43 +20,24 @@ interface YouTubeMetadata {
 export default function YouTubeEmbed({ videoId, title }: YouTubeEmbedProps) {
   const [metadata, setMetadata] = useState<YouTubeMetadata>({
     title: title || "YouTube Video",
-    thumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+    thumbnail: `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
     channelName: "",
     loading: true,
     error: false,
   });
 
   const [expanded, setExpanded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   // Fetch video metadata (optional)
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        // We're using a fallback approach here without an API call
-        // This will at least show the video thumbnail from YouTube's default URL pattern
+        // Using fallback approach without API call
         setMetadata((prev) => ({
           ...prev,
           loading: false,
         }));
-
-        // If you want to fetch full metadata, implement an API endpoint and uncomment:
-        /*
-        const response = await fetch(`/api/youtube-metadata?videoId=${videoId}`);
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch video metadata');
-        }
-        
-        const data = await response.json();
-        
-        setMetadata({
-          title: data.title,
-          channelName: data.channelName,
-          thumbnail: data.thumbnail,
-          loading: false,
-          error: false
-        });
-        */
       } catch (error) {
         console.error("Error fetching YouTube metadata:", error);
         setMetadata((prev) => ({
@@ -70,89 +51,133 @@ export default function YouTubeEmbed({ videoId, title }: YouTubeEmbedProps) {
     fetchMetadata();
   }, [videoId]);
 
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
   const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+
+  // Fallback to high quality thumbnail if maxres fails
+  const thumbnailUrl = imageError
+    ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+    : metadata.thumbnail;
 
   // Render YouTube card or embed
   return (
-    <div className="my-6">
+    <div className="not-prose my-8 w-full">
       {!expanded ? (
-        <div
-          className="border-navy-600 group bg-navy-800/60 hover:bg-navy-700/80 relative flex cursor-pointer overflow-hidden rounded-lg border transition-all"
-          onClick={() => setExpanded(true)}
-        >
-          {/* Thumbnail with play button overlay */}
-          <div className="relative aspect-video w-full max-w-[320px] flex-shrink-0 overflow-hidden">
+        <div className="group relative overflow-hidden rounded-xl border border-gray-700 bg-gray-900/50 backdrop-blur-sm transition-all duration-300 hover:border-gray-600 hover:bg-gray-800/60 hover:shadow-xl">
+          {/* Thumbnail Section */}
+          <div className="relative aspect-video w-full overflow-hidden">
             {metadata.loading ? (
-              <div className="bg-navy-800/60 absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
                 <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
               </div>
             ) : (
               <>
                 <Image
-                  width={500}
-                  height={500}
-                  src={metadata.thumbnail}
-                  alt={metadata.title || "YouTube video"}
-                  className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                  width={1280}
+                  height={720}
+                  src={thumbnailUrl}
+                  alt={metadata.title || "YouTube video thumbnail"}
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  onError={() => setImageError(true)}
+                  priority={false}
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-600 text-white shadow-lg transition-transform group-hover:scale-110">
-                    <Play className="h-5 w-5 pl-1" fill="white" />
+                {/* Play Button Overlay */}
+                <div
+                  className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/30 transition-all duration-300 group-hover:bg-black/50"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setExpanded(true);
+                  }}
+                >
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 text-white shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:bg-red-500">
+                    <Play className="ml-1 h-6 w-6" fill="white" />
                   </div>
                 </div>
               </>
             )}
           </div>
 
-          {/* Video info */}
-          <div className="flex flex-grow flex-col justify-center p-4">
-            <div className="mb-2 flex items-center gap-2">
+          {/* Video Info Section */}
+          <div className="p-6">
+            <div className="mb-3 flex items-center gap-2">
               <Youtube className="h-5 w-5 text-red-500" />
               <span className="text-sm font-medium text-red-500">YouTube</span>
             </div>
-            <h3 className="line-clamp-2 text-lg font-medium text-white">
+
+            <h3 className="mb-2 line-clamp-2 text-lg leading-tight font-semibold text-white">
               {metadata.title}
             </h3>
+
             {metadata.channelName && (
-              <p className="mt-1 text-sm text-gray-400">
+              <p className="mb-3 text-sm text-gray-400">
                 {metadata.channelName}
               </p>
             )}
-            <p className="mt-2 text-sm text-gray-400">Click to play video</p>
+
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setExpanded(true);
+                }}
+                className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-500 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 focus:outline-none"
+              >
+                <Play className="h-4 w-4" />
+                Play Video
+              </button>
+
+              <a
+                href={youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-gray-400 no-underline hover:text-gray-200"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Youtube className="h-4 w-4" />
+                <span className="max-w-[200px] truncate">Watch on YouTube</span>
+              </a>
+            </div>
           </div>
         </div>
       ) : (
-        <div className="border-navy-600 relative overflow-hidden rounded-lg border shadow-lg">
+        <div className="relative overflow-hidden rounded-xl border border-gray-700 bg-gray-900 shadow-2xl">
+          {/* Video Embed */}
           <div className="relative aspect-video w-full">
             <iframe
               src={embedUrl}
               title={metadata.title || "YouTube video"}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-              className="absolute inset-0 h-full w-full"
-            ></iframe>
+              className="absolute inset-0 h-full w-full border-0"
+            />
           </div>
-          <div className="bg-navy-800 flex items-center justify-between px-3 py-2">
-            <div className="flex items-center gap-2">
+
+          {/* Control Bar */}
+          <div className="flex items-center justify-between bg-gray-800 px-4 py-3">
+            <div className="flex items-center gap-3">
               <Youtube className="h-4 w-4 text-red-500" />
               <a
                 href={youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-neon text-sm hover:underline"
+                className="text-sm text-gray-400 no-underline hover:text-gray-200"
                 onClick={(e) => e.stopPropagation()}
               >
-                Watch on YouTube
+                <span className="max-w-[150px] truncate">Watch on YouTube</span>
               </a>
             </div>
+
             <button
-              className="text-sm text-gray-400 hover:text-white"
+              className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 setExpanded(false);
               }}
             >
+              <X className="h-4 w-4" />
               Close
             </button>
           </div>

@@ -16,11 +16,7 @@ function ClientHeading({
   className,
   ...rest
 }: ClientHeadingProps & React.HTMLAttributes<HTMLHeadingElement>) {
-  const handleClick = () => {
-    if (id) window.history.pushState({}, "", `#${id}`);
-  };
-
-  // Create the heading based on the level
+  // Create the heading based on the level without click handler
   const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
 
   return React.createElement(
@@ -28,7 +24,6 @@ function ClientHeading({
     {
       id,
       className,
-      onClick: handleClick,
       ...rest,
     },
     children,
@@ -167,7 +162,7 @@ export function H6(
     <ClientHeading
       id={id}
       level={6}
-      className="mt-4 mb-2 text-sm font-bold text-white"
+      className="text-foreground mt-4 mb-2 text-sm font-bold"
       {...props}
     />
   );

@@ -54,11 +54,11 @@ export default function RootLayout({
           <StarsBackground />
           {/* Mobile Navigation Dock */}
           <MobileDock />
-          {/* <div className="glow-container z-1">
+          <div className="relative overflow-x-clip">
             <div className="glow-primary" />
             <div className="glow-secondary" />
-          </div> */}
-          {children}
+            {children}
+          </div>
           <PortfolioFooter />
           <Toaster position="top-right" richColors closeButton />
         </ClickSpark>

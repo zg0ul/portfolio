@@ -32,10 +32,29 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${project.title} | Projects`,
+    title: `${project.title} | zg0ul's Projects`,
     description: project.short_description,
     openGraph: {
-      images: [{ url: project.featured_image }],
+      title: `${project.title} | zg0ul's Projects`,
+      description: project.short_description,
+      url: `https://zg0ul.com/projects/${project.slug}`,
+      siteName: "zg0ul's Projects",
+      images: [
+        {
+          url: project.featured_image,
+          width: 1200,
+          height: 630, // Optimal OG image ratio
+          alt: `${project.title} project showcase`,
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.title} | zg0ul's Projects`,
+      description: project.short_description,
+      images: [project.featured_image],
     },
   };
 }

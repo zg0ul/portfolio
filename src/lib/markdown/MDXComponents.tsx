@@ -6,37 +6,37 @@ import YouTubeEmbed from "@/components/ui/YoutubeEmbed";
 import getYouTubeVideoId from "@/utils/GetYoutubeVideoById";
 import { H1, H2, H3, H4, H5, H6 } from "@/components/projects/ClientHeadings";
 
-// Responsive MDX components with mobile-first design
-export const mdxComponents = {
+// Server-safe components that avoid client component issues
+const createMdxComponents = () => ({
   // Enhanced responsive table styling
   table: (props: any) => (
-    <div className="border-navy-600 my-4 w-full overflow-hidden rounded-lg border shadow-md sm:my-6">
+    <div className="my-6 w-full overflow-hidden rounded-lg border border-gray-700 shadow-lg sm:my-8">
       <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse" {...props} />
+        <table className="min-w-full border-collapse bg-gray-900" {...props} />
       </div>
     </div>
   ),
-  thead: (props: any) => <thead className="bg-navy-700" {...props} />,
+  thead: (props: any) => <thead className="bg-gray-800" {...props} />,
   th: (props: any) => (
     <th
-      className="border-navy-600 text-foreground border-b p-2 text-left text-sm font-semibold whitespace-nowrap sm:p-3 sm:text-base"
+      className="border-b border-gray-700 px-4 py-3 text-left text-sm font-semibold text-gray-200 sm:px-6 sm:text-base"
       {...props}
     />
   ),
   td: (props: any) => (
     <td
-      className="border-navy-600 text-foreground border-t p-2 text-sm sm:p-3 sm:text-base"
+      className="border-t border-gray-700 px-4 py-3 text-sm text-gray-300 sm:px-6 sm:text-base"
       {...props}
     />
   ),
   tr: (props: any) => (
-    <tr className="hover:bg-navy-700/50 transition-colors" {...props} />
+    <tr className="transition-colors hover:bg-gray-800/50" {...props} />
   ),
 
-  // Responsive code blocks
+  // Responsive code blocks with better colors
   pre: (props: any) => {
     const customClasses =
-      "border-navy-600 bg-navy-800/80 my-4 sm:my-6 overflow-x-auto rounded-lg border p-3 sm:p-4 text-xs sm:text-sm shadow-lg";
+      "my-6 overflow-x-auto rounded-lg border border-gray-700 bg-gray-900 p-4 text-sm shadow-lg sm:my-8 sm:p-6 sm:text-base";
     const classes = [props.className, customClasses].filter(Boolean).join(" ");
     return <pre className={classes} {...props} />;
   },
@@ -44,11 +44,14 @@ export const mdxComponents = {
     const isInline = !props.className;
     return isInline ? (
       <code
-        className="bg-navy-800/90 text-neon rounded px-1 py-0.5 font-mono text-xs break-words sm:px-1.5 sm:text-sm"
+        className="rounded bg-gray-800 px-2 py-1 font-mono text-sm text-blue-300 [&:not(.hljs)]:text-blue-300"
         {...props}
       />
     ) : (
-      <code className={`${props.className || ""} font-mono`} {...props} />
+      <code
+        className={`${props.className || ""} font-mono text-gray-300`}
+        {...props}
+      />
     );
   },
 
@@ -57,14 +60,12 @@ export const mdxComponents = {
     if (props.className?.includes("task-list-item")) {
       return (
         <li
-          className="my-1 flex items-start gap-2 text-sm sm:text-base"
+          className="my-2 flex list-none items-start gap-3 text-base text-gray-300"
           {...props}
-        >
-          {props.children}
-        </li>
+        />
       );
     }
-    return <li className="my-1 text-sm sm:text-base" {...props} />;
+    return <li className="my-1 text-base text-gray-300" {...props} />;
   },
 
   // Responsive checkbox styling
@@ -72,33 +73,33 @@ export const mdxComponents = {
     if (props.type === "checkbox") {
       return (
         <span
-          className={`mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded border sm:h-5 sm:w-5 ${
+          className={`mt-1 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-2 ${
             props.checked
-              ? "border-neon bg-neon/20 text-neon"
-              : "bg-navy-700 border-gray-600"
+              ? "border-blue-500 bg-blue-500/20 text-blue-400"
+              : "border-gray-600 bg-gray-800"
           }`}
         >
-          {props.checked && <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5" />}
+          {props.checked && <Check className="h-3.5 w-3.5" />}
         </span>
       );
     }
     return <input {...props} />;
   },
 
-  // Responsive blockquotes
+  // Responsive blockquotes with better styling
   blockquote: (props: any) => (
     <blockquote
-      className="border-neon/30 bg-navy-800/50 text-foreground my-4 border-l-4 py-2 pl-3 text-sm italic sm:my-6 sm:py-3 sm:pl-4 sm:text-base"
+      className="my-6 border-l-4 border-blue-500 bg-gray-800/50 py-4 pl-6 text-base text-gray-300 italic sm:my-8"
       {...props}
     />
   ),
 
   // Responsive horizontal rules
   hr: (props: any) => (
-    <hr className="border-navy-600 my-6 border-t sm:my-8" {...props} />
+    <hr className="my-8 border-t border-gray-700 sm:my-12" {...props} />
   ),
 
-  // Responsive paragraphs with YouTube detection
+  // Fixed paragraphs - handle YouTube embeds safely
   p: (props: any) => {
     const childrenArray = React.Children.toArray(props.children);
 
@@ -108,7 +109,7 @@ export const mdxComponents = {
       const youtubeRegex =
         /^https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:\S*)?$/;
 
-      if (youtubeRegex.test(text)) {
+      if (youtubeRegex.test(text.trim())) {
         const videoId = getYouTubeVideoId(text);
         if (videoId) {
           return <YouTubeEmbed videoId={videoId} />;
@@ -118,22 +119,24 @@ export const mdxComponents = {
 
     return (
       <p
-        className="text-foreground my-3 text-sm leading-relaxed break-words sm:my-4 sm:text-base"
+        className="my-4 text-base leading-relaxed text-gray-300 sm:my-6 sm:text-lg sm:leading-relaxed"
         {...props}
       />
     );
   },
 
-  // Responsive links
+  // Fixed links with proper YouTube handling and no underlines
   a: (props: any) => {
     const childrenArray = React.Children.toArray(props.children);
 
+    // Check if this is a standalone YouTube link
     if (childrenArray.length === 1 && typeof childrenArray[0] === "string") {
       const text = childrenArray[0] as string;
       const youtubeRegex =
         /^https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:\S*)?$/;
 
-      if (youtubeRegex.test(text)) {
+      // Only convert to embed if the link text matches the href exactly
+      if (youtubeRegex.test(text) && props.href === text) {
         const videoId = getYouTubeVideoId(text);
         if (videoId) {
           return <YouTubeEmbed videoId={videoId} />;
@@ -143,7 +146,7 @@ export const mdxComponents = {
 
     return (
       <a
-        className="text-neon hover:text-neon-4 text-sm break-words transition-colors hover:underline sm:text-base"
+        className="break-words text-blue-400 decoration-blue-400/50 transition-colors hover:text-blue-300 hover:underline"
         target={props.href?.startsWith("http") ? "_blank" : undefined}
         rel={props.href?.startsWith("http") ? "noopener noreferrer" : undefined}
         {...props}
@@ -151,47 +154,67 @@ export const mdxComponents = {
     );
   },
 
-  // Responsive headings
+  // Responsive headings with better colors
   h1: (props: any) => (
-    <H1 className="text-xl sm:text-2xl lg:text-3xl" {...props} />
+    <H1
+      className="mt-8 mb-6 text-2xl font-bold text-white sm:text-3xl lg:text-4xl"
+      {...props}
+    />
   ),
   h2: (props: any) => (
-    <H2 className="text-lg sm:text-xl lg:text-2xl" {...props} />
+    <H2
+      className="mt-8 mb-4 text-xl font-semibold text-gray-100 sm:text-2xl lg:text-3xl"
+      {...props}
+    />
   ),
   h3: (props: any) => (
-    <H3 className="text-base sm:text-lg lg:text-xl" {...props} />
+    <H3
+      className="mt-6 mb-4 text-lg font-semibold text-gray-200 sm:text-xl lg:text-2xl"
+      {...props}
+    />
   ),
   h4: (props: any) => (
-    <H4 className="text-sm sm:text-base lg:text-lg" {...props} />
+    <H4
+      className="mt-6 mb-3 text-base font-semibold text-gray-200 sm:text-lg lg:text-xl"
+      {...props}
+    />
   ),
-  h5: (props: any) => <H5 className="text-sm sm:text-base" {...props} />,
-  h6: (props: any) => <H6 className="text-xs sm:text-sm" {...props} />,
+  h5: (props: any) => (
+    <H5
+      className="mt-4 mb-3 text-base font-medium text-gray-300 sm:text-lg"
+      {...props}
+    />
+  ),
+  h6: (props: any) => (
+    <H6
+      className="mt-4 mb-2 text-sm font-medium text-gray-400 sm:text-base"
+      {...props}
+    />
+  ),
 
-  // Responsive images
+  // Improved image handling
   img: (props: any) => (
-    <div className="my-4 w-full sm:my-6">
+    <span className="not-prose my-6 block w-full sm:my-8">
       <Image
-        width={800}
-        height={600}
-        className="h-auto w-full max-w-full rounded-lg object-cover shadow-lg"
+        width={1200}
+        height={800}
+        className="h-auto w-full max-w-full rounded-lg object-cover shadow-xl"
         loading="lazy"
         alt={props.alt || "Content image"}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
         {...props}
       />
-    </div>
+    </span>
   ),
 
-  // Responsive lists
+  // Responsive lists with better spacing and colors
   ul: (props: any) => {
     if (props.className?.includes("contains-task-list")) {
-      return (
-        <ul className="my-3 space-y-1 pl-1 sm:my-4 sm:space-y-2" {...props} />
-      );
+      return <ul className="my-4 space-y-2 pl-2 sm:my-6" {...props} />;
     }
     return (
       <ul
-        className="my-3 list-disc space-y-1 pl-4 text-sm sm:my-4 sm:space-y-2 sm:pl-6 sm:text-base"
+        className="my-4 list-disc space-y-2 pl-6 text-base text-gray-300 sm:my-6 sm:text-lg"
         {...props}
       />
     );
@@ -199,15 +222,18 @@ export const mdxComponents = {
 
   ol: (props: any) => (
     <ol
-      className="my-3 list-decimal space-y-1 pl-4 text-sm sm:my-4 sm:space-y-2 sm:pl-6 sm:text-base"
+      className="my-4 list-decimal space-y-2 pl-6 text-base text-gray-300 sm:my-6 sm:text-lg"
       {...props}
     />
   ),
 
-  // Responsive strong and emphasis
+  // Better emphasis styling
   strong: (props: any) => (
-    <strong className="text-sm font-bold sm:text-base" {...props} />
+    <strong className="font-bold text-white" {...props} />
   ),
 
-  em: (props: any) => <em className="text-sm italic sm:text-base" {...props} />,
-};
+  em: (props: any) => <em className="text-gray-200 italic" {...props} />,
+});
+
+// Export the components as a function call to avoid client component issues
+export const mdxComponents = createMdxComponents();
