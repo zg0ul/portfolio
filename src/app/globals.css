@@ -3,8 +3,8 @@
 @plugin "@tailwindcss/typography";
 
 @import "./styles/mdx.css";
-/* @import "./styles/animation.css";
-@import "./styles/markdown-preview.css";
+@import "./styles/animation.css";
+/* @import "./styles/markdown-preview.css";
 @import "./styles/prism-theme.css";
 @import "./styles/scrollbar.css";
 @import "./styles/mdx-container.css"; */
@@ -193,4 +193,3 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #86d562;
 }
-

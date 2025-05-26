@@ -3,9 +3,14 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { BsAward, BsTrophy } from "react-icons/bs";
-import { FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import {
+  FiX,
+  FiChevronLeft,
+  FiChevronRight,
+  FiMaximize2,
+} from "react-icons/fi";
 import { Award } from "@/lib/awards-data";
-import ModalControls from "@/components/ui/modal-controls";
+import * as motion from "motion/react-client";
 
 interface AwardsSectionProps {
   awards: Award[];
@@ -15,6 +20,7 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [currentAwardId, setCurrentAwardId] = useState<number | null>(null);
+  const [imageLoading, setImageLoading] = useState<boolean>(false);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -40,20 +46,18 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
     };
 
     window.addEventListener("keydown", handleKeyDown);
-
     return () => window.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen, currentAwardId]);
 
   // Get icon component based on string name
   const getIconComponent = (iconName: string) => {
     switch (iconName) {
       case "BsAward":
-        return <BsAward className="h-6 w-6" />;
+        return <BsAward className="h-5 w-5 sm:h-6 sm:w-6" />;
       case "BsTrophy":
-        return <BsTrophy className="h-6 w-6" />;
+        return <BsTrophy className="h-5 w-5 sm:h-6 sm:w-6" />;
       default:
-        return <BsAward className="h-6 w-6" />;
+        return <BsAward className="h-5 w-5 sm:h-6 sm:w-6" />;
     }
   };
 
@@ -61,6 +65,7 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
   const openImageModal = (awardId: number, imageIndex: number) => {
     setCurrentAwardId(awardId);
     setCurrentImageIndex(imageIndex);
+    setImageLoading(true);
     setIsModalOpen(true);
   };
 
@@ -69,29 +74,32 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
     setIsModalOpen(false);
     setCurrentImageIndex(0);
     setCurrentAwardId(null);
+    setImageLoading(false);
   };
 
   // Navigate to the previous image
-  const prevImage = () => {
+  const prevImage = React.useCallback(() => {
     if (!currentAwardId) return;
 
     const currentAward = awards.find((award) => award.id === currentAwardId);
     if (!currentAward || !currentAward.images.length) return;
 
+    setImageLoading(true);
     setCurrentImageIndex((prev) =>
       prev <= 0 ? currentAward.images.length - 1 : prev - 1,
     );
-  };
+  }, [currentAwardId, awards]);
 
   // Navigate to the next image
-  const nextImage = () => {
+  const nextImage = React.useCallback(() => {
     if (!currentAwardId) return;
 
     const currentAward = awards.find((award) => award.id === currentAwardId);
     if (!currentAward || !currentAward.images.length) return;
 
+    setImageLoading(true);
     setCurrentImageIndex((prev) => (prev + 1) % currentAward.images.length);
-  };
+  }, [currentAwardId, awards]);
 
   // Get current image data for the modal
   const getCurrentImage = () => {
@@ -103,150 +111,263 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
     return currentAward.images[currentImageIndex];
   };
 
+  const getCurrentAward = () => {
+    if (!currentAwardId) return null;
+    return awards.find((award) => award.id === currentAwardId);
+  };
+
   return (
     <>
-      <div className="container mx-auto max-w-5xl">
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Page header */}
-        <div className="mb-10 text-center sm:mb-12">
-          <h1 className="section-title">Honors & Awards</h1>
-          <p className="section-description">
+        <div className="mb-12 text-center sm:mb-16">
+          <h1 className="section-title mb-4">Honors & Awards</h1>
+          <p className="section-description mx-auto max-w-2xl">
             Recognition for excellence in technology and innovation
           </p>
         </div>
 
-        {/* Timeline of awards */}
-        <div className="relative">
-          {/* Timeline center line - visible on all screens */}
-          <div className="bg-dark-400 absolute top-0 bottom-0 left-10 w-0.5 md:left-1/2 md:-translate-x-1/2 md:transform"></div>
+        {/* Awards Grid - Responsive layout */}
+        <div className="space-y-8 sm:space-y-12">
+          {awards.map((award, idx) => (
+            <motion.div
+              key={award.id}
+              className="group"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.05 }}
+              transition={{ duration: 0.5, delay: idx * 0.2 }}
+            >
+              {/* Award Card */}
+              <div className="bg-navy-800/50 border-navy-600 hover:border-navy-500/70 relative overflow-hidden rounded-2xl border p-6 shadow-lg backdrop-blur-sm transition-all duration-300 hover:shadow-xl sm:p-8">
+                {/* Background decoration */}
+                <div className="from-neon/5 absolute inset-0 bg-gradient-to-br via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-          <div className="relative">
-            {awards.map((award, idx) => (
-              <div
-                key={award.id}
-                className="mb-12 md:mb-16 md:flex"
-                style={{
-                  flexDirection: idx % 2 === 0 ? "row" : "row-reverse",
-                }}
-              >
-                {/* Content */}
-                <div
-                  className={`w-full pl-16 md:w-1/2 md:pl-0 ${
-                    idx % 2 === 0 ? "md:pr-10 lg:pr-12" : "md:pl-10 lg:pl-12"
-                  } ${idx % 2 === 0 ? "md:text-right" : "md:text-left"}`}
-                >
-                  {/* Mobile view date */}
-                  <div className="mb-1 text-sm text-[#748cab] md:hidden">
-                    {award.date}
-                  </div>
+                <div className="relative z-10">
+                  {/* Header section */}
+                  <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:gap-6">
+                    {/* Icon and badge */}
+                    <div className="mb-4 flex items-center gap-4 sm:mb-0 sm:flex-col sm:items-center">
+                      <motion.div
+                        className="bg-neon/20 border-neon/30 flex h-12 w-12 items-center justify-center rounded-full border shadow-lg sm:h-16 sm:w-16"
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <div className="text-neon">
+                          {getIconComponent(award.icon)}
+                        </div>
+                      </motion.div>
 
-                  <h3 className="text-xl font-bold text-[#f0ebd8] sm:text-2xl">
-                    {award.title}
-                  </h3>
-                  <div
-                    className={`my-2 flex items-center gap-2 text-sm text-[#748cab] ${
-                      idx % 2 === 0 ? "md:justify-end" : "md:justify-start"
-                    }`}
-                  >
-                    <span>{award.issuer}</span>
-                    <span>•</span>
-                    <span className="hidden md:inline">{award.date}</span>
+                      {/* Date badge */}
+                      <div className="bg-navy-700/80 text-neon-10 rounded-full px-3 py-1 text-xs font-medium backdrop-blur-sm sm:mt-2 sm:text-sm">
+                        {award.date}
+                      </div>
+                    </div>
+
+                    {/* Title and organization */}
+                    <div className="flex-1">
+                      <h3 className="text-foreground mb-2 text-xl leading-tight font-bold sm:text-2xl">
+                        {award.title}
+                      </h3>
+                      <p className="text-navy-200 mb-3 text-base font-medium sm:text-lg">
+                        {award.issuer}
+                      </p>
+                      <p className="text-foreground/80 leading-relaxed">
+                        {award.description}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-[#dad6c5]">{award.description}</p>
 
                   {/* Image gallery */}
                   {award.images && award.images.length > 0 && (
-                    <div
-                      className={`mt-4 flex gap-2 overflow-x-auto pb-2 ${
-                        idx % 2 === 0 ? "md:justify-end" : "md:justify-start"
-                      }`}
-                    >
-                      {award.images.map((image, imageIdx) => (
-                        <div
-                          key={imageIdx}
-                          className="h-24 w-24 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg bg-gray-800 transition-transform hover:scale-95 sm:h-32 sm:w-32"
-                          onClick={() => openImageModal(award.id, imageIdx)}
-                        >
-                          {/* Use next/image for optimized loading */}
-                          <div className="flex h-full w-full items-center justify-center bg-[#2d3748] text-xs text-[#90a3bc]">
+                    <div className="space-y-4">
+                      <h4 className="text-neon text-sm font-semibold tracking-wide uppercase">
+                        Gallery ({award.images.length}{" "}
+                        {award.images.length === 1 ? "Image" : "Images"})
+                      </h4>
+
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+                        {award.images.map((image, imageIdx) => (
+                          <motion.div
+                            key={imageIdx}
+                            className="group/image bg-navy-700/50 relative aspect-square cursor-pointer overflow-hidden rounded-xl"
+                            onClick={() => openImageModal(award.id, imageIdx)}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{
+                              duration: 0.3,
+                              delay: imageIdx * 0.1,
+                            }}
+                          >
                             <Image
                               src={image.src}
                               alt={image.alt}
-                              width={256}
-                              height={256}
-                              className="h-full w-full object-cover"
-                              quality={80}
-                              placeholder="blur"
-                              blurDataURL={
-                                image.blurDataURL ||
-                                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN88OjpfwAI+QM4V9Qg1QAAAABJRU5ErkJggg=="
-                              }
+                              fill
+                              className="object-cover transition-transform duration-300 group-hover/image:scale-110"
+                              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                             />
-                          </div>
-                        </div>
-                      ))}
+
+                            {/* Hover overlay */}
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-300 group-hover/image:opacity-100">
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                whileHover={{ scale: 1 }}
+                                className="bg-neon/20 border-neon/50 rounded-full border p-2 backdrop-blur-sm"
+                              >
+                                <FiMaximize2 className="text-neon h-4 w-4" />
+                              </motion.div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
-
-                {/* Timeline icon */}
-                <div className="absolute left-10 flex h-10 w-10 -translate-x-1/2 transform items-center justify-center rounded-full border-3 border-[#0c111e] bg-[#3e5c76] md:left-1/2 md:h-12 md:w-12 md:border-4">
-                  <div className="text-[#f0ebd8]">
-                    {getIconComponent(award.icon)}
-                  </div>
-                </div>
               </div>
-            ))}
-          </div>
+            </motion.div>
+          ))}
         </div>
       </div>
 
-      {/* Optimized Modal with improved click outside functionality */}
+      {/* Enhanced Modal */}
       {isModalOpen && (
-        <div
-          className="bg-background/80 fixed inset-0 z-50 flex items-center justify-center p-4"
-          onClick={closeImageModal}
+        <motion.div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          <div
-            className="relative mx-auto h-[70vh] w-full max-w-5xl"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on the container
-          >
-            {/* Close button */}
-            <ModalControls onClick={closeImageModal} position="close">
-              <FiX className="h-6 w-6" />
-            </ModalControls>
+          {/* Backdrop with blur */}
+          <motion.div
+            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            onClick={closeImageModal}
+            initial={{ backdropFilter: "blur(0px)" }}
+            animate={{ backdropFilter: "blur(8px)" }}
+            exit={{ backdropFilter: "blur(0px)" }}
+          />
 
-            {/* Image navigation - previous */}
-            <ModalControls onClick={prevImage} position="left">
-              <FiChevronLeft className="h-6 w-6" />
-            </ModalControls>
+          {/* Modal content */}
+          <div className="relative z-10 mx-4 h-[80vh] w-full max-w-6xl">
+            {/* Header */}
+            <motion.div
+              className="mb-4 flex items-center justify-between"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1 }}
+            >
+              <div className="text-foreground">
+                <h3 className="text-lg font-semibold sm:text-xl">
+                  {getCurrentAward()?.title}
+                </h3>
+                <p className="text-navy-300 text-sm">
+                  Image {currentImageIndex + 1} of{" "}
+                  {getCurrentAward()?.images?.length || 0}
+                </p>
+              </div>
 
-            {/* Fixed-size image container */}
-            <div className="bg-dark-600/90 relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg border border-teal-700">
-              {getCurrentImage() && (
-                <Image
-                  src={getCurrentImage()!.src}
-                  alt={getCurrentImage()!.alt}
-                  width={getCurrentImage()!.width}
-                  height={getCurrentImage()!.height}
-                  className="max-h-full max-w-full object-contain shadow-2xl"
-                  quality={100}
-                  priority={true}
-                  sizes="(max-width: 768px) 100vw, 80vw"
-                  placeholder="blur"
-                  blurDataURL={
-                    getCurrentImage()!.blurDataURL ||
-                    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN88OjpfwAI+QM4V9Qg1QAAAABJRU5ErkJggg=="
-                  }
-                />
+              <button
+                onClick={closeImageModal}
+                className="bg-navy-800/90 border-navy-600 hover:bg-navy-700/90 group flex h-10 w-10 items-center justify-center rounded-full border backdrop-blur-sm transition-all duration-200 hover:border-red-500/50"
+              >
+                <FiX className="text-foreground h-5 w-5 transition-colors group-hover:text-red-400" />
+              </button>
+            </motion.div>
+
+            {/* Image container */}
+            <motion.div
+              className="bg-navy-900/50 relative h-full overflow-hidden rounded-xl backdrop-blur-sm"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.1, type: "spring", stiffness: 300 }}
+            >
+              {/* Navigation buttons */}
+              {getCurrentAward() && getCurrentAward()!.images.length > 1 && (
+                <>
+                  <motion.button
+                    onClick={prevImage}
+                    className="bg-navy-800/90 border-navy-600 hover:bg-navy-700/90 hover:border-neon/50 absolute top-1/2 left-4 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm transition-all duration-200"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <FiChevronLeft className="text-foreground h-6 w-6" />
+                  </motion.button>
+
+                  <motion.button
+                    onClick={nextImage}
+                    className="bg-navy-800/90 border-navy-600 hover:bg-navy-700/90 hover:border-neon/50 absolute top-1/2 right-4 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm transition-all duration-200"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <FiChevronRight className="text-foreground h-6 w-6" />
+                  </motion.button>
+                </>
               )}
-            </div>
 
-            {/* Image navigation - next */}
-            <ModalControls onClick={nextImage} position="right">
-              <FiChevronRight className="h-6 w-6" />
-            </ModalControls>
+              {/* Loading indicator */}
+              {imageLoading && (
+                <div className="bg-navy-900/50 absolute inset-0 z-20 flex items-center justify-center backdrop-blur-sm">
+                  <motion.div
+                    className="bg-neon/20 border-neon/50 flex h-16 w-16 items-center justify-center rounded-full border"
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                  >
+                    <div className="bg-neon h-2 w-2 rounded-full" />
+                  </motion.div>
+                </div>
+              )}
+
+              {/* Main image */}
+              {getCurrentImage() && (
+                <motion.div
+                  key={`${currentAwardId}-${currentImageIndex}`}
+                  className="relative h-full w-full"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Image
+                    src={getCurrentImage()!.src}
+                    alt={getCurrentImage()!.alt}
+                    fill
+                    className="object-contain"
+                    sizes="100vw"
+                    priority
+                    onLoad={() => setImageLoading(false)}
+                    onError={() => setImageLoading(false)}
+                  />
+                </motion.div>
+              )}
+
+              {/* Image info overlay */}
+              {getCurrentImage() && (
+                <motion.div
+                  className="bg-navy-900/90 absolute right-0 bottom-0 left-0 p-4 backdrop-blur-sm"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <p className="text-foreground text-sm font-medium">
+                    {getCurrentImage()!.alt}
+                  </p>
+                </motion.div>
+              )}
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       )}
     </>
   );
