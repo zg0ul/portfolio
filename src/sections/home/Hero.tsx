@@ -1,7 +1,8 @@
 import SocialLinks from "@/components/SocialLinks";
-import { ContainerTextFlip } from "@/components/ui/container-text-flip";
+// import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import SplitText from "@/components/ui/split-text-motion";
+import { AnimatedCareerContainer } from "@/components/ui/AnimatedCareerContainer";
 import React from "react";
 
 function Hero() {
@@ -26,14 +27,15 @@ function Hero() {
               animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
               animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
               easing="easeInOut"
-              threshold={0.2}
+              threshold={0.1}
             />
             <span className="gradient-title">I&apos;m</span>
             <span className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl">
               Mohammad Zgoul
             </span>
             <br />
-            <ContainerTextFlip className="body-bold sm:2xl text-xl leading-tight font-bold md:text-3xl lg:text-4xl xl:text-5xl" />
+            <AnimatedCareerContainer className="body-bold sm:2xl text-xl leading-tight font-bold md:text-3xl lg:text-4xl xl:text-5xl" />
+            {/* <ContainerTextFlip className="body-bold sm:2xl text-xl leading-tight font-bold md:text-3xl lg:text-4xl xl:text-5xl" /> */}
           </h2>
 
           <p className="text-md body-light mb-8 font-light md:text-xl lg:text-2xl">

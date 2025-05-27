@@ -61,16 +61,18 @@ export default function Bento() {
       </div>
 
       {/* Background large number */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <h3 className="text-foreground/10 text-[8rem] font-bold select-none sm:text-[10rem] xl:text-[12rem]">
+      <div className="pointer-events-none absolute inset-0 flex -translate-x-15 items-center justify-center">
+        <h3 className="text-foreground/5 text-[6rem] font-bold blur-xs select-none sm:text-[8rem] xl:text-[10rem]">
           70
         </h3>
       </div>
 
       {/* Foreground content */}
-      <div className="relative z-10 flex h-[calc(100%-4rem)] flex-col justify-center">
+      <div className="relative z-10 flex h-full flex-col justify-center">
         <div className="body-bold text-foreground flex items-baseline">
-          <h3 className="text-5xl font-bold sm:text-6xl xl:text-8xl">70</h3>
+          <h3 className="text-5xl font-bold sm:text-7xl md:text-8xl xl:text-8xl">
+            70
+          </h3>
           <p className="ml-2 text-base sm:text-lg">wpm</p>
         </div>
 

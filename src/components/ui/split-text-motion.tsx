@@ -65,7 +65,7 @@ const SplitText: React.FC<SplitTextProps> = ({
       className={`split-parent inline overflow-hidden ${className}`}
       style={{ textAlign, whiteSpace: "normal", wordWrap: "break-word" }}
       initial="hidden"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.1 }}
       whileInView="visible"
     >
       {words.map((word, wordIndex) => (
