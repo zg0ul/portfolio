@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// Cache for 24 hours (86400 seconds)
+const CACHE_DURATION = 86400;
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const username = searchParams.get("username");
@@ -37,7 +40,13 @@ export async function GET(request: NextRequest) {
       apiUrl += `?${queryParams.join("&")}`;
     }
 
-    const response = await fetch(apiUrl);
+    // Fetch with caching - Next.js will cache this for 24 hours
+    const response = await fetch(apiUrl, {
+      next: {
+        revalidate: CACHE_DURATION,
+        tags: [`github-contributions-${username}`],
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -45,7 +54,14 @@ export async function GET(request: NextRequest) {
 
     const data = await response.json();
 
-    return NextResponse.json(data);
+    // Set cache headers for the API response
+    const headers = new Headers();
+    headers.set(
+      "Cache-Control",
+      `public, s-maxage=${CACHE_DURATION}, stale-while-revalidate=3600`,
+    );
+
+    return NextResponse.json(data, { headers });
   } catch (error) {
     console.error("Error fetching GitHub contributions:", error);
     return NextResponse.json(

@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { FiGithub } from "react-icons/fi";
 import { BentoCard } from "@/components/ui/bento-card";
+import BentoPill from "./ui/bento-pill";
 
 // Simple contribution cell interface
 interface ContributionDay {
@@ -178,18 +179,18 @@ export default function GitHubContributionGraph({ username = "zg0ul" }) {
     return (
       <BentoCard>
         <div className="flex items-center justify-between">
-          <h2 className="group mr-auto flex w-fit items-center rounded-3xl border-[2px] border-white/5 bg-gradient-to-tr from-zinc-300/5 via-gray-400/5 to-transparent px-5 py-2 text-sm text-gray-400">
+          <BentoPill>
             <FiGithub className="mr-2 inline h-4 w-4 transition-all duration-300" />
             GitHub Contributions
-          </h2>
-          <div className="text-zinc-200">
+          </BentoPill>
+          <div className="text-foreground">
             <span className="animate-pulse text-sm font-medium">
               Loading contributions...
             </span>
           </div>
         </div>
 
-        <div ref={containerRef} className="mt-5 h-full min-h-[100px] w-full">
+        <div ref={containerRef} className="mt-5 h-full w-full">
           <div className="flex h-full w-full justify-center">
             <div ref={gridRef} className="flex gap-1 pb-2">
               {placeholderWeeks.map((week, weekIndex) => (
@@ -218,10 +219,10 @@ export default function GitHubContributionGraph({ username = "zg0ul" }) {
   return (
     <BentoCard>
       <div className="flex items-center justify-between">
-        <h2 className="group mr-auto flex w-fit items-center rounded-3xl border-[2px] border-white/5 bg-gradient-to-tr from-zinc-300/5 via-gray-400/5 to-transparent px-5 py-2 text-sm text-gray-400">
+        <BentoPill>
           <FiGithub className="mr-2 inline h-4 w-4 transition-all duration-300" />
           GitHub Contributions
-        </h2>
+        </BentoPill>
         <div className="text-zinc-200">
           {hoveredDay ? (
             <span className="text-sm font-medium">
@@ -236,7 +237,7 @@ export default function GitHubContributionGraph({ username = "zg0ul" }) {
         </div>
       </div>
 
-      <div ref={containerRef} className="mt-5 h-full min-h-[100px] w-full">
+      <div ref={containerRef} className="mt-5 h-full w-full">
         {/* GitHub-style contribution grid that fills available space */}
         <div className="flex h-full w-full justify-center">
           <div ref={gridRef} className="flex gap-1 pb-2">
@@ -270,6 +271,9 @@ export default function GitHubContributionGraph({ username = "zg0ul" }) {
             ))}
           </div>
         </div>
+      </div>
+      <div className="leading-wider text-navy-200/80 p-5 text-lg font-semibold">
+        Code, commit, repeat - that's the routine.
       </div>
     </BentoCard>
   );

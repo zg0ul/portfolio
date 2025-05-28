@@ -19,7 +19,7 @@ export const BentoCard = ({
 
   return (
     <div
-      className="group bg-background border-navy-600 relative h-full transform-gpu overflow-hidden rounded-[20px] border p-4 transition-transform hover:scale-[1.01] active:scale-95"
+      className="group bg-navy-700 border-navy-500 relative h-full transform-gpu overflow-hidden rounded-[20px] border p-4 transition-transform hover:scale-[1.01] active:scale-99"
       ref={parentRef}
     >
       {withArrow && (
@@ -48,7 +48,7 @@ export const BentoCard = ({
       {children && (
         <div
           className={cn(
-            "border-navy-400 relative grid overflow-hidden rounded-[15px]",
+            "border-navy-500 relative grid overflow-hidden rounded-[15px]",
             className,
           )}
         >

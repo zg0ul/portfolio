@@ -23,7 +23,7 @@ export const AnimatedCard = ({
 
   return (
     <div
-      className="group border-navy-500 bg-navy-800 relative h-full transform-gpu overflow-hidden rounded-3xl border p-4 transition-transform hover:scale-[1.01]"
+      className="group border-navy-500 bg-navy-700 relative h-full transform-gpu overflow-hidden rounded-3xl border p-4 transition-transform hover:scale-[1.01]"
       ref={parentRef}
     >
       {withArrow && (
@@ -31,7 +31,7 @@ export const AnimatedCard = ({
       )}
       <div
         className={cn(
-          "absolute -translate-x-1/2 -translate-y-1/2 transform-gpu rounded-full blur-xl transition-transform duration-500 group-hover:scale-[3]",
+          "absolute -translate-x-1/2 -translate-y-1/2 transform-gpu border blur-xl transition-transform duration-500 group-hover:scale-[3]",
           mouse.elementX === null || mouse.elementY === null
             ? "opacity-0"
             : "opacity-100",
@@ -52,7 +52,7 @@ export const AnimatedCard = ({
       {children && (
         <div
           className={cn(
-            "border-navy-500 relative grid overflow-hidden rounded-3xl",
+            "border-navy-500 relative grid overflow-hidden rounded-2xl",
             className,
           )}
         >

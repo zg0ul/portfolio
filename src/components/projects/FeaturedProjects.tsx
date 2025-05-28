@@ -6,6 +6,7 @@ import * as motion from "motion/react-client";
 import ProjectCard from "@/components/projects/ProjectCard";
 import { ProjectType } from "@/types/project";
 import { Button } from "@/components/ui/button";
+import AnimatedUnderline from "../ui/AnimatedUnderline";
 
 export default function FeaturedProjects() {
   const [featuredProjects, setFeaturedProjects] = useState<ProjectType[]>([]);
@@ -36,8 +37,9 @@ export default function FeaturedProjects() {
   if (isLoading) {
     return (
       <div className="mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="section-title:small mb-4 text-center">
+        <h2 className="section-title:small relative inline-block text-center">
           Featured Projects
+          <AnimatedUnderline />
         </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
@@ -57,13 +59,50 @@ export default function FeaturedProjects() {
   }
 
   return (
-    <div className="mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:px-8">
-      <h2 className="section-title:small text-center">Featured Projects</h2>
-      <p className="section-description:small mb-6 text-center">
-        Check out some of my best work
-      </p>
+    <section id="featured-projects" className="container mb-38">
+      <div className="mb-8 sm:mb-12">
+        {/* Mobile: Stacked layout */}
+        <div className="block sm:hidden">
+          <div className="mb-4 text-center">
+            <h2 className="section-title:small relative inline-block">
+              Featured Projects
+              <AnimatedUnderline />
+            </h2>
+          </div>
+          <div className="text-center">
+            <Link href="/projects">
+              <Button
+                variant="outline"
+                className="border-neon/30 text-neon hover:bg-neon/10 hover:border-neon/50 px-4 py-2 text-sm transition-all duration-200"
+              >
+                View All →
+              </Button>
+            </Link>
+          </div>
+        </div>
 
-      <div className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Desktop: Side-by-side layout */}
+        <div className="relative hidden sm:block">
+          <div className="text-center">
+            <h2 className="section-title:small relative inline-block">
+              Featured Projects
+              <AnimatedUnderline />
+            </h2>
+          </div>
+          <div className="absolute top-1/2 right-0 -translate-y-1/2">
+            <Link href="/projects">
+              <Button
+                variant="outline"
+                className="border-neon/30 text-neon hover:bg-neon/10 hover:border-neon/50 px-4 py-2 text-sm transition-all duration-200"
+              >
+                View All →
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {featuredProjects.map((project) => (
           <motion.div
             key={project.id}
@@ -75,14 +114,6 @@ export default function FeaturedProjects() {
           </motion.div>
         ))}
       </div>
-
-      <div className="flex justify-center">
-        <Link href="/projects">
-          <Button className="bg-neon text-navy-900 hover:bg-neon/90 rounded-full px-8 py-2 transition-colors">
-            View All Projects
-          </Button>
-        </Link>
-      </div>
-    </div>
+    </section>
   );
 }

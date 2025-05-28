@@ -1,9 +1,9 @@
 import * as motion from "motion/react-client";
 import React from "react";
-import { AnimatedCard } from "@/components/ui/animated_card";
 import { TechnologyWithIcon } from "@/components/TechIcons";
 import { cn } from "@/lib/utils";
 import AnimatedUnderline from "@/components/ui/AnimatedUnderline";
+import { BentoCard } from "@/components/ui/bento-card";
 
 interface ExperienceItem {
   title: string;
@@ -22,13 +22,10 @@ const experiences: ExperienceItem[] = [
     location: "Amman, Jordan",
     description: [
       "Developed computer vision and geospatial AI solutions for ultra-HD aerial mapping applications.",
-      "Built custom motion detection system using YOLOv9 for polygon-based vehicle tracking with multi-class identification.",
-      "Developed UAE license plate detection model with custom post-processing algorithms for multi-emirate plate recognition.",
-      "Created CNN models from scratch and implemented custom image processing algorithms without external libraries.",
-      'Built "Searchable Images" - NextJS/TypeScript application with Gemini AI integration for automatic image categorization.',
-      'Developed "Searchable Maps" - Interactive geospatial query system using PostgreSQL/PostGIS with natural language processing.',
-      "Processed geospatial data using Python (rasterio), QGIS, and x-anylabeling for map annotation.",
-      "Transformed GeoJSON data to structured database formats for efficient spatial queries.",
+      "Built motion detection and UAE license plate recognition systems using YOLOv9 with custom post-processing algorithms.",
+      "Created CNN models from scratch and implemented custom image processing functions without external libraries.",
+      "Developed two full-stack applications: AI-powered image categorization platform and interactive geospatial query system with natural language processing.",
+      "Processed geospatial data using Python (rasterio), QGIS, and PostgreSQL/PostGIS for spatial analysis and visualization.",
     ],
     skills: [
       "Computer Vision",
@@ -70,12 +67,12 @@ const ExperienceCard: React.FC<{
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: index * 0.2 }}
       viewport={{ once: true, amount: 0.2 }}
-      className="relative w-full pb-8 pl-8 will-change-transform last:pb-0"
+      className="relative w-full pb-8 pl-0 will-change-transform last:pb-0 sm:pl-8"
     >
-      {/* Timeline line */}
+      {/* Timeline line - hidden on mobile */}
       <div
         className={cn(
-          "bg-navy-700 absolute top-0 left-0 h-full w-px",
+          "bg-navy-700 absolute top-0 left-0 hidden h-full w-px sm:block",
           index === 0 ? "mask-t-from-80% mask-t-to-100%" : "",
           index === experiences.length - 1
             ? "mask-b-from-80% mask-b-to-100%"
@@ -83,15 +80,15 @@ const ExperienceCard: React.FC<{
         )}
       />
 
-      {/* Timeline dot aligned with title */}
-      <div className="bg-neon absolute top-[3.2rem] left-[-4px] h-2 w-2 rounded-full" />
+      {/* Timeline dot aligned with title - hidden on mobile */}
+      <div className="bg-neon absolute top-[3.2rem] left-[-4px] hidden h-2 w-2 rounded-full sm:block" />
 
       {/* Bento Card */}
-      <AnimatedCard className="w-full">
+      <BentoCard className="w-full">
         <div className="z-10 p-4 sm:p-6">
           <div className="mb-4 flex flex-col sm:flex-row sm:items-start sm:justify-between">
             <div className="text-left">
-              <h3 className="text-text-300 text-xl font-semibold">
+              <h3 className="text-foreground text-xl font-semibold">
                 {experience.title}
               </h3>
               <p className="text-navy-300 text-lg">{experience.company}</p>
@@ -129,14 +126,14 @@ const ExperienceCard: React.FC<{
             {experience.skills.map((skill, i) => (
               <div
                 key={i}
-                className="pill-container hover:border-navy-500/70 flex items-center gap-1.5 px-3 py-1.5 text-sm transition-all duration-300 hover:scale-110"
+                className="pill-container hover:border-navy-400 flex items-center gap-1.5 px-3 py-1.5 text-sm transition-all duration-300 hover:scale-110"
               >
                 <TechnologyWithIcon techId={skill} />
               </div>
             ))}
           </div>
         </div>
-      </AnimatedCard>
+      </BentoCard>
     </motion.div>
   );
 };

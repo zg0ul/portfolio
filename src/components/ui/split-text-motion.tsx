@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { motion, useAnimation, Variants } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, Variants, useInView } from "motion/react";
 
 interface SplitTextProps {
   text?: string;
@@ -24,13 +24,19 @@ const SplitText: React.FC<SplitTextProps> = ({
   animationTo = { opacity: 1, transform: "translate3d(0,0,0)" },
   easing = "easeInOut",
   threshold = 0,
-  rootMargin = "0px",
   textAlign = "center",
   onLetterAnimationComplete,
 }) => {
+  const ref = useRef(null);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  const isInView = useInView(ref, {
+    once: true,
+    amount: threshold,
+  });
+
   // Parse text into words and letters
   const words = text.split(" ").map((word) => word.split(""));
-  const controls = useAnimation();
 
   // Define letter animation variants
   const letterVariants: Variants = {
@@ -43,30 +49,47 @@ const SplitText: React.FC<SplitTextProps> = ({
       transform: animationTo.transform,
       transition: {
         delay: i * (delay / 1000),
-        duration: 0.3,
+        duration: 0.5,
         ease: easing,
       },
     }),
   };
 
-  useEffect(() => {
-    const handleAnimation = async () => {
-      await controls.start("visible");
-      if (onLetterAnimationComplete) {
-        onLetterAnimationComplete();
-      }
-    };
+  // Container variants for smooth coordination
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: delay / 1000,
+      },
+    },
+  };
 
-    handleAnimation();
-  }, [controls, onLetterAnimationComplete]);
+  useEffect(() => {
+    if (isInView) {
+      setShouldAnimate(true);
+      if (onLetterAnimationComplete) {
+        // Calculate total animation time and call callback
+        const totalLetters = text.replace(/\s/g, "").length;
+        const totalTime = totalLetters * delay + 500; // 500ms for last letter duration
+        setTimeout(onLetterAnimationComplete, totalTime);
+      }
+    }
+  }, [isInView, delay, text, onLetterAnimationComplete]);
+
+  // Reset animation when component remounts (page navigation)
+  useEffect(() => {
+    setShouldAnimate(false);
+  }, [text]); // Reset when text changes (component remount)
 
   return (
     <motion.p
+      ref={ref}
       className={`split-parent inline overflow-hidden ${className}`}
       style={{ textAlign, whiteSpace: "normal", wordWrap: "break-word" }}
+      variants={containerVariants}
       initial="hidden"
-      viewport={{ once: true, amount: 0.1 }}
-      whileInView="visible"
+      animate={shouldAnimate ? "visible" : "hidden"}
     >
       {words.map((word, wordIndex) => (
         <span
@@ -89,7 +112,7 @@ const SplitText: React.FC<SplitTextProps> = ({
               </motion.span>
             );
           })}
-          <span style={{ display: "inline-block", width: "0.3em" }}>
+          <span style={{ display: "inline-block", width: "0.1em" }}>
             &nbsp;
           </span>
         </span>

@@ -1,6 +1,7 @@
 import Bento from "@/sections/home/Bento";
 import ContactForm from "@/sections/home/ContactForm";
 import Hero from "@/sections/home/Hero";
+import Approach from "@/sections/home/Approach";
 import FeaturedProjects from "@/components/projects/FeaturedProjects";
 import AboutPageExperience from "@/sections/about/Experience";
 
@@ -14,6 +15,8 @@ const PortfolioPage: React.FC = () => (
 
     <FeaturedProjects />
 
+    <Approach />
+    
     <ContactForm />
   </div>
 );

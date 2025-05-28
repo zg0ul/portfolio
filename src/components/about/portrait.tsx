@@ -31,7 +31,6 @@ export default function Portrait() {
             <CardItem
               className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg p-6 sm:p-7"
               translateZ={100}
-              rotateY={-10}
             >
               <Image
                 src={"/assets/images/portrait.jpeg"}

@@ -95,10 +95,15 @@ export default function Bento() {
 
   const LocationCard = () => (
     <BentoCard>
-      <BentoPill>
-        <MapPin className="mr-2 inline h-4 w-4 duration-300" />
-        Location
-      </BentoPill>
+      <div className="flex items-center justify-between gap-5">
+        <BentoPill>
+          <MapPin className="mr-2 inline h-4 w-4 duration-300" />
+          Location
+        </BentoPill>
+        <span className="text-navy-200 mr-2 text-xs md:text-sm">
+          Amman, Jordan 🇯🇴
+        </span>
+      </div>
       <div className="mt-5 rounded-xl">
         <div className="relative rounded-xl">
           <Image
@@ -137,7 +142,7 @@ export default function Bento() {
                     {/* Remove default padding */}
                     <div className="relative mt-6 w-full mask-r-from-30% mask-r-to-95% mask-l-from-30% mask-l-to-95%">
                       {/* Ensure full width */}
-                      <Marquee className="[--duration:10s]">
+                      <Marquee className="[--duration:5 s]">
                         {techStacks.map((techstack, idx) => (
                           <techstack.icon
                             key={idx}

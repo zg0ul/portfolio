@@ -34,7 +34,9 @@ export default async function ProjectsPage() {
 
         <Suspense
           fallback={
-            <div>
+            <div className="min-h-[600px]">
+              {" "}
+              {/* Add minimum height */}
               {/* Category filter skeleton */}
               <div className="mb-8 flex flex-wrap justify-center gap-2">
                 {Array.from({ length: 5 }).map((_, index) => (
@@ -44,16 +46,19 @@ export default async function ProjectsPage() {
                   />
                 ))}
               </div>
-
               {/* Project cards skeleton */}
               <ProjectCardSkeleton count={6} />
             </div>
           }
         >
-          <ProjectsClient
-            initialProjects={projects || []}
-            categories={categories}
-          />
+          <div className="min-h-[600px]">
+            {" "}
+            {/* Match the fallback height */}
+            <ProjectsClient
+              initialProjects={projects || []}
+              categories={categories}
+            />
+          </div>
         </Suspense>
       </div>
     </main>

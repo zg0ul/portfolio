@@ -5,23 +5,19 @@ import React from "react";
 function AboutPageHero() {
   return (
     <section className="relative mb-24">
-      <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col items-center gap-8 text-center lg:flex-row lg:items-center lg:justify-between">
         {/* Text Content */}
-        <div className="w-full px-4 lg:w-1/2 lg:px-0 lg:text-left">
+        <div className="h-full w-full px-4 lg:px-0 lg:text-left">
           <h1 className="gradient-title mb-6 text-xl font-extrabold md:text-3xl lg:text-4xl">
             I'm Mohammad - Tech-Savvy Engineer
           </h1>
 
           <p className="text-text-400 mb-8 text-base leading-normal tracking-wide md:text-lg lg:text-xl">
-            I'm Mohammad Zgoul, I go by zg0ul online, an engineer passionate
-            about bridging AI, hardware, and software to build meaningful
-            technology. My journey has taken me through developing computer
-            vision systems, geospatial AI solutions, assistive tech, and
-            full-stack applications. I enjoy approaching problems from multiple
-            angles, drawing on my background in machine learning, Python,
-            Flutter, and Next.js. Right now, I'm focused on Flutter development,
-            constantly learning and aiming to create solutions that make a real
-            difference.
+            I'm Mohammad Zgoul (zg0ul), a software engineer with a mechatronics
+            background. Entirely self-taught in programming, I specialize in
+            Flutter development while exploring web technologies like Next.js.
+            I'm passionate about continuous learning and creating technology
+            that makes a difference.
           </p>
 
           {/* Social Links - Centered on mobile, left-aligned on desktop */}
@@ -36,7 +32,7 @@ function AboutPageHero() {
         </div>
 
         {/* Portrait - Below text on mobile, side-by-side on desktop */}
-        <div className="flex w-full justify-center p-2 lg:w-1/2 lg:justify-end">
+        <div className="flex h-full w-full justify-center p-2 md:w-xl lg:w-3xl lg:justify-end">
           <Portrait />
         </div>
       </div>

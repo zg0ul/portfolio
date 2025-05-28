@@ -19,16 +19,21 @@ function Hero() {
             <Location />
             {isOpenToWork && <OpenToWork />}
           </div> */}
-          <h2 className="body-bold mb-8 text-2xl leading-tight font-bold sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
-            <SplitText
-              text="Hey!"
-              className="gradient-title text-neon"
-              delay={150}
-              animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
-              animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
-              easing="easeInOut"
-              threshold={0.1}
-            />
+          <h2 className="body-bold mb-8 text-2xl leading-tight font-bold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+            <span>
+              <SplitText
+                text="Hey!"
+                className="gradient-title text-neon"
+                delay={200}
+                animationFrom={{
+                  opacity: 0,
+                  transform: "translate3d(0,50px,0)",
+                }}
+                animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
+                easing="easeInOut"
+                threshold={0.1}
+              />
+            </span>
             <span className="gradient-title">I&apos;m</span>
             <span className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl">
               Mohammad Zgoul
@@ -38,7 +43,7 @@ function Hero() {
             {/* <ContainerTextFlip className="body-bold sm:2xl text-xl leading-tight font-bold md:text-3xl lg:text-4xl xl:text-5xl" /> */}
           </h2>
 
-          <p className="text-md body-light mb-8 font-light md:text-xl lg:text-2xl">
+          <p className="text-md body-light text-foreground mb-8 font-normal md:text-xl lg:text-2xl">
             I enjoy bringing ideas to life <br /> whether it's a mobile app or a
             full-stack web platform.
           </p>
