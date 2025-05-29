@@ -15,6 +15,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -26,6 +27,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          logout: false
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -33,9 +35,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
+            type=raw,value=latest 
             type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch,enable={{is_default_branch}}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -66,12 +68,12 @@ jobs:
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
             # Stop and remove existing container if it exists
-            docker stop portfolio-app || true
-            docker rm portfolio-app || true
+            docker stop portfolio || true
+            docker rm portfolio || true
 
             # Run the new container
             docker run -d \
-              --name portfolio-app \
+              --name portfolio \
               --restart unless-stopped \
               -p 3000:3000 \
               -e NODE_ENV=production \
@@ -82,6 +84,7 @@ jobs:
               -e SUPABASE_SERVICE_ROLE_KEY="${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
               -e ADMIN_SECRET_KEY="${{ secrets.ADMIN_SECRET_KEY }}" \
               -e ADMIN_PATH="${{ secrets.ADMIN_PATH }}" \
+              -e NEXT_PUBLIC_SUPABASE_ANON_KEY="${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
               -e NEXT_PUBLIC_DASHBOARD_SECRET="${{ secrets.NEXT_PUBLIC_DASHBOARD_SECRET }}" \
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
@@ -90,7 +93,7 @@ jobs:
             docker images ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --format "table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.CreatedAt}}" | tail -n +4 | awk '{print $2}' | head -n -3 | xargs -r docker rmi || true
 
             # Show running containers for verification
-            docker ps --filter name=portfolio-app
+            docker ps --filter name=portfolio
 
       - name: Health Check & Nginx Reload
         uses: appleboy/ssh-action@v1.0.3
@@ -104,7 +107,7 @@ jobs:
             sleep 10
 
             # Check if container is running
-            if docker ps --filter name=portfolio-app --format "{{.Names}}" | grep -q portfolio-app; then
+            if docker ps --filter name=portfolio --format "{{.Names}}" | grep -q portfolio; then
               echo "✅ Container is running successfully"
               
               # Test if the application responds locally
@@ -126,12 +129,12 @@ jobs:
                 
               else
                 echo "❌ Application is not responding on port 3000"
-                docker logs portfolio-app --tail 50
+                docker logs portfolio --tail 50
                 exit 1
               fi
             else
               echo "❌ Container failed to start"
-              docker logs portfolio-app --tail 50
+              docker logs portfolio --tail 50
               exit 1
             fi
 

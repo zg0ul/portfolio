@@ -27,17 +27,20 @@ COPY . .
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Provide dummy environment variables for build-time
 # These will be overridden at runtime with real values
+ENV RESEND_API_KEY=build-time-dummy-key
 ENV NEXT_PUBLIC_SUPABASE_URL=https://dummy.supabase.co
+ENV SUPABASE_SERVICE_ROLE_KEY=dummy-service-role-key
+ENV ADMIN_SECRET_KEY=dummy-admin-secret
 ENV NEXT_PUBLIC_DASHBOARD_SECRET=dummy-dashboard-secret
 
 RUN \
-    if [ -f yarn.lock ]; then yarn run build; \
+    if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+    elif [ -f yarn.lock ]; then yarn run build; \
     elif [ -f package-lock.json ]; then npm run build; \
-    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
     else echo "Lockfile not found." && exit 1; \
     fi
 
