@@ -1,6 +1,9 @@
+import { MetadataRoute } from "next";
 import { createClient } from "@/lib/supabase/server";
 
-export default async function sitemap() {
+export const baseUrl = "https://zg0ul.com";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = await createClient();
   const { data: projects } = await supabase
     .from("projects")
@@ -8,43 +11,44 @@ export default async function sitemap() {
 
   const projectUrls =
     projects?.map((project) => ({
-      url: `https://zg0ul.com/projects/${project.slug}`,
-      lastModified: new Date(project.updated_at),
+      url: `${baseUrl}/projects/${project.slug}`,
+      lastModified: new Date(project.updated_at).toISOString(),
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })) || [];
 
-  return [
+  const staticRoutes = [
     {
-      url: "https://zg0ul.com",
-      lastModified: new Date(),
+      url: baseUrl,
+      lastModified: new Date().toISOString(),
       changeFrequency: "weekly" as const,
       priority: 1,
     },
     {
-      url: "https://zg0ul.com/about",
-      lastModified: new Date(),
+      url: `${baseUrl}/about`,
+      lastModified: new Date().toISOString(),
       changeFrequency: "monthly" as const,
       priority: 0.9,
     },
     {
-      url: "https://zg0ul.com/projects",
-      lastModified: new Date(),
+      url: `${baseUrl}/projects`,
+      lastModified: new Date().toISOString(),
       changeFrequency: "weekly" as const,
       priority: 0.9,
     },
     {
-      url: "https://zg0ul.com/awards",
-      lastModified: new Date(),
+      url: `${baseUrl}/awards`,
+      lastModified: new Date().toISOString(),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     },
     {
-      url: "https://zg0ul.com/resume",
-      lastModified: new Date(),
+      url: `${baseUrl}/resume`,
+      lastModified: new Date().toISOString(),
       changeFrequency: "monthly" as const,
       priority: 0.6,
     },
-    ...projectUrls,
   ];
+
+  return [...staticRoutes, ...projectUrls];
 }
