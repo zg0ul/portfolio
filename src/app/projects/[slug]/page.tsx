@@ -8,10 +8,10 @@ import { ProjectNavigation } from "@/components/projects/ProjectNavigation";
 import { TableOfContents } from "@/components/projects/TableOfContents";
 import { configureMdx } from "@/lib/markdown/mdx-config";
 import { mdxComponents } from "@/lib/markdown/MDXComponents";
+import ProjectTracker from "@/components/projects/ProjectTracker";
 
 type Params = Promise<{ slug: string[] }>;
-
-// Generate metadata for SEO
+/// Generate metadata for SEO
 export async function generateMetadata({
   params,
 }: {
@@ -84,6 +84,9 @@ export default async function ProjectPage({ params }: { params: Params }) {
 
   return (
     <main className="topPageMargin relative container min-h-screen">
+      {/* Add the tracker */}
+      <ProjectTracker project={{ slug: project.slug, title: project.title }} />
+
       <ScrollToHashHandler />
 
       {/* Hero Section - Full width */}

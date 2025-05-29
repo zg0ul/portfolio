@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import AnimatedUnderline from "@/components/ui/AnimatedUnderline";
+import { usePageTracking } from "@/components/AnalyticsTracker";
 
 interface FormData {
   name: string;
@@ -35,8 +36,9 @@ const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const email = "zg0ul.contact@gmail.com";
+  const email = "mohammad@zg0ul.com";
   const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 2000 });
+  const { trackFormSubmission, trackCustomEvent } = usePageTracking();
 
   const MAX_MESSAGE_LENGTH = 1000;
   const MIN_MESSAGE_LENGTH = 10;
@@ -160,11 +162,26 @@ const ContactForm = () => {
           console.warn("Could not store submission timestamp:", error);
         }
 
+        // Track successful form submission
+        trackFormSubmission("contact_form", true);
+        trackCustomEvent("contact_form_success", {
+          form_type: "contact",
+          message_length: formData.message.length,
+          has_name: !!formData.name.trim(),
+        });
+
         toast.success("Message sent successfully! I'll get back to you soon.");
         // Reset form after successful submission
         setFormData({ name: "", email: "", message: "" });
         setErrors({});
       } else {
+        // Track failed form submission
+        trackFormSubmission("contact_form", false);
+        trackCustomEvent("contact_form_error", {
+          error_type: response.status === 429 ? "rate_limit" : "server_error",
+          status_code: response.status,
+        });
+
         if (response.status === 429) {
           toast.error(
             "Too many requests. Please wait 15 minutes before sending another message.",
@@ -186,8 +203,20 @@ const ContactForm = () => {
   const handleCopyEmail = async () => {
     const success = await copyToClipboard(email);
     if (success) {
+      // Track successful email copy
+      trackCustomEvent("email_copied", {
+        email: email,
+        source: "contact_form",
+        method: "clipboard",
+      });
       toast.success("Email copied to clipboard!");
     } else {
+      // Track failed email copy
+      trackCustomEvent("email_copy_failed", {
+        email: email,
+        source: "contact_form",
+        error: "clipboard_failed",
+      });
       toast.error("Failed to copy email");
     }
   };

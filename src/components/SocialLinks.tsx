@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { BsTwitterX } from "react-icons/bs";
 import { SlSocialLinkedin, SlSocialYoutube } from "react-icons/sl";
@@ -5,6 +7,7 @@ import { FiGithub } from "react-icons/fi";
 import { SiInstagram } from "react-icons/si";
 import { IconType } from "react-icons/lib";
 import { cn } from "@/lib/utils";
+import { usePageTracking } from "@/components/AnalyticsTracker";
 
 interface SocialLink {
   name: string;
@@ -50,6 +53,8 @@ const SocialLinks: React.FC<SocialLinksProps> = ({
   size = "md",
   showLabels = false,
 }) => {
+  const { trackExternalLink } = usePageTracking();
+
   const socialLinks: SocialLink[] = [
     {
       name: "GitHub",
@@ -78,6 +83,10 @@ const SocialLinks: React.FC<SocialLinksProps> = ({
     },
   ];
 
+  const handleSocialClick = (platform: string, href: string) => {
+    trackExternalLink(href, platform);
+  };
+
   return (
     <div
       className={cn(
@@ -91,6 +100,7 @@ const SocialLinks: React.FC<SocialLinksProps> = ({
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => handleSocialClick(link.name, link.href)}
           className={cn(
             "bg-navy-300 flex items-center justify-center transition-all duration-300",
             socialLinkVariants.size[size],

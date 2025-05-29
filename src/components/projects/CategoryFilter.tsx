@@ -1,3 +1,7 @@
+"use client";
+
+import { usePageTracking } from "@/components/AnalyticsTracker";
+
 interface CategoryFilterProps {
   categories: string[];
   onCategoryChange: (category: string | null) => void;
@@ -20,11 +24,22 @@ export function CategoryFilter({
   onCategoryChange,
   activeCategory,
 }: CategoryFilterProps) {
+  const { trackCustomEvent } = usePageTracking();
+
+  const handleCategoryClick = (category: string | null) => {
+    onCategoryChange(category);
+    trackCustomEvent("project_category_filter", {
+      category: category || "all",
+      available_categories: categories.length,
+      previous_category: activeCategory || "all",
+    });
+  };
+
   return (
     <div className="mb-8 flex flex-wrap justify-center gap-2 md:justify-start">
       {/* "All" filter button */}
       <button
-        onClick={() => onCategoryChange(null)}
+        onClick={() => handleCategoryClick(null)}
         className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-medium transition-all duration-300 ${
           activeCategory === null
             ? "bg-navy-700 text-neon border-neon border shadow-md"
@@ -39,7 +54,7 @@ export function CategoryFilter({
       {categories.map((category) => (
         <button
           key={category}
-          onClick={() => onCategoryChange(category)}
+          onClick={() => handleCategoryClick(category)}
           className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-medium transition-all duration-300 ${
             activeCategory === category
               ? "bg-navy-700 text-neon border-neon border shadow-md"

@@ -8,16 +8,79 @@ import { Toaster } from "sonner";
 import ClickSpark from "@/components/ui/click-spark";
 import { StarsBackground } from "@/components/ui/stars-background";
 import MobileDock from "@/components/MobileDock";
+import AnalyticsTracker from "@/components/AnalyticsTracker"; // Add this import
 import { Roboto } from "next/font/google";
+import { Suspense } from "react";
 
 const roboto = Roboto({
   subsets: ["latin"],
   variable: "--font-roboto",
 });
+
 export const metadata: Metadata = {
-  title: "zg0ul.com",
-  description: "A Portfolio website for Mohammad Zgoul (zg0ul)",
+  title: {
+    template: "%s | Mohammad Zgoul - Software Engineer",
+    default: "Mohammad Zgoul - Software Engineer & Flutter Developer",
+  },
+  description:
+    "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development. Based in Amman, Jordan.",
+  keywords: [
+    "Mohammad Zgoul",
+    "zg0ul",
+    "Software Engineer",
+    "Flutter Developer",
+    "Full Stack Developer",
+    "AI Engineer",
+    "Mechatronics",
+    "Next.js",
+    "React",
+    "Amman Jordan",
+    "Portfolio",
+  ],
+  authors: [{ name: "Mohammad Zgoul", url: "https://zg0ul.com" }],
+  creator: "Mohammad Zgoul",
+  publisher: "Mohammad Zgoul",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://zg0ul.com",
+    siteName: "Mohammad Zgoul - Software Engineer",
+    title: "Mohammad Zgoul - Software Engineer & Flutter Developer",
+    description:
+      "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development.",
+    images: [
+      {
+        url: "/assets/images/portfolio-thumbnail.png",
+        width: 1920,
+        height: 1080,
+        alt: "Mohammad Zgoul - Software Engineer Portfolio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mohammad Zgoul - Software Engineer",
+    description:
+      "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development.",
+    creator: "@zg0ul",
+    images: ["/assets/images/portfolio-thumbnail.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "https://zg0ul.com",
+  },
 };
+
 
 export default function RootLayout({
   children,
@@ -50,6 +113,11 @@ export default function RootLayout({
           sparkCount={8}
           duration={400}
         >
+          {/* Add Analytics Tracker */}
+          <Suspense fallback={null}>
+            <AnalyticsTracker />
+          </Suspense>
+
           <Header />
           <StarsBackground />
           {/* Mobile Navigation Dock */}
