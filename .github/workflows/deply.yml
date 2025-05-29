@@ -145,8 +145,17 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
           script: |
-            # Test API endpoint
-            curl -s http://localhost:3000/api/projects | head -200
+            # Test API endpoint with detailed output
+            echo "Testing /api/projects endpoint:"
+            curl -s http://localhost:3000/api/projects | jq '.' || curl -s http://localhost:3000/api/projects
+
+            # Check environment variables are loaded
+            echo "Checking environment variables in container:"
+            docker exec portfolio env | grep SUPABASE || echo "No SUPABASE env vars found"
+
+            # Check container logs for errors
+            echo "Container logs:"
+            docker logs portfolio --tail 20
 
   notify:
     needs: build-and-deploy
