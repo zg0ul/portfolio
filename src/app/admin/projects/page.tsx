@@ -1,6 +1,5 @@
 // src/app/admin/projects/page.tsx
 import { createAdminClient } from "@/lib/supabase/admin";
-import { checkAdminAuth } from "@/lib/admin-auth";
 import Link from "next/link";
 import { AdminProjectTable } from "@/components/admin/ProjectTable";
 import { ArrowLeft, Plus } from "lucide-react";
@@ -12,8 +11,6 @@ export const metadata = {
 };
 
 async function AdminProjectsPage() {
-  // Check authentication first
-  await checkAdminAuth();
 
   const adminClient = createAdminClient();
   const { data: projects, error } = await adminClient

@@ -1,4 +1,3 @@
-import { checkAdminAuth } from "@/lib/admin-auth";
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, BarChart3 } from "lucide-react";
@@ -11,8 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AnalyticsPage() {
-  // Check authentication
-  await checkAdminAuth();
 
   return (
     <main className="topPageMargin bg-background min-h-screen">
