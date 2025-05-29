@@ -126,8 +126,8 @@ export async function POST(request: NextRequest) {
 
     // Send email using Resend
     const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM_DOMAIN || "onboarding@resend.dev",
-      to: [process.env.EMAIL_TO || "zg0ul.contact@gmail.com"],
+      from: process.env.EMAIL_FROM_DOMAIN || "contact@zg0ul.com",
+      to: [process.env.EMAIL_TO || "mohammad@zg0ul.com"],
       replyTo: email, // This allows you to reply directly to the user
       subject: `🚀 New Portfolio Contact: ${name}`,
       html: `

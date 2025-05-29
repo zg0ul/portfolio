@@ -1,6 +1,5 @@
 // src/app/admin/projects/editor/[[...params]]/page.tsx
 import { createAdminClient } from "@/lib/supabase/admin";
-import { checkAdminAuth } from "@/lib/admin-auth";
 import { notFound } from "next/navigation";
 import ProjectEditor from "@/components/admin/editor/ProjectEditor";
 
@@ -21,7 +20,6 @@ export default async function ProjectEditorPage({
 }: {
   params: Params;
 }) {
-  await checkAdminAuth();
 
   const { params: paramArray } = await params;
   const projectId = paramArray?.[0];
