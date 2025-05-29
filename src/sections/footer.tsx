@@ -59,7 +59,7 @@ const PortfolioFooter = () => {
                         href="https://github.com/zg0ul/portfolio"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-foreground/80 hover:text-foreground/60 text-sm transition-all duration-300"
+                        className="text-foreground/80 hover:text-neon text-sm transition-all duration-300"
                       >
                         This Site
                       </Link>
@@ -78,14 +78,6 @@ const PortfolioFooter = () => {
                         <LuMail className="mr-2 h-4 w-4 flex-shrink-0" />
                         <span className="whitespace-nowrap">
                           mohammad@zg0ul.com
-                        </span>
-                      </span>
-                    </FooterLink>
-                    <FooterLink href="mailto:zg0ul.contact@gmail.com">
-                      <span className="flex items-center">
-                        <LuMail className="mr-2 h-4 w-4 flex-shrink-0" />
-                        <span className="whitespace-nowrap">
-                          zg0ul.contact@gmail.com
                         </span>
                       </span>
                     </FooterLink>
@@ -116,7 +108,7 @@ const FooterLink: React.FC<FooterLinkProps> = ({ href, children }) => {
     <li>
       <Link
         href={href}
-        className="text-foreground/80 hover:text-foreground/60 text-sm transition-all duration-300"
+        className="text-foreground/80 hover:text-neon decoration-foreground/20 trabsition-all text-sm decoration-2 underline-offset-4 transition-all duration-300 hover:translate-x-5 hover:underline"
       >
         {children}
       </Link>

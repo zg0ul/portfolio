@@ -6,8 +6,11 @@ import { toast } from "sonner";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { MdOutlineFileDownload } from "react-icons/md";
+import { usePageTracking } from "@/components/AnalyticsTracker";
 
 const ResumePage = () => {
+  const { trackDownload, trackCustomEvent } = usePageTracking();
+
   // PDF file path
   const flutterResumePath = "/assets/pdf/My_Resume_flutter.pdf";
   // Commented out for future use
@@ -18,10 +21,37 @@ const ResumePage = () => {
   // Commented out for future use
   // const fullstackResumeImage = "/assets/pdf/My_Resume_fullstack.png";
 
+  // Current active resume type (ready for future expansion)
+  const currentResumeType = "flutter";
+
+  // // Function to handle resume type switching with tracking (ready for future use)
+  // const setActiveResumeWithTracking = (resumeType: "flutter" | "fullstack") => {
+  //   if (resumeType !== currentResumeType) {
+  //     trackCustomEvent("resume_type_switch", {
+  //       from: currentResumeType,
+  //       to: resumeType,
+  //       source: "resume_toggle_buttons",
+  //     });
+  //     // When multiple resumes are available, this will update state
+  //     // setActiveResume(resumeType);
+  //   }
+  // };
+
   const handleDownload = () => {
     // Currently only handling Flutter resume download
     const path = flutterResumePath;
     const filename = "zg0ul_Flutter_Resume.pdf";
+
+    // Track the download event
+    trackDownload(filename, "resume");
+
+    // Track additional custom event with metadata
+    trackCustomEvent("resume_download", {
+      resumeType: currentResumeType,
+      format: "pdf",
+      source: "resume_page",
+      fileName: filename,
+    });
 
     // Create an anchor element and trigger download
     const link = document.createElement("a");
@@ -90,7 +120,18 @@ const ResumePage = () => {
         const [activeResume, setActiveResume] = useState<"flutter" | "fullstack">("flutter");
         
         // Toggle function
-        const toggleResume = () => {
+        const setActiveResumeWithTracking = (resumeType: "flutter" | "fullstack") => {
+    if (resumeType !== activeResume) {
+      trackCustomEvent('resume_type_switch', {
+        from: activeResume,
+        to: resumeType,
+        source: 'resume_toggle_buttons'
+      });
+      setActiveResume(resumeType);
+    }
+  };
+
+  const toggleResume = () => {
           setActiveResume(activeResume === "flutter" ? "fullstack" : "flutter");
         };
         

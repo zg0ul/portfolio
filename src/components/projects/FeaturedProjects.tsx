@@ -7,10 +7,12 @@ import ProjectCard from "@/components/projects/ProjectCard";
 import { ProjectType } from "@/types/project";
 import { Button } from "@/components/ui/button";
 import AnimatedUnderline from "../ui/AnimatedUnderline";
+import { usePageTracking } from "@/components/AnalyticsTracker";
 
 export default function FeaturedProjects() {
   const [featuredProjects, setFeaturedProjects] = useState<ProjectType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { trackCustomEvent } = usePageTracking();
 
   useEffect(() => {
     const fetchFeaturedProjects = async () => {
@@ -33,6 +35,14 @@ export default function FeaturedProjects() {
 
     fetchFeaturedProjects();
   }, []);
+
+  const handleViewAllClick = () => {
+    trackCustomEvent("view_all_projects_click", {
+      source: "featured_projects_section",
+      featured_projects_count: featuredProjects.length,
+      location: "homepage",
+    });
+  };
 
   if (isLoading) {
     return (
@@ -70,7 +80,7 @@ export default function FeaturedProjects() {
             </h2>
           </div>
           <div className="text-center">
-            <Link href="/projects">
+            <Link href="/projects" onClick={handleViewAllClick}>
               <Button
                 variant="outline"
                 className="border-neon/30 text-neon hover:bg-neon/10 hover:border-neon/50 px-4 py-2 text-sm transition-all duration-200"
@@ -90,7 +100,7 @@ export default function FeaturedProjects() {
             </h2>
           </div>
           <div className="absolute top-1/2 right-0 -translate-y-1/2">
-            <Link href="/projects">
+            <Link href="/projects" onClick={handleViewAllClick}>
               <Button
                 variant="outline"
                 className="border-neon/30 text-neon hover:bg-neon/10 hover:border-neon/50 px-4 py-2 text-sm transition-all duration-200"

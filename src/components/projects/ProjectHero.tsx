@@ -1,9 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink, ArrowLeft } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import * as motion from "motion/react-client";
 import { ProjectDetails } from "@/components/projects/ProjectDetails";
+import { usePageTracking } from "@/components/AnalyticsTracker";
 
 interface ProjectHeroProps {
   project: {
@@ -21,6 +24,18 @@ interface ProjectHeroProps {
 }
 
 export function ProjectHero({ project }: ProjectHeroProps) {
+  const { trackExternalLink, trackCustomEvent } = usePageTracking();
+
+  const handleExternalLinkClick = (type: "github" | "live", url: string) => {
+    trackExternalLink(url, `${project.title} - ${type}`);
+    trackCustomEvent("project_external_link_click", {
+      project_title: project.title,
+      link_type: type,
+      url: url,
+      source: "project_hero",
+    });
+  };
+
   return (
     <div className="relative w-full">
       {/* Header with Back Button and Title */}
@@ -75,6 +90,9 @@ export function ProjectHero({ project }: ProjectHeroProps) {
                       href={project.github_url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() =>
+                        handleExternalLinkClick("github", project.github_url!)
+                      }
                       className="group border-navy-400 bg-navy-700/50 hover:border-neon/40 hover:bg-navy-600/50 hover:text-neon flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-all"
                     >
                       <SiGithub className="h-4 w-4 transition-transform group-hover:scale-110" />
@@ -86,6 +104,9 @@ export function ProjectHero({ project }: ProjectHeroProps) {
                       href={project.live_url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() =>
+                        handleExternalLinkClick("live", project.live_url!)
+                      }
                       className="from-neon to-neon-4 hover:from-neon-4 hover:to-neon group text-navy-900 flex items-center gap-2 rounded-lg bg-gradient-to-r px-4 py-2.5 text-sm font-medium shadow-lg transition-all"
                     >
                       <ExternalLink className="h-4 w-4 transition-transform group-hover:scale-110" />

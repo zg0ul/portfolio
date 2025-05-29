@@ -8,12 +8,26 @@ import { CategoryWithIcon } from "@/components/ProjectCategories";
 import { TechnologyWithIcon } from "@/components/TechIcons";
 import { ProjectType } from "@/types/project";
 import { FiGithub } from "react-icons/fi";
+import { usePageTracking } from "@/components/AnalyticsTracker";
 
 interface ProjectCardProps {
   project: ProjectType;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const { trackExternalLink, trackCustomEvent } = usePageTracking();
+
+  const handleExternalLinkClick = (type: "github" | "live", url: string) => {
+    trackExternalLink(url, `${project.title} - ${type}`);
+    trackCustomEvent("project_external_link_click", {
+      project_slug: project.slug,
+      project_title: project.title,
+      link_type: type,
+      url: url,
+      source: "project_card",
+    });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -94,6 +108,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     href={project.github_url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      handleExternalLinkClick("github", project.github_url!)
+                    }
                     className="border-navy-500 hover:bg-neon hover:text-navy-800 flex size-10 items-center justify-center rounded-lg border transition-colors duration-500"
                   >
                     <FiGithub className="h-5 w-5" />
@@ -105,6 +122,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     href={project.live_url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      handleExternalLinkClick("live", project.live_url!)
+                    }
                     className="border-navy-500 hover:bg-neon hover:text-navy-800 flex size-10 items-center justify-center rounded-lg border transition-colors duration-500"
                   >
                     <ExternalLink className="h-5 w-5" />
