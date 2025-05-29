@@ -40,6 +40,9 @@ export const metadata: Metadata = {
   authors: [{ name: "Mohammad Zgoul", url: "https://zg0ul.com" }],
   creator: "Mohammad Zgoul",
   publisher: "Mohammad Zgoul",
+  icons: {
+    icon: "/icon.png",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -50,10 +53,11 @@ export const metadata: Metadata = {
       "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development.",
     images: [
       {
-        url: "https://zg0ul.com/assets/images/portfolio-thumbnail.png", // Use absolute URL
+        url: "https://pmerpfdlvkhayhritnhy.supabase.co/storage/v1/object/public/images//portfolio%20thumbnail.png",
         width: 1920,
         height: 1080,
         alt: "Mohammad Zgoul - Software Engineer Portfolio",
+        type: "image/png",
       },
     ],
   },
@@ -63,7 +67,9 @@ export const metadata: Metadata = {
     description:
       "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development.",
     creator: "@zg0ul",
-    images: ["https://zg0ul.com/assets/images/portfolio-thumbnail.png"], // Use absolute URL
+    images: [
+      "https://pmerpfdlvkhayhritnhy.supabase.co/storage/v1/object/public/images//portfolio%20thumbnail.png",
+    ], // Use absolute URL
   },
   robots: {
     index: true,
