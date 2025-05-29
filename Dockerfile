@@ -36,7 +36,6 @@ ENV NEXT_PUBLIC_SUPABASE_URL=https://dummy.supabase.co
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=dummy-anon-key
 ENV SUPABASE_SERVICE_ROLE_KEY=dummy-service-role-key
 ENV ADMIN_SECRET_KEY=dummy-admin-secret
-ENV NEXT_PUBLIC_DASHBOARD_SECRET=dummy-dashboard-secret
 
 RUN \
     if [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
