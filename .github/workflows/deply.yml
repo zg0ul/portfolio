@@ -67,8 +67,8 @@ jobs:
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
             # Stop and remove existing container if it exists
-            docker stop reverent_napier || true
-            docker rm reverent_napier || true
+            docker stop portfolio || true
+            docker rm portfolio || true
 
             # Run the new container
             docker run -d \
