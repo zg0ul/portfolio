@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import ProjectsClient from "./projectsClient";
 import ProjectCardSkeleton from "@/components/projects/ProjectCardSkeleton";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProjectsPage() {
   // Server-side data fetching
   const supabase = await createClient();

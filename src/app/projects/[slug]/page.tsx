@@ -10,6 +10,8 @@ import { configureMdx } from "@/lib/markdown/mdx-config";
 import { mdxComponents } from "@/lib/markdown/MDXComponents";
 import ProjectTracker from "@/components/projects/ProjectTracker";
 
+export const dynamic = "force-dynamic";
+
 type Params = Promise<{ slug: string[] }>;
 /// Generate metadata for SEO
 export async function generateMetadata({

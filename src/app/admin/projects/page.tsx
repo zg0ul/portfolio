@@ -10,6 +10,8 @@ export const metadata = {
   description: "Manage your portfolio projects",
 };
 
+export const dynamic = "force-dynamic";
+
 async function AdminProjectsPage() {
 
   const adminClient = createAdminClient();
