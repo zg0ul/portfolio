@@ -126,7 +126,7 @@ class AnalyticsClient {
   private async getLocationData() {
     try {
       // Using a free IP geolocation service
-      const response = await fetch("https://ipapi.co/json/");
+      const response = await fetch("/api/location");
       if (response.ok) {
         const data = await response.json();
         return {

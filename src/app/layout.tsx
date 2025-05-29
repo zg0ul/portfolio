@@ -11,7 +11,6 @@ import MobileDock from "@/components/MobileDock";
 import AnalyticsTracker from "@/components/AnalyticsTracker"; // Add this import
 import { Roboto } from "next/font/google";
 import { Suspense } from "react";
-import { baseUrl } from "./sitemap";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -19,7 +18,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  metadataBase: baseUrl ? new URL(baseUrl) : undefined,
+  metadataBase: new URL("https://zg0ul.com"),
   title: {
     template: "%s | Mohammad Zgoul - Software Engineer",
     default: "Mohammad Zgoul - Software Engineer & Flutter Developer",
