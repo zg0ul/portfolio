@@ -50,7 +50,7 @@ export const metadata: Metadata = {
       "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development.",
     images: [
       {
-        url: "/assets/images/portfolio-thumbnail.png",
+        url: "https://zg0ul.com/assets/images/portfolio-thumbnail.png", // Use absolute URL
         width: 1920,
         height: 1080,
         alt: "Mohammad Zgoul - Software Engineer Portfolio",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     description:
       "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development.",
     creator: "@zg0ul",
-    images: ["/assets/images/portfolio-thumbnail.png"],
+    images: ["https://zg0ul.com/assets/images/portfolio-thumbnail.png"], // Use absolute URL
   },
   robots: {
     index: true,
@@ -80,7 +80,6 @@ export const metadata: Metadata = {
     canonical: "https://zg0ul.com",
   },
 };
-
 
 export default function RootLayout({
   children,
