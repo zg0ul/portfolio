@@ -55,7 +55,7 @@ export const metadata: Metadata = {
       "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development.",
     images: [
       {
-        url: "https://pmerpfdlvkhayhritnhy.supabase.co/storage/v1/object/public/images//portfolio%20thumbnail.png",
+        url: "https://pmerpfdlvkhayhritnhy.supabase.co/storage/v1/object/public/images/portfolio%20thumbnail.png",
         width: 1920,
         height: 1080,
         alt: "Mohammad Zgoul - Software Engineer Portfolio",
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
       "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development.",
     creator: "@zg0ul",
     images: [
-      "https://pmerpfdlvkhayhritnhy.supabase.co/storage/v1/object/public/images//portfolio%20thumbnail.png",
+      "https://pmerpfdlvkhayhritnhy.supabase.co/storage/v1/object/public/images/portfolio%20thumbnail.png",
     ], // Use absolute URL
   },
   robots: {
