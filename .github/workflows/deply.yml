@@ -2,7 +2,7 @@ name: Deploy to Production
 
 on:
   push:
-    branches: [ deploy ]
+    branches: [deploy]
   workflow_dispatch: # Allows manual trigger
 
 env:
@@ -17,129 +17,137 @@ jobs:
       packages: write
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Log in to Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        tags: |
-          type=ref,event=branch
-          type=sha,prefix={{branch}}-
-          type=raw,value=latest,enable={{is_default_branch}}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        platforms: linux/amd64
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-    - name: Deploy to VPS
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.VPS_SSH_KEY }}
-        port: ${{ secrets.VPS_PORT || 22 }}
-        script: |
-          # Login to GitHub Container Registry
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          
-          # Pull the latest image
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          
-          # Stop and remove existing container if it exists
-          docker stop portfolio-app || true
-          docker rm portfolio-app || true
-          
-          # Run the new container
-          docker run -d \
-            --name portfolio-app \
-            --restart unless-stopped \
-            -p 3000:3000 \
-            -e NODE_ENV=production \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          
-          # Cleanup old images (keep last 3)
-          docker image prune -f
-          docker images ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --format "table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.CreatedAt}}" | tail -n +4 | awk '{print $2}' | head -n -3 | xargs -r docker rmi || true
-          
-          # Show running containers for verification
-          docker ps --filter name=portfolio-app
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            # Login to GitHub Container Registry
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: Health Check & Nginx Reload
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.VPS_SSH_KEY }}
-        port: ${{ secrets.VPS_PORT || 22 }}
-        script: |
-          # Wait for container to be ready
-          sleep 10
-          
-          # Check if container is running
-          if docker ps --filter name=portfolio-app --format "{{.Names}}" | grep -q portfolio-app; then
-            echo "✅ Container is running successfully"
-            
-            # Test if the application responds locally
-            if curl -f http://localhost:3000 >/dev/null 2>&1; then
-              echo "✅ Application is responding on port 3000"
+            # Pull the latest image
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+            # Stop and remove existing container if it exists
+            docker stop portfolio-app || true
+            docker rm portfolio-app || true
+
+            # Run the new container
+            docker run -d \
+              --name portfolio-app \
+              --restart unless-stopped \
+              -p 3000:3000 \
+              -e NODE_ENV=production \
+              -e RESEND_API_KEY="${{ secrets.RESEND_API_KEY }}" \
+              -e EMAIL_FROM_DOMAIN="${{ secrets.EMAIL_FROM_DOMAIN }}" \
+              -e EMAIL_TO="${{ secrets.EMAIL_TO }}" \
+              -e NEXT_PUBLIC_SUPABASE_URL="${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" \
+              -e SUPABASE_SERVICE_ROLE_KEY="${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+              -e ADMIN_SECRET_KEY="${{ secrets.ADMIN_SECRET_KEY }}" \
+              -e ADMIN_PATH="${{ secrets.ADMIN_PATH }}" \
+              -e NEXT_PUBLIC_DASHBOARD_SECRET="${{ secrets.NEXT_PUBLIC_DASHBOARD_SECRET }}" \
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+            # Cleanup old images (keep last 3)
+            docker image prune -f
+            docker images ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --format "table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.CreatedAt}}" | tail -n +4 | awk '{print $2}' | head -n -3 | xargs -r docker rmi || true
+
+            # Show running containers for verification
+            docker ps --filter name=portfolio-app
+
+      - name: Health Check & Nginx Reload
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            # Wait for container to be ready
+            sleep 10
+
+            # Check if container is running
+            if docker ps --filter name=portfolio-app --format "{{.Names}}" | grep -q portfolio-app; then
+              echo "✅ Container is running successfully"
               
-              # Test Nginx configuration and reload if needed
-              nginx -t && nginx -s reload
-              echo "✅ Nginx configuration reloaded"
-              
-              # Test the public domain (optional - can fail if DNS propagation is slow)
-              sleep 5
-              if curl -f -k https://zg0ul.com >/dev/null 2>&1; then
-                echo "✅ Site is accessible via https://zg0ul.com"
+              # Test if the application responds locally
+              if curl -f http://localhost:3000 >/dev/null 2>&1; then
+                echo "✅ Application is responding on port 3000"
+                
+                # Test Nginx configuration and reload if needed
+                nginx -t && nginx -s reload
+                echo "✅ Nginx configuration reloaded"
+                
+                # Test the public domain (optional - can fail if DNS propagation is slow)
+                sleep 5
+                if curl -f -k https://zg0ul.com >/dev/null 2>&1; then
+                  echo "✅ Site is accessible via https://zg0ul.com"
+                else
+                  echo "⚠️  Site might not be accessible via domain yet (DNS/SSL issue)"
+                  echo "This is normal for new deployments - check manually"
+                fi
+                
               else
-                echo "⚠️  Site might not be accessible via domain yet (DNS/SSL issue)"
-                echo "This is normal for new deployments - check manually"
+                echo "❌ Application is not responding on port 3000"
+                docker logs portfolio-app --tail 50
+                exit 1
               fi
-              
             else
-              echo "❌ Application is not responding on port 3000"
+              echo "❌ Container failed to start"
               docker logs portfolio-app --tail 50
               exit 1
             fi
-          else
-            echo "❌ Container failed to start"
-            docker logs portfolio-app --tail 50
-            exit 1
-          fi
 
   notify:
     needs: build-and-deploy
     runs-on: ubuntu-latest
     if: always()
     steps:
-    - name: Notify Success
-      if: needs.build-and-deploy.result == 'success'
-      run: |
-        echo "🚀 Deployment successful!"
-        echo "Your portfolio is now live at your VPS!"
-        
-    - name: Notify Failure
-      if: needs.build-and-deploy.result == 'failure'
-      run: |
-        echo "❌ Deployment failed!"
-        echo "Check the logs above for details."
+      - name: Notify Success
+        if: needs.build-and-deploy.result == 'success'
+        run: |
+          echo "🚀 Deployment successful!"
+          echo "Your portfolio is now live at your VPS!"
+
+      - name: Notify Failure
+        if: needs.build-and-deploy.result == 'failure'
+        run: |
+          echo "❌ Deployment failed!"
+          echo "Check the logs above for details."

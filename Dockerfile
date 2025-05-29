@@ -29,6 +29,11 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
+# Provide dummy environment variables for build-time
+# These will be overridden at runtime with real values
+ENV NEXT_PUBLIC_SUPABASE_URL=https://dummy.supabase.co
+ENV NEXT_PUBLIC_DASHBOARD_SECRET=dummy-dashboard-secret
+
 RUN \
     if [ -f yarn.lock ]; then yarn run build; \
     elif [ -f package-lock.json ]; then npm run build; \
