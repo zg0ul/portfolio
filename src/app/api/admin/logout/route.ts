@@ -1,24 +1,46 @@
 import { NextResponse } from "next/server";
 
 export async function POST() {
-  // Clear the admin authentication cookie
-  const response = NextResponse.json({
-    success: true,
-    message: "Logged out successfully",
-  });
+  try {
+    const response = NextResponse.json({
+      success: true,
+      message: "Logged out successfully",
+    });
 
-  response.cookies.delete("admin-auth");
+    // Clear the admin session cookie with the same attributes used when setting it
+    response.cookies.set("admin-session", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 0, // Expire immediately
+      path: "/admin", // Same path restriction as when setting
+    });
 
-  return response;
+    return response;
+  } catch {
+    return NextResponse.json({ error: "Logout failed" }, { status: 500 });
+  }
 }
 
-export async function GET() {
-  // Also support GET for direct logout URL
-  const response = NextResponse.redirect(
-    new URL("/", process.env.NEXTAUTH_URL || "http://localhost:3000"),
-  );
+// Also support GET for simple logout links
+export async function GET(request: Request) {
+  try {
+    // Get the current URL's origin and redirect to home page
+    const url = new URL(request.url);
+    const response = NextResponse.redirect(new URL("/", url.origin));
 
-  response.cookies.delete("admin-auth");
+    // Clear the admin session cookie
+    response.cookies.set("admin-session", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 0,
+      path: "/admin",
+    });
 
-  return response;
+    return response;
+  } catch {
+    const url = new URL(request.url);
+    return NextResponse.redirect(new URL("/", url.origin));
+  }
 }

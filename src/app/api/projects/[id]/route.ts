@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAdminClient } from "@/lib/supabase/admin";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  checkAdminAPIAuth,
+  createUnauthorizedResponse,
+} from "@/lib/admin-api-auth";
 
 type Params = Promise<{ id: string[] }>;
 
@@ -40,6 +44,11 @@ export async function PUT(
   { params }: { params: Params },
 ) {
   try {
+    // Check admin authentication first
+    if (!(await checkAdminAPIAuth())) {
+      return createUnauthorizedResponse();
+    }
+
     // Get the project ID from the URL params - properly handled without destructuring
     const { id } = await params;
 
@@ -88,6 +97,11 @@ export async function DELETE(
   { params }: { params: Params },
 ) {
   try {
+    // Check admin authentication first
+    if (!(await checkAdminAPIAuth())) {
+      return createUnauthorizedResponse();
+    }
+
     const { id } = await params;
 
     if (!id) {

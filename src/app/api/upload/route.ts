@@ -1,8 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  checkAdminAPIAuth,
+  createUnauthorizedResponse,
+} from "@/lib/admin-api-auth";
 import { v4 as uuidv4 } from "uuid";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Check admin authentication first
+  if (!(await checkAdminAPIAuth())) {
+    return createUnauthorizedResponse();
+  }
+
   try {
     // Use the admin client to bypass RLS
     const supabase = createAdminClient();

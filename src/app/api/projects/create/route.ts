@@ -1,9 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CreateProjectPayload } from "@/lib/supabase/types";
+import {
+  checkAdminAPIAuth,
+  createUnauthorizedResponse,
+} from "@/lib/admin-api-auth";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // Check admin authentication first
+    if (!(await checkAdminAPIAuth())) {
+      return createUnauthorizedResponse();
+    }
     // Parse the project data from the request
     const projectData: CreateProjectPayload = await request.json();
 

@@ -2,6 +2,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notFound } from "next/navigation";
 import ProjectEditor from "@/components/admin/editor/ProjectEditor";
+import { checkAdminAuth } from "@/lib/admin-auth";
 
 type Params = Promise<{ params?: string[] }>;
 
@@ -20,7 +21,8 @@ export default async function ProjectEditorPage({
 }: {
   params: Params;
 }) {
-
+  await checkAdminAuth();
+  
   const { params: paramArray } = await params;
   const projectId = paramArray?.[0];
   const isEditing = Boolean(projectId);

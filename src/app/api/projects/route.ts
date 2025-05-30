@@ -6,12 +6,6 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category") as string | null;
-    // Log the environment variables (remove in production)
-    console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log(
-      "Has Service Role Key:",
-      !!process.env.SUPABASE_SERVICE_ROLE_KEY,
-    );
     // Use server-side client for API routes
     const supabase = await createClient();
 

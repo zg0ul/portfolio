@@ -1,11 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
+import {
+  checkAdminAPIAuth,
+  createUnauthorizedResponse,
+} from "@/lib/admin-api-auth";
 
-
-
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // Check admin authentication first
+    if (!(await checkAdminAPIAuth())) {
+      return createUnauthorizedResponse();
+    }
+
     // Initialize Supabase client inside the function
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -18,12 +25,6 @@ export async function POST(request: Request) {
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-    // Check for authentication (add your auth check here)
-    // const session = await getServerSession(authOptions);
-    // if (!session) {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    // }
 
     // Get the form data with the uploaded file
     const formData = await request.formData();

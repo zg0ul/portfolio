@@ -89,6 +89,7 @@ jobs:
               -e EMAIL_FROM_DOMAIN="${{ secrets.EMAIL_FROM_DOMAIN }}" \
               -e EMAIL_TO="${{ secrets.EMAIL_TO }}" \
               -e ADMIN_SECRET_KEY="${{ secrets.ADMIN_SECRET_KEY }}" \
+              -e ADMIN_SESSION_TOKEN="${{ secrets.ADMIN_SESSION_TOKEN }}" \
               -e ADMIN_PATH="${{ secrets.ADMIN_PATH }}" \
               -e NEXT_PUBLIC_DASHBOARD_SECRET="${{ secrets.NEXT_PUBLIC_DASHBOARD_SECRET }}" \
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest

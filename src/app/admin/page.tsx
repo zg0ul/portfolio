@@ -1,6 +1,6 @@
-// src/app/admin/page.tsx
 import { createAdminClient } from "@/lib/supabase/admin";
 import AdminDashboard from "@/components/admin/AdminDashboard";
+import { checkAdminAuth } from "@/lib/admin-auth";
 
 export const metadata = {
   title: "Admin Dashboard - zg0ul",
@@ -8,6 +8,7 @@ export const metadata = {
 };
 
 async function AdminPage() {
+  await checkAdminAuth();
   // Fetch dashboard statistics
   const adminClient = createAdminClient();
 

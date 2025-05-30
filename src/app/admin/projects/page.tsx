@@ -1,9 +1,9 @@
-// src/app/admin/projects/page.tsx
 import { createAdminClient } from "@/lib/supabase/admin";
 import Link from "next/link";
 import { AdminProjectTable } from "@/components/admin/ProjectTable";
 import { ArrowLeft, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { checkAdminAuth } from "@/lib/admin-auth";
 
 export const metadata = {
   title: "Projects Management - Admin",
@@ -13,6 +13,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 async function AdminProjectsPage() {
+  await checkAdminAuth();
 
   const adminClient = createAdminClient();
   const { data: projects, error } = await adminClient

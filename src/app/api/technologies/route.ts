@@ -1,5 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  checkAdminAPIAuth,
+  createUnauthorizedResponse,
+} from "@/lib/admin-api-auth";
 import { TechnologyWithLogo } from "@/lib/supabase/types";
 
 export async function GET() {
@@ -35,7 +39,12 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // Check admin authentication first
+  if (!(await checkAdminAPIAuth())) {
+    return createUnauthorizedResponse();
+  }
+
   try {
     // Parse the technology data from the request
     const technologyData: TechnologyWithLogo = await request.json();
