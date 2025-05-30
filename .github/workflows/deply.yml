@@ -8,9 +8,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
 jobs:
   build-and-deploy:
@@ -48,7 +45,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: . # use the dockerfile in the root of the repo
+          context: .
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -58,22 +55,6 @@ jobs:
             NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           no-cache: true
 
-      - name: Debug Environment Variables
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT || 22 }}
-          script: |
-            # Check what env vars the container actually has
-            echo "=== Container Environment Variables ==="
-            docker exec portfolio env | grep -E "(SUPABASE|RESEND)" | sed 's/=.*/=***/'
-            
-            # Check the actual URL being used
-            echo "=== Actual Supabase URL ==="
-            docker exec portfolio printenv NEXT_PUBLIC_SUPABASE_URL
-
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -81,19 +62,18 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
-          envs: NEXT_PUBLIC_SUPABASE_URL,SUPABASE_SERVICE_ROLE_KEY,NEXT_PUBLIC_SUPABASE_ANON_KEY,RESEND_API_KEY,EMAIL_FROM_DOMAIN,EMAIL_TO,ADMIN_SECRET_KEY,ADMIN_PATH,NEXT_PUBLIC_DASHBOARD_SECRET,REGISTRY,IMAGE_NAME,GITHUB_ACTOR
           script: |
             # Login to GitHub Container Registry
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             # Pull the latest image
-            docker pull ${REGISTRY}/${IMAGE_NAME}:latest
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
             # Stop and remove existing container if it exists
             docker stop portfolio || true
             docker rm portfolio || true
 
-            # Run the new container
+            # Run the new container with ALL environment variables
             docker run -d \
               --name portfolio \
               --restart unless-stopped \
@@ -102,16 +82,16 @@ jobs:
               -p 3000:3000 \
               -e NODE_ENV=production \
               -e NODE_OPTIONS="--tls-min-v1.2" \
-              -e RESEND_API_KEY="${RESEND_API_KEY}" \
-              -e EMAIL_FROM_DOMAIN="${EMAIL_FROM_DOMAIN}" \
-              -e EMAIL_TO="${EMAIL_TO}" \
-              -e NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL}" \
-              -e SUPABASE_SERVICE_ROLE_KEY="${SUPABASE_SERVICE_ROLE_KEY}" \
-              -e ADMIN_SECRET_KEY="${ADMIN_SECRET_KEY}" \
-              -e ADMIN_PATH="${ADMIN_PATH}" \
-              -e NEXT_PUBLIC_SUPABASE_ANON_KEY="${NEXT_PUBLIC_SUPABASE_ANON_KEY}" \
-              -e NEXT_PUBLIC_DASHBOARD_SECRET="${NEXT_PUBLIC_DASHBOARD_SECRET}" \
-              ${REGISTRY}/${IMAGE_NAME}:latest
+              -e NEXT_PUBLIC_SUPABASE_URL="${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" \
+              -e NEXT_PUBLIC_SUPABASE_ANON_KEY="${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
+              -e SUPABASE_SERVICE_ROLE_KEY="${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+              -e RESEND_API_KEY="${{ secrets.RESEND_API_KEY }}" \
+              -e EMAIL_FROM_DOMAIN="${{ secrets.EMAIL_FROM_DOMAIN }}" \
+              -e EMAIL_TO="${{ secrets.EMAIL_TO }}" \
+              -e ADMIN_SECRET_KEY="${{ secrets.ADMIN_SECRET_KEY }}" \
+              -e ADMIN_PATH="${{ secrets.ADMIN_PATH }}" \
+              -e NEXT_PUBLIC_DASHBOARD_SECRET="${{ secrets.NEXT_PUBLIC_DASHBOARD_SECRET }}" \
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Health Check & Nginx Reload
         uses: appleboy/ssh-action@v1.0.3
@@ -136,7 +116,7 @@ jobs:
                 nginx -t && nginx -s reload
                 echo "✅ Nginx configuration reloaded"
                 
-                # Test the public domain (optional - can fail if DNS propagation is slow)
+                # Test the public domain
                 sleep 5
                 if curl -f -k https://zg0ul.com >/dev/null 2>&1; then
                   echo "✅ Site is accessible via https://zg0ul.com"
@@ -156,7 +136,7 @@ jobs:
               exit 1
             fi
 
-      - name: Test Supabase Connection
+      - name: Test API Keys and Environment
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -164,36 +144,19 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
           script: |
-            # Test API endpoint with detailed output
-            echo "Testing /api/projects endpoint:"
-            curl -s http://localhost:3000/api/projects | jq '.' || curl -s http://localhost:3000/api/projects
-
-            echo "Testing supabase endpoint:"
-            curl -v ${{ env.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/
-
-            echo "Testing Supabase connection from container:"
-            docker exec portfolio curl -v https://pmerpfdlvkhayhritnhy.supabase.co/rest/v1/ \
-              -H "apikey: ${{ env.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
-              -H "Authorization: Bearer ${{ env.NEXT_PUBLIC_SUPABASE_ANON_KEY }}"
-
-            # Test with service role key
-            echo "Testing with service role key:"
-            docker exec portfolio curl -s https://pmerpfdlvkhayhritnhy.supabase.co/rest/v1/projects \
-              -H "apikey: ${{ env.SUPABASE_SERVICE_ROLE_KEY }}" \
-              -H "Authorization: Bearer ${{ env.SUPABASE_SERVICE_ROLE_KEY }}" | jq '.'
-
-            # Check environment variables are loaded
-            echo "Checking environment variables in container:"
-            docker exec portfolio env | grep SUPABASE || echo "No SUPABASE env vars found"
-
-            # Check container logs for errors
-            echo "Container logs:"
+            echo "=== Checking Environment Variables ==="
+            docker exec portfolio env | grep -E "(SUPABASE|RESEND|ADMIN)" | sed 's/=.*/=***/' || echo "No matching env vars found"
+            
+            echo "=== Testing Supabase Connection ==="
+            docker exec portfolio curl -s https://pmerpfdlvkhayhritnhy.supabase.co/rest/v1/ \
+              -H "apikey: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
+              -H "Authorization: Bearer ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}"
+            
+            echo "=== Testing /api/projects endpoint ==="
+            curl -s http://localhost:3000/api/projects | head -c 500
+            
+            echo "=== Container logs (last 20 lines) ==="
             docker logs portfolio --tail 20
-
-            echo "Testing network connectivity:"
-            docker exec portfolio nslookup pmerpfdlvkhayhritnhy.supabase.co || echo "DNS resolution failed"
-            docker exec portfolio ping -c 2 8.8.8.8 || echo "Internet connectivity failed"
-            docker exec portfolio curl -v ${{ env.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/ || echo "Supabase unreachable"
 
   notify:
     needs: build-and-deploy
