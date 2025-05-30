@@ -158,6 +158,17 @@ jobs:
             echo "Testing supabase endpoint:"
             curl -v ${{ env.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/
 
+            echo "Testing Supabase connection from container:"
+            docker exec portfolio curl -v https://pmerpfdlvkhayhritnhy.supabase.co/rest/v1/ \
+              -H "apikey: ${{ env.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
+              -H "Authorization: Bearer ${{ env.NEXT_PUBLIC_SUPABASE_ANON_KEY }}"
+
+            # Test with service role key
+            echo "Testing with service role key:"
+            docker exec portfolio curl -s https://pmerpfdlvkhayhritnhy.supabase.co/rest/v1/projects \
+              -H "apikey: ${{ env.SUPABASE_SERVICE_ROLE_KEY }}" \
+              -H "Authorization: Bearer ${{ env.SUPABASE_SERVICE_ROLE_KEY }}" | jq '.'
+
             # Check environment variables are loaded
             echo "Checking environment variables in container:"
             docker exec portfolio env | grep SUPABASE || echo "No SUPABASE env vars found"
