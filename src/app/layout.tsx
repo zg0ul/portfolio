@@ -18,6 +18,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://zg0ul.com"),
   title: {
     template: "%s | Mohammad Zgoul - Software Engineer",
     default: "Mohammad Zgoul - Software Engineer & Flutter Developer",
@@ -40,6 +41,9 @@ export const metadata: Metadata = {
   authors: [{ name: "Mohammad Zgoul", url: "https://zg0ul.com" }],
   creator: "Mohammad Zgoul",
   publisher: "Mohammad Zgoul",
+  icons: {
+    icon: "/icon.png",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -50,10 +54,11 @@ export const metadata: Metadata = {
       "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development.",
     images: [
       {
-        url: "/assets/images/portfolio-thumbnail.png",
-        width: 1920,
-        height: 1080,
+        url: "https://pmerpfdlvkhayhritnhy.supabase.co/storage/v1/object/public/images//portfolio-thumbnail.jpg",
+        width: 960,
+        height: 540,
         alt: "Mohammad Zgoul - Software Engineer Portfolio",
+        type: "image/png",
       },
     ],
   },
@@ -63,7 +68,9 @@ export const metadata: Metadata = {
     description:
       "Mechatronics engineer turned software developer specializing in Flutter, AI, and full-stack web development.",
     creator: "@zg0ul",
-    images: ["/assets/images/portfolio-thumbnail.png"],
+    images: [
+      "https://pmerpfdlvkhayhritnhy.supabase.co/storage/v1/object/public/images//portfolio-thumbnail.jpg",
+    ], // Use absolute URL
   },
   robots: {
     index: true,
@@ -80,7 +87,6 @@ export const metadata: Metadata = {
     canonical: "https://zg0ul.com",
   },
 };
-
 
 export default function RootLayout({
   children,

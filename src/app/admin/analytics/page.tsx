@@ -1,9 +1,9 @@
-import { checkAdminAuth } from "@/lib/admin-auth";
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
+import { checkAdminAuth } from "@/lib/admin-auth";
 
 export const metadata: Metadata = {
   title: "Analytics - Admin Dashboard",
@@ -11,12 +11,11 @@ export const metadata: Metadata = {
 };
 
 export default async function AnalyticsPage() {
-  // Check authentication
   await checkAdminAuth();
 
   return (
     <main className="topPageMargin bg-background min-h-screen">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
           <div className="mb-6 flex items-center gap-4">

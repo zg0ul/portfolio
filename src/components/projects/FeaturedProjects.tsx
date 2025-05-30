@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import AnimatedUnderline from "../ui/AnimatedUnderline";
 import { usePageTracking } from "@/components/AnalyticsTracker";
 
+export const dynamic = "force-dynamic";
+
 export default function FeaturedProjects() {
   const [featuredProjects, setFeaturedProjects] = useState<ProjectType[]>([]);
   const [isLoading, setIsLoading] = useState(true);

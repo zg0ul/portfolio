@@ -1,56 +1,23 @@
 // src/components/admin/AdminLoginForm.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Loader2, Lock, User, Eye, EyeOff } from "lucide-react";
-import { toast } from "sonner";
+import { Lock, AlertTriangle } from "lucide-react";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 
 export default function AdminLoginForm() {
-  const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  useEffect(() => {
+    // Redirect to home page after a delay since we use path-based authentication
+    const timer = setTimeout(() => {
+      router.replace("/");
+    }, 5000);
 
-    try {
-      const response = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Login failed");
-      }
-
-      toast.success("Welcome back!");
-      router.push("/admin");
-      router.refresh();
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error(error instanceof Error ? error.message : "Login failed");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCredentials((prev) => ({ ...prev, [name]: value }));
-  };
+    return () => clearTimeout(timer);
+  }, [router]);
 
   return (
     <main className="bg-background relative flex min-h-screen items-center justify-center overflow-hidden">
@@ -71,101 +38,30 @@ export default function AdminLoginForm() {
             <h1 className="text-foreground mb-2 text-2xl font-bold">
               Admin Access
             </h1>
-            <p className="text-navy-200 text-sm">
-              Secure authentication required
+            <p className="text-navy-400 text-sm">
+              This system uses path-based authentication
             </p>
           </div>
 
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Username Field */}
-            <div className="space-y-2">
-              <label
-                htmlFor="username"
-                className="text-foreground block text-sm font-medium"
-              >
-                Username
-              </label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <User className="text-navy-400 h-5 w-5" />
-                </div>
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  required
-                  value={credentials.username}
-                  onChange={handleInputChange}
-                  className="bg-navy-700/50 border-navy-600 focus:border-neon focus:ring-neon/20 text-foreground placeholder-navy-400 w-full rounded-lg border py-3 pr-4 pl-10 transition-colors focus:ring-2 focus:outline-none"
-                  placeholder="Enter username"
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-
-            {/* Password Field */}
-            <div className="space-y-2">
-              <label
-                htmlFor="password"
-                className="text-foreground block text-sm font-medium"
-              >
-                Password
-              </label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Lock className="text-navy-400 h-5 w-5" />
-                </div>
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  value={credentials.password}
-                  onChange={handleInputChange}
-                  className="bg-navy-700/50 border-navy-600 focus:border-neon focus:ring-neon/20 text-foreground placeholder-navy-400 w-full rounded-lg border py-3 pr-12 pl-10 transition-colors focus:ring-2 focus:outline-none"
-                  placeholder="Enter password"
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="hover:text-neon absolute inset-y-0 right-0 flex items-center pr-3 transition-colors"
-                  disabled={isLoading}
-                >
-                  {showPassword ? (
-                    <EyeOff className="text-navy-400 h-5 w-5" />
-                  ) : (
-                    <Eye className="text-navy-400 h-5 w-5" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              disabled={
-                isLoading || !credentials.username || !credentials.password
-              }
-              className="from-neon to-neon-4 hover:from-neon-4 hover:to-neon text-navy-900 w-full rounded-lg bg-gradient-to-r px-4 py-3 font-semibold transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Authenticating...
-                </>
-              ) : (
-                "Sign In"
-              )}
-            </Button>
-          </form>
-
           {/* Security Notice */}
-          <div className="bg-navy-700/30 border-navy-600/50 mt-6 rounded-lg border p-4">
-            <p className="text-navy-300 text-center text-xs">
-              🔒 This is a secure area. All access attempts are logged.
-            </p>
+          <div className="mb-6 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+            <div className="flex items-start space-x-3">
+              <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-500" />
+              <div>
+                <h3 className="mb-1 text-sm font-medium text-yellow-300">
+                  Authentication Method Changed
+                </h3>
+                <p className="text-xs text-yellow-200/80">
+                  Traditional login is no longer available. Access is now
+                  provided via secure URL paths.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-navy-400 space-y-2 text-center text-sm">
+            <p>Contact the administrator for access instructions.</p>
+            <p className="text-xs opacity-75">Redirecting to home page...</p>
           </div>
         </div>
 

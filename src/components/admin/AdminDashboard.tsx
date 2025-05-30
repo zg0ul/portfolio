@@ -1,4 +1,3 @@
-// src/components/admin/AdminDashboard.tsx
 "use client";
 
 import { useState } from "react";
@@ -51,8 +50,8 @@ export default function AdminDashboard({ data }: AdminDashboardProps) {
     setIsLoggingOut(true);
 
     try {
-      const response = await fetch("/api/admin/login", {
-        method: "DELETE",
+      const response = await fetch("/api/admin/logout", {
+        method: "POST",
       });
 
       if (response.ok) {
@@ -237,6 +236,16 @@ export default function AdminDashboard({ data }: AdminDashboardProps) {
                   >
                     <Edit3 className="mr-2 h-4 w-4" />
                     Manage Projects
+                  </Button>
+                </Link>
+
+                <Link href="/admin/analytics" className="block">
+                  <Button
+                    variant="outline"
+                    className="border-navy-600 bg-navy-700/50 hover:bg-navy-600 w-full justify-start"
+                  >
+                    <TrendingUp className="mr-2 h-4 w-4" />
+                    View Analytics
                   </Button>
                 </Link>
 

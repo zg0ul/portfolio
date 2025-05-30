@@ -1,7 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization to avoid build-time errors
+let resend: Resend | null = null;
+
+function getResendInstance(): Resend {
+  if (!resend) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error("RESEND_API_KEY environment variable is required");
+    }
+    resend = new Resend(apiKey);
+  }
+  return resend;
+}
 
 // Simple in-memory rate limiting (for production, use Redis or a database)
 const rateLimitMap = new Map<string, number[]>();
@@ -125,9 +137,10 @@ export async function POST(request: NextRequest) {
     });
 
     // Send email using Resend
-    const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM_DOMAIN || "onboarding@resend.dev",
-      to: [process.env.EMAIL_TO || "zg0ul.contact@gmail.com"],
+    const resendInstance = getResendInstance();
+    const { data, error } = await resendInstance.emails.send({
+      from: process.env.EMAIL_FROM_DOMAIN || "contact@zg0ul.com",
+      to: [process.env.EMAIL_TO || "mohammad@zg0ul.com"],
       replyTo: email, // This allows you to reply directly to the user
       subject: `🚀 New Portfolio Contact: ${name}`,
       html: `

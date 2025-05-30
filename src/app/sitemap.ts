@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 
+
 export default async function sitemap() {
   const supabase = await createClient();
   const { data: projects } = await supabase
