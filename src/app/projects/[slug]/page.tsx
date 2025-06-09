@@ -43,9 +43,9 @@ export async function generateMetadata({
       siteName: "zg0ul's Projects",
       images: [
         {
-          url: project.featured_image,
+          url: `${project.featured_image}?width=1200&height=630&resize=cover&format=webp`,
           width: 1200,
-          height: 630, // Optimal OG image ratio
+          height: 630,
           alt: `${project.title} project showcase`,
         },
       ],
@@ -56,7 +56,9 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${project.title} | zg0ul's Projects`,
       description: project.short_description,
-      images: [project.featured_image],
+      images: [
+        `${project.featured_image}?width=1200&height=630&resize=cover&format=webp`,
+      ],
     },
   };
 }

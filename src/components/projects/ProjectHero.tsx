@@ -107,7 +107,7 @@ export function ProjectHero({ project }: ProjectHeroProps) {
                       onClick={() =>
                         handleExternalLinkClick("live", project.live_url!)
                       }
-                      className="from-neon to-neon-4 hover:from-neon-4 hover:to-neon group text-navy-900 flex items-center gap-2 rounded-lg bg-gradient-to-r px-4 py-2.5 text-sm font-medium shadow-lg transition-all"
+                      className="group border-navy-400 bg-navy-700/50 hover:border-neon/40 hover:bg-navy-600/50 hover:text-neon flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-all"
                     >
                       <ExternalLink className="h-4 w-4 transition-transform group-hover:scale-110" />
                       Live Demo

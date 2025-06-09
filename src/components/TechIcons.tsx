@@ -110,6 +110,20 @@ export const TECHNOLOGIES: Technology[] = [
     name: "JavaScript",
     icon: JavaScriptIcon,
   },
+  {
+    id: "appwrite",
+    name: "Appwrite",
+    icon: () => (
+      <Image
+        width={100}
+        height={100}
+        draggable={false}
+        src="/assets/icons/appwrite.png"
+        className="h-5 w-5"
+        alt="appwrite"
+      />
+    ),
+  },
   // Flutter specific
   {
     id: "flutter",
